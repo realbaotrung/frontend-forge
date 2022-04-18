@@ -1,7 +1,7 @@
 import qs from 'qs';
 import {createSlice} from '@reduxjs/toolkit';
 import {apiPrivate} from '../../../api/rtkQuery'
-import {apiPaths} from '../../../api/apiPaths'
+import {apiPaths} from '../../../api/features/apiPaths'
 import {
   setItemToSS,
   getItemFromSS,
@@ -18,8 +18,9 @@ const signInMutation = {
   query: ({username, password}) => ({
     url: apiPaths.API_SIGNIN,
     method: 'POST',
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    body: qs.stringify({username, password}),
+    // headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    // body: qs.stringify({username, password}),
+    body: {username, password},
   }),
   transformResponse: (response) => {
     if (response.result.accessToken) {

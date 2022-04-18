@@ -1,7 +1,7 @@
 // import {createEntityAdapter} from '@reduxjs/toolkit';
 // import qs from 'qs';
 import {api} from '../../../api/rtkQuery';
-import {apiPaths} from '../../../api/apiPaths';
+import {apiPaths} from '../../../api/features/apiPaths';
 
 // export const designAutomationAdapter = createEntityAdapter();
 // export const initialState = designAutomationAdapter.getInitialState();
