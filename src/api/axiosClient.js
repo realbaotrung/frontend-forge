@@ -7,8 +7,6 @@ const axiosClient = axios.create({
     headers: {
         'content-type': 'application/json',
     },
-    //data: params,
-    //paramsSerializer: params => queryString.stringify(params),
 });
 
 axiosClient.interceptors.request.use(async (config) => {
@@ -17,7 +15,7 @@ axiosClient.interceptors.request.use(async (config) => {
         if (accessToken) {
           config.headers = {
             ...config.headers,
-            Authorization: "Bearer " + accessToken,
+            Authorization: `Bearer ${accessToken}`,
           };
         }
     
@@ -30,7 +28,7 @@ axiosClient.interceptors.request.use(async (config) => {
 
 axiosClient.interceptors.response.use((response) => {
     if (response.data.code === 401) {
-        console.log("Unauthorize 401")
+        console.log("UnAuthorize 401")
         window.location.href = routePaths.LOGIN_URL;
         return Promise.reject();
     }
@@ -44,11 +42,9 @@ axiosClient.interceptors.response.use((response) => {
     } else {
       try {
         console.log(error.response.data)
-        if (error?.response?.data?.result.errors)
-          error.message = error.response.data.result.errors[0];
-          
-      } catch (error) {
-
+        if (error?.response?.data?.result.errors) error.message = error.response.data.result.errors[0];    
+      } catch (e) {
+        console.log(e)
       }
     }
     return Promise.reject(error);
