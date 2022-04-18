@@ -28,11 +28,6 @@ import routePaths from '../../../../../route/routePaths';
 import {selectUser} from '../../../../../../slices/auth/selectors';
 import { useSignInMutation } from '../../../../../../slices/auth/authSlice';
 
-// Get user from state
-const stateSelector = createStructuredSelector({
-  user: selectUser,
-});
-
 // =====================================================================
 // LoginForm component
 // =====================================================================
@@ -43,7 +38,7 @@ export default function LoginForm() {
   const handleShowClick = () => setShowPassword(!showPassword);
 
   // Redux...
-  const {user} = useSelector(stateSelector);
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
   // action creators...
   const {clearMessage, setMessage} = useMessageSlice().actions;

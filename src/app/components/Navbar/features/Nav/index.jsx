@@ -56,17 +56,13 @@ const popoverContentCSS = {
   },
 };
 
-const stateSelector = createStructuredSelector({
-  user: selectUser,
-});
-
 export default function Nav() {
   const [userFullName, setUserFullname] = useState('');
   const [userEmail, setUserEmail] = useState('');
 
   const {isOpen, onOpen, onClose} = useDisclosure();
 
-  const {user} = useSelector(stateSelector);
+  const user = useSelector(selectUser);
 
   const navigate = useNavigate();
 
