@@ -22,11 +22,11 @@ import {
 import {FaUserAlt, FaLock} from 'react-icons/fa';
 import {createStructuredSelector} from 'reselect';
 import {BsFillEyeFill, BsFillEyeSlashFill} from 'react-icons/bs';
-import {useMessageSlice} from '../../../../../../slices/message';
+import {useMessageSlice} from '../../../../../slices/message';
 import LoginFormMessage from './features/LoginFormMessage';
-import routePaths from '../../../../../route/routePaths';
-import {selectUser} from '../../../../../../slices/auth/selectors';
-import { useSignInMutation } from '../../../../../../slices/auth/authSlice';
+import routePaths from '../../../../route/routePaths';
+import {selectUser} from '../../../../../slices/auth/selectors';
+import { useSignInMutation } from '../../../../../slices/auth/authSlice';
 
 // =====================================================================
 // LoginForm component

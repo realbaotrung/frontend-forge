@@ -1,8 +1,8 @@
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {loadable as LoginPage} from '../auth/pages/LoginPage/Loadable';
-import {loadable as DashboardPage} from '../dashboard/pages/DashboardPage/Loadable';
-import {loadable as MissingPage} from '../notfound/pages/MissingPage/Loadable';
+import {loadable as LoginPage} from '../auth/LoginPage/Loadable';
+import {loadable as DashboardPage} from '../dashboard/DashboardPage/Loadable';
+import {loadable as MissingPage} from '../notfound/MissingPage/Loadable';
 import RequireAuth from './RequireAuth';
 import routePaths from './routePaths';
 

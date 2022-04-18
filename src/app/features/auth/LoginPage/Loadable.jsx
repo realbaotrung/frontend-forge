@@ -1,4 +1,4 @@
-import {lazyLoad} from '../../../../../utils/loadable.utils';
+import {lazyLoad} from '../../../../utils/loadable.utils';
 
 const loading = () => {
   return <div>Loading...</div>;
@@ -6,7 +6,7 @@ const loading = () => {
 
 export const loadable = lazyLoad(
   () => import('./index'),
-  (module) => module.DashboardPage,
+  (module) => module.LoginPage,
   {
     fallback: loading,
   },
