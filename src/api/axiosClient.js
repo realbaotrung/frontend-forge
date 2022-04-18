@@ -2,8 +2,10 @@ import axios from "axios";
 import {getItemFromSS, storageItem} from "../utils/storage.utils";
 import routePaths from "../app/features/route/routePaths";
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 const axiosClient = axios.create({
-    baseURL: REACT_APP_API_URL,
+    baseURL: BASE_URL,
     headers: {
         'content-type': 'application/json',
     },
@@ -42,7 +44,7 @@ axiosClient.interceptors.response.use((response) => {
     } else {
       try {
         console.log(error.response.data)
-        if (error?.response?.data?.result.errors) error.message = error.response.data.result.errors[0];    
+        if (error?.response?.data?.errors) error.message = error.response.data.errors[0];    
       } catch (e) {
         console.log(e)
       }
@@ -50,4 +52,20 @@ axiosClient.interceptors.response.use((response) => {
     return Promise.reject(error);
 });
 
-export default axiosClient;
+export const api = {
+    get: (url) => {
+        return axiosClient.get(url);
+    },
+    create: (url, data, config = {}) => {
+        return axiosClient.post(url, data, config);
+    },
+    update: (url, data, config = {}) => {
+        return axiosClient.put(url, data, config);
+    },
+    delete: (url) => {
+        return axiosClient.delete(url);
+    },
+}
+
+
+export default api;
