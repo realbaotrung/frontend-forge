@@ -1,0 +1,16 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 2
+indent_style = space
+max_line_length = 80
+tab_width = 2
+
+[{*.ts,*.tsx,*js,*jsx}]
+max_line_length = 80
+quote_type = single
+
+[{*.json,.babelrc,.eslintrc,.prettierrc,.stylelintrc,bowerrc,jest.config}]
+indent_size = 2

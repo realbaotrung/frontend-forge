@@ -1,0 +1,65 @@
+{
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "jest": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "airbnb",
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "prettier"
+  ],
+  "rules": {
+    "import/no-unresolved": 0,
+    "no-param-reassign": 0,
+    "prefer-destructuring":0,
+    "no-debugger": 0,
+    "default-param-last": 0,
+    "func-names": 0,
+    "class-methods-use-this": 0,
+    "no-undef": 1,
+    "prettier/prettier": 0,
+    "import/no-extraneous-dependencies": 0,
+    "arrow-body-style": 0,
+    "react/jsx-fragments": 0,
+    "no-unused-vars": 1,
+    "react/function-component-definition": 1,
+    "react/self-closing-comp": 0,
+    "react/jsx-props-no-spreading": 0,
+    "import/prefer-default-export": 0,
+    "no-script-url": 0,
+    "react/react-in-jsx-scope": 0,
+    "no-console": 0,
+    "no-alert": 0
+  },
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "detect"
+    },
+    "import/extensions": [
+      ".js",
+      ".jsx"
+    ],
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    }
+  }
+}
