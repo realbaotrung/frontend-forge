@@ -22,16 +22,11 @@ import {
 import {FaUserAlt, FaLock} from 'react-icons/fa';
 import {createStructuredSelector} from 'reselect';
 import {BsFillEyeFill, BsFillEyeSlashFill} from 'react-icons/bs';
-import {useMessageSlice} from '../../../../../../slices/message';
+import {useMessageSlice} from '../../../../../slices/message';
 import LoginFormMessage from './features/LoginFormMessage';
-import routePaths from '../../../../../route/routePaths';
-import {selectUser} from '../../../../../../slices/auth/selectors';
-import { useSignInMutation } from '../../../../../../slices/auth/authSlice';
-
-// Get user from state
-const stateSelector = createStructuredSelector({
-  user: selectUser,
-});
+import routePaths from '../../../../route/routePaths';
+import {selectUser} from '../../../../../slices/auth/selectors';
+import { useSignInMutation } from '../../../../../slices/auth/authSlice';
 
 // =====================================================================
 // LoginForm component
@@ -43,7 +38,7 @@ export default function LoginForm() {
   const handleShowClick = () => setShowPassword(!showPassword);
 
   // Redux...
-  const {user} = useSelector(stateSelector);
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
   // action creators...
   const {clearMessage, setMessage} = useMessageSlice().actions;

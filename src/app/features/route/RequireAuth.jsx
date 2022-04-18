@@ -7,12 +7,8 @@ import {Box} from '@chakra-ui/react';
 import {selectAccessToken} from '../../slices/auth/selectors';
 import routePaths from './routePaths';
 
-const stateSelector = createStructuredSelector({
-  accessToken: selectAccessToken,
-});
-
 export default function RequireAuth({children}) {
-  const {accessToken} = useSelector(stateSelector);
+  const accessToken = useSelector(selectAccessToken);
   const navigate = useNavigate();
 
   useEffect(() => {
