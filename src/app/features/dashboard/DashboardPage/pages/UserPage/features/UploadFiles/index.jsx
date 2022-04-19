@@ -12,6 +12,7 @@ import {
   ModalBody,
   ModalFooter,
   Progress,
+  Box,
 } from '@chakra-ui/react';
 
 import {AiOutlineCloudUpload} from 'react-icons/ai';
@@ -23,6 +24,7 @@ import {
   selectHasLoadingFromDA,
   selectRevitFileNameFromDA,
 } from '../../../../../../../slices/designAutomation/selectors';
+import CategoryFromJsonData from './features/RefetchToShowLoadingAndGetJsonData/features/CategoryFromJsonData';
 
 // TODO: IMplement Button UploadFile
 function ButtonModalUploadFiles({onOpen}) {
@@ -117,11 +119,14 @@ export default function UploadFiles() {
             {hasLoadingFromDA && (
               <Progress size='xs' isAnimated isIndeterminate />
             )}
-            {!haveChosenFiles ? (
+            <Box overflow='auto'>
+              <CategoryFromJsonData />
+            </Box>
+            {/* {!haveChosenFiles ? (
               <DragFilesFromLocal />
             ) : (
               <RefetchToShowLoadingAndGetJsonData />
-            )}
+            )} */}
           </ModalBody>
           <ModalFooter sx={modelFooterCSS}>
             <Button mr={3} onClick={onClose} isDisabled={!revitFileName}>
