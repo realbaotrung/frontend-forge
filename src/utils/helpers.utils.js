@@ -16,3 +16,14 @@ export function isErrorWithMessage(error) {
     typeof error.message === 'string'
   );
 }
+
+/**
+ * This function help format string of json to json object
+ * by using regex pattern
+ */
+export const formatStringToJsonObjectWithRegex = (str="", pattern) => {
+  // const regex = /\\/g;
+  const newString = str.replace(pattern, "");
+  const jsonObject = JSON.parse(newString)
+  return jsonObject;
+}

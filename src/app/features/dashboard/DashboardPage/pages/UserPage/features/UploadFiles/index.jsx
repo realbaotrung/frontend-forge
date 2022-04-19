@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Modal,
@@ -10,12 +11,18 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  Progress,
 } from '@chakra-ui/react';
 
 import {AiOutlineCloudUpload} from 'react-icons/ai';
-import ButtonUploadFiles from './features/ButtonUploadFiles';
+import ButtonUploadFilesFromLocal from './features/ButtonUploadFiles';
 import DragFilesFromLocal from './features/DragFilesFromLocal';
-import ListChosenFiles from './features/ListChosenFiles';
+import RefetchToShowLoadingAndGetJsonData from './features/RefetchToShowLoadingAndGetJsonData';
+
+import {
+  selectHasLoadingFromDA,
+  selectRevitFileNameFromDA,
+} from '../../../../../../../slices/designAutomation/selectors';
 
 // TODO: IMplement Button UploadFile
 function ButtonModalUploadFiles({onOpen}) {
@@ -44,17 +51,8 @@ function ButtonModalUploadFiles({onOpen}) {
 }
 
 ButtonModalUploadFiles.propTypes = {
-  onOpen: PropTypes.func.isRequired
-}
-
-/**
- * 1. Initilizing
-//  * 2. upload progress bar (tinh)
-//  * 3. Pending
-//  * 4. Processing
- * 5. Uploaded..
- * @returns 
- */
+  onOpen: PropTypes.func.isRequired,
+};
 
 const modelHeaderCSS = {
   fontWeight: '300',
@@ -84,8 +82,19 @@ const closeButtonCSS = {
  * //TODO: Implement share state between components...
  */
 export default function UploadFiles() {
-  const [haveChosenFiles, setHaveChosenFiles] = useState(false)
+  const [haveChosenFiles, setHaveChosenFiles] = useState(false);
   const {isOpen, onOpen, onClose} = useDisclosure();
+
+  // Check loading when file is taken and push to the server
+  const hasLoadingFromDA = useSelector(selectHasLoadingFromDA);
+  const revitFileName = useSelector(selectRevitFileNameFromDA);
+
+  useEffect(() => {
+    if (!hasLoadingFromDA && revitFileName) {
+      setHaveChosenFiles(true);
+    }
+  })
+
 
   // TODO: Implement haveChosenFiles state to show ListChosenFile
 
@@ -102,13 +111,20 @@ export default function UploadFiles() {
         <ModalOverlay />
         <ModalContent maxW='37.5rem' w='full'>
           <ModalHeader sx={modelHeaderCSS}>Upload files</ModalHeader>
-          <ModalCloseButton sx={closeButtonCSS} />
+
           <ModalBody p='1rem 1.5rem'>
-            <ButtonUploadFiles />
-            {!haveChosenFiles ? <DragFilesFromLocal /> : <ListChosenFiles /> }
+            <ButtonUploadFilesFromLocal />
+            {hasLoadingFromDA && (
+              <Progress size='xs' isAnimated isIndeterminate />
+            )}
+            {!haveChosenFiles ? (
+              <DragFilesFromLocal />
+            ) : (
+              <RefetchToShowLoadingAndGetJsonData />
+            )}
           </ModalBody>
           <ModalFooter sx={modelFooterCSS}>
-            <Button mr={3} onClick={onClose} isDisabled={!haveChosenFiles}>
+            <Button mr={3} onClick={onClose} isDisabled={!revitFileName}>
               Done
             </Button>
           </ModalFooter>

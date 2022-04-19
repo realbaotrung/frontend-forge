@@ -1,7 +1,8 @@
 import {configureStore} from '@reduxjs/toolkit';
+import {apiRtk, apiPrivate} from '../api/rtkQuery';
 import {reducer as messageReducer} from '../app/slices/message';
 import {reducer as authReducer} from '../app/slices/auth/authSlice';
-import {api, apiPrivate} from '../api/rtkQuery';
+import {reducer as designAutomationReducer} from '../app/slices/designAutomation/designAutomationSlice';
 
 /**
  * All reducers put here...
@@ -11,11 +12,14 @@ const store = configureStore({
   reducer: {
     auth: authReducer,
     message: messageReducer,
-    [api.reducerPath]: api.reducer,
+    designAutomation: designAutomationReducer,
+    [apiRtk.reducerPath]: apiRtk.reducer,
     [apiPrivate.reducerPath]: apiPrivate.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware).concat(apiPrivate.middleware),
+    getDefaultMiddleware()
+      .concat(apiRtk.middleware)
+      .concat(apiPrivate.middleware),
 });
 
 export default store;
