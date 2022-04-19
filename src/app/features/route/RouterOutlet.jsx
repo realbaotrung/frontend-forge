@@ -1,19 +1,25 @@
-import {Route, Routes} from 'react-router-dom';
+import {Route, Routes, useLocation} from 'react-router-dom';
 import routes from './routeMap';
 import Layout from './Layout';
-
+import RequireAuth from './RequireAuth';
+import NavBar from '../../components/Navbar';
 
 export default function RouterOutlet() {
+
   const routeComponents = routes.map((routeItem) => {
-    const {id, path, component: Page} = routeItem;
-    return <Route key={id} path={path} element={<Page />} />;
+    if(!routeItem.isAuth) {
+      return <Route key={routeItem.id} path={routeItem.path} element={routeItem.component} />;
+    } 
+    return <Route key={routeItem.id} path={routeItem.path} element={<RequireAuth>
+      <NavBar />
+      {routeItem.component}
+    </RequireAuth>} />
+    ;
   });
 
   return (
-    <Routes>
-      <Route path='/' element={<Layout />}>
-        {routeComponents}
-      </Route>
-    </Routes>
+      <Routes>
+          {routeComponents}
+      </Routes>
   );
 }

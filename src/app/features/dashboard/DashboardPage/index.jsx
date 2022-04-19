@@ -15,7 +15,7 @@ export default function DashboardPage() {
   const showPageDependByRole = (role === 'admin' ? <AdminPage /> : <UserPage />);
   return (
   <>
-    <NavBar />
+    <div></div>
     {showPageDependByRole}
   </>
   );

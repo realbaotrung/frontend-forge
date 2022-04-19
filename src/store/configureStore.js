@@ -2,6 +2,8 @@ import {configureStore} from '@reduxjs/toolkit';
 import {reducer as messageReducer} from '../app/slices/message';
 import {reducer as authReducer} from '../app/slices/auth/authSlice';
 import {api, apiPrivate} from '../api/rtkQuery';
+import bundleReducer from '../app/slices/bundle/bundleSlice';
+import bundleCategoryReducer from '../app/slices/bundleCategory/bundleCategorySlice';
 
 /**
  * All reducers put here...
@@ -10,6 +12,8 @@ import {api, apiPrivate} from '../api/rtkQuery';
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    bundle: bundleReducer,
+    bundleCategory: bundleCategoryReducer,
     message: messageReducer,
     [api.reducerPath]: api.reducer,
     [apiPrivate.reducerPath]: apiPrivate.reducer,

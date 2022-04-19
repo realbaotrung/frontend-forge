@@ -32,9 +32,10 @@ ReactDOM.render(
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <Box minW='2xl' p={0} minH='100vh'>
           <BrowserRouter>
-            <Routes>
+            {/* <Routes>
               <Route path='/*' element={<App />} />
-            </Routes>
+            </Routes> */}
+            <App />
           </BrowserRouter>
         </Box>
       </ChakraProvider>
