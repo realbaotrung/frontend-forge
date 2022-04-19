@@ -26,7 +26,7 @@ const MOUNT_NODE = document.getElementById('root');
 
 
 ReactDOM.render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <ChakraProvider theme={theme}>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
@@ -40,7 +40,8 @@ ReactDOM.render(
         </Box>
       </ChakraProvider>
     </Provider>
-  </StrictMode>,
+  // </StrictMode>
+  ,
   MOUNT_NODE,
 );
 

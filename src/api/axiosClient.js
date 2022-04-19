@@ -63,6 +63,9 @@ export const api = {
     update: (url, data, config = {}) => {
         return axiosClient.put(url, data, config);
     },
+    patch: (url, data, config = {}) => {
+        return axiosClient.patch(url, data, config);
+    },
     delete: (url) => {
         return axiosClient.delete(url);
     },
