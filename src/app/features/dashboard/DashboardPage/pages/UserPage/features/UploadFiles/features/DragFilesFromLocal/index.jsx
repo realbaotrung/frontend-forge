@@ -4,10 +4,8 @@ import {FileUploader} from 'react-drag-drop-files';
 import {ReactComponent as Document} from './assets/document.svg';
 import { usePostDesignAutomationGetInfoProjectMutation, getRevitFileName } from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
 
-// HACK: accept fileTypes here...
 const fileTypes = ['RVT'];
 
-// TODO: Implement Drag files make a state dispatch between Components...
 export default function DragFilesFromLocal() {
   const [postDesignAutomationGetInfoProject] =
     usePostDesignAutomationGetInfoProjectMutation();
@@ -46,7 +44,6 @@ export default function DragFilesFromLocal() {
   )
 
   return (
-    <Box mt='1.25rem' border='1px dashed' borderColor='gray.300' sx={{listStyle: 'none'}}>
       <FileUploader
         onTypeError={onTypeError}
         name='FileUpload'
@@ -55,7 +52,6 @@ export default function DragFilesFromLocal() {
         hoverTitle={String(' ')}
         children={content}
       />
-    </Box>
   );
 }
 

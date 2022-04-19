@@ -109,6 +109,12 @@ const designAutomationSlice = createSlice({
     getRevitFileName: (state, {payload}) => {
       state.revitFileName = payload;
     },
+    resetDesignAutomationState: (state) => {
+      state.id = '';
+      state.revitFileName = '';
+      state.hasLoading = false;
+      state.jsonData = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -132,6 +138,9 @@ const designAutomationSlice = createSlice({
 
 // --- Export reducer here ---
 
-export const {getJsonDataForDesignAutomation, getRevitFileName} =
-  designAutomationSlice.actions;
+export const {
+  getJsonDataForDesignAutomation,
+  getRevitFileName,
+  resetDesignAutomationState,
+} = designAutomationSlice.actions;
 export const {reducer} = designAutomationSlice;

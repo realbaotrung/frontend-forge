@@ -1,31 +1,17 @@
 import {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Stack, Spinner} from '@chakra-ui/react';
+import {Text, VStack, Spinner} from '@chakra-ui/react';
 import {
   selectIdFromDA,
-  selectJsonDataFromDA,
 } from '../../../../../../../../../slices/designAutomation/selectors';
 import {
   getJsonDataForDesignAutomation,
   useGetDesignAutomationInfoByIdQuery,
 } from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
-import CategoryFromJsonData from './features/CategoryFromJsonData'
-
-const container = {
-  mt: '1.25rem',
-  border: '1px solid',
-  borderColor: 'gray.300',
-  w: 'full',
-  h: '18.125rem',
-  fontSize: '0.875rem',
-  fontWeight: '300',
-};
 
 export default function RefetchToShowLoadingAndGetJsonData() {
-  const [pollInterval, setPollInterval] = useState(5000);
-
-  const jsonDataFromDA = useSelector(selectJsonDataFromDA)
-  // const hasLoadingFromDA = useSelector(selectHasLoadingFromDA);
+  const [pollInterval, setPollInterval] = useState(10000);
+  const [count, setCount] = useState(1);
 
   const idFromDA = useSelector(selectIdFromDA);
 
@@ -39,15 +25,18 @@ export default function RefetchToShowLoadingAndGetJsonData() {
     console.log('data refetch:', data?.result);
     console.log('data state:', data?.result?.status);
     const status = data?.result?.status;
-    if (status < 1) {
+    if (status < 1 || count === 0) {
       setPollInterval(0);
       if (status === -1) {
         // show error message
         console.error('Can get json data of design automation from server');
       } else {
         const stringJsonData = data?.result?.data;
-        if (stringJsonData) {
+        if (!stringJsonData && count > 0) {
           // TODO: check getJsonData logic
+          setCount(0);
+          setPollInterval(10000);
+        } else {
           dispatch(getJsonDataForDesignAutomation(stringJsonData));
         }
       }
@@ -56,15 +45,11 @@ export default function RefetchToShowLoadingAndGetJsonData() {
 
   // {!hasLoadingFromDA && !jsonDataFromDA && <Spinner size='xl' />}
   return (
-    <Stack
-      sx={container}
-      justify='center'
-      align='center'
-      border='1px dashed'
-      borderColor='gray.300'
-    >
-      {!jsonDataFromDA && <Spinner size='xl' />}
-      {jsonDataFromDA && <CategoryFromJsonData />}
-    </Stack>
+    <VStack w='full' h='18.125rem' justify='center' align='center'>
+      <Spinner pb='0.75rem'size='lg' />
+      <Text fontSize='1.25em'>
+        In processing ...
+      </Text>
+    </VStack>
   );
 }
