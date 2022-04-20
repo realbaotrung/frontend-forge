@@ -4,7 +4,6 @@ import {api} from '../../../api/axiosClient';
 
 const initialState = {
   isLoading: false,
-  isDeleting: false,
   errorMessage: '',
   bundles: null,
   bundle: {},
@@ -12,8 +11,8 @@ const initialState = {
 
 export const getBundle = createAsyncThunk(
   'bundle/get',
-  async (data, {rejectWithValue}) => {
-    const response = await api.get('/bundle');
+  async ({index, size}, {rejectWithValue}) => {
+    const response = await api.get(`/bundle?PageNumber=${index}&PageSize=${size}`);
     return response.data;
   },
 );
@@ -41,10 +40,10 @@ export const postBundle = createAsyncThunk(
 
 export const putBundle = createAsyncThunk(
   'bundle/update',
-  async (data, {rejectWithValue}) => {
+  async ({data, id}) => {
     const config = {headers: {'Content-Type': 'multipart/form-data'}};
     try {
-      const response = await api.patch('/bundle', data, config);
+      const response = await api.patch(`/bundle/${id}`, data, config);
       return response.data;
     } catch (e) {
       return e;
@@ -69,6 +68,7 @@ export const bundleSlice = createSlice({
   name: 'bundle',
   initialState: {
     isLoading: false,
+    isSuccess: false,
     errorMessage: '',
     bundles: null,
     bundle: {},
@@ -76,65 +76,75 @@ export const bundleSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    // Start get request
+    // Start GET request
     builder.addCase(getBundle.pending, (state) => {
       state.isLoading = true;
     });
 
-    // Request successful
+    // Request GET successful
     builder.addCase(getBundle.fulfilled, (state, action) => {
       state.isLoading = false;
       state.bundles = action.payload;
     });
 
-    // Request error
+    // Request GET error
     builder.addCase(getBundle.rejected, (state, action) => {
       state.isLoading = false;
       state.errorMessage = action.payload.message;
     });
 
-    // Request successful
+     // Start POST  request
+     builder.addCase(postBundle.pending, (state) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+    });
+    // Request POST successful
     builder.addCase(postBundle.fulfilled, (state, action) => {
       state.isLoading = false;
+      state.isSuccess = true;
       state.bundle = action.payload;
     });
-    // Request error
+    // Request POST error
     builder.addCase(postBundle.rejected, (state, action) => {
       state.isLoading = false;
+      state.isSuccess = false;
       state.errorMessage = action.payload.message;
     });
 
-    // Start get request
+    // Start DELETE request
     builder.addCase(deleteBundle.pending, (state) => {
-      state.isDeleting = true;
-    });
-    // Request successful
-    builder.addCase(deleteBundle.fulfilled, (state, action) => {
-      state.isDeleting = false;
-      state.bundle = action.payload;
-    });
-    // Request error
-    builder.addCase(deleteBundle.rejected, (state, action) => {
-      state.isDeleting = false;
-      state.errorMessage = action.payload.message;
-    });
-
-    // Start get request
-    builder.addCase(putBundle.pending, (state) => {
       state.isLoading = true;
     });
-    // Request successful
-    builder.addCase(putBundle.fulfilled, (state, action) => {
+    // Request DELETE successful
+    builder.addCase(deleteBundle.fulfilled, (state, action) => {
       state.isLoading = false;
       state.bundle = action.payload;
     });
-    // Request error
-    builder.addCase(putBundle.rejected, (state, action) => {
+    // Request DELETE error
+    builder.addCase(deleteBundle.rejected, (state, action) => {
       state.isLoading = false;
       state.errorMessage = action.payload.message;
     });
 
-    // Request successful
+    // Start PATCH request
+    builder.addCase(putBundle.pending, (state) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+    });
+    // Request PATCH successful
+    builder.addCase(putBundle.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.bundle = action.payload;
+    });
+    // Request PATCH error
+    builder.addCase(putBundle.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isSuccess = false;
+      state.errorMessage = action.payload.message;
+    });
+
+    // Request VersionRevit successful
     builder.addCase(getVersionRevit.fulfilled, (state, action) => {
       state.isLoading = false;
       state.versions = action.payload;
@@ -145,7 +155,7 @@ export const bundleSlice = createSlice({
 // Select state currentUser from slice
 export const selectBundle = (state) => state.bundle.bundles;
 export const selectLoading = (state) => state.bundle.isLoading;
-export const deleteLoading = (state) => state.bundle.isDeleting;
+export const selectSuccess = (state) => state.bundle.isSuccess;
 export const selectErrorMessage = (state) => state.bundle.errorMessage;
 export const selectVersion = (state) => state.bundle.versions;
 export const addBundle = (state) => state.bundle.bundle;

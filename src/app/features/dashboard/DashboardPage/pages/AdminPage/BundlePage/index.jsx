@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Button, Table, Modal} from 'antd';
+import {Button, Table, Modal, Spin, notification } from 'antd';
 import {EditOutlined, DeleteOutlined} from '@ant-design/icons';
 import BundleModal from './BundleModal';
+import { SystemContants } from '../../../../../../../common/systemcontants';
+
 import {
   getBundle,
   selectBundle,
   deleteBundle,
-  selectLoading,
-  deleteLoading,
+  selectLoading
 } from '../../../../../../slices/bundle/bundleSlice';
 
 import {
@@ -17,26 +18,19 @@ import {
 
 export default function BundlePage() {
   const [isEditing, setIsEditing] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [editingBundle, setEditingBundle] = useState(new BundleModel());
-
   const bundle = useSelector(selectBundle);
   const dispatch = useDispatch();
-
-  const isDeleting = useSelector(deleteLoading);
+  const isLoading = useSelector(selectLoading);
 
   useEffect(() => {
-    dispatch(getBundle());
+    dispatch(getBundle({index: SystemContants.PAGE_INDEX, size: SystemContants.PAGE_SIZE}));
   }, [dispatch]);
 
   useEffect(() => {
     
   }, [editingBundle]);
-
-  useEffect(() => {
-    if (isDeleting) {
-      dispatch(getBundle());
-    }
-  }, [isDeleting]);
 
   const onAddBundle = () => {
     setIsEditing(true);
@@ -44,15 +38,38 @@ export default function BundlePage() {
   };
 
   const onEditBundle = (record) => {
-    setEditingBundle({...record});
+    setEditingBundle({...record, bundleCategoryId: record.bundleCategory.id});
     setIsEditing(true);
   };
 
-  const resetEditing = () => {
+  const resetEditing = (isReset = false) => {
     setIsEditing(false);
     setEditingBundle(new BundleModel());
+    if(isReset) {
+      dispatch(getBundle({index: currentPage, size: SystemContants.PAGE_SIZE}));
+    }
   };
 
+  const closeModal = () => {
+
+  };
+
+  const openNotification = () => {
+    notification.open({
+      message: 'Notification Title',
+      description:
+        'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+      onClick: () => {
+        console.log('Notification Clicked!');
+      },
+    });
+  };
+
+
+  const paginationChange =(page, pageSize) =>{
+    setCurrentPage(page);
+    dispatch(getBundle({index: page, size: pageSize}));
+  }
   const onDeleteBundle = (record) => {
     Modal.confirm({
       title: 'Are you sure, you want to delete this Bundle record?',
@@ -60,15 +77,17 @@ export default function BundlePage() {
       okType: 'danger',
       onOk: () => {
         dispatch(deleteBundle(record));
+        dispatch(getBundle({index: SystemContants.PAGE_INDEX, size: SystemContants.PAGE_SIZE}));
+        openNotification();
       },
     });
   };
 
   const columns = [
     {
-      key: 'name',
-      title: 'name',
-      dataIndex: 'name',
+      key: 'description',
+      title: 'Description',
+      dataIndex: 'description',
     },
     {
       key: 'path',
@@ -105,14 +124,17 @@ export default function BundlePage() {
     },
   ];
   return (
-    <>
+    <Spin spinning={isLoading}>
       <Button onClick={onAddBundle}>Add a new Bundle</Button>
-      <Table columns={columns} dataSource={bundle?.result}></Table>
+      <Table columns={columns} dataSource={bundle?.result.map((value) => {
+        return {...value, key:value.id}
+      })} pagination={{pageSize: SystemContants.PAGE_SIZE, total:bundle?.totalRecords,  defaultCurrent: 1, onChange: paginationChange}}  ></Table>
       <BundleModal
         resetEditing={resetEditing}
         isEditing={isEditing}
         editingBundle={editingBundle}
+        closeModal={closeModal}
       />
-    </>
+      </Spin>
   );
 }
