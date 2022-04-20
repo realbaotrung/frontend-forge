@@ -14,8 +14,7 @@ const getDesignAutomationActivitiesQuery = {
     method: 'GET',
   }),
   transformResponse: (response) => {
-    const data = response;
-    console.log(data);
+    console.log(response);
     return response;
   },
 };
@@ -26,8 +25,7 @@ const getDesignAutomationInfoByIdQuery = {
     method: 'GET',
   }),
   transformResponse: (response) => {
-    const data = response;
-    console.log(data);
+    console.log(response);
     return response;
   },
 };
@@ -38,8 +36,7 @@ const getDesignAutomationEngineQuery = {
     method: 'GET',
   }),
   transformResponse: (response) => {
-    const data = response;
-    console.log(data);
+    console.log(response);
     return response;
   },
 };
@@ -56,8 +53,7 @@ const postDesignAutomationGetInfoProjectMutation = {
     },
   }),
   transformResponse: (response) => {
-    const data = response;
-    console.log(data);
+    console.log(response);
     return response;
   },
 };
@@ -103,8 +99,7 @@ const designAutomationSlice = createSlice({
   reducers: {
     getJsonDataForDesignAutomation: (state, {payload}) => {
       const pattern = /\\/g;
-      const jsonData = formatStringToJsonObjectWithRegex(payload, pattern);
-      state.jsonData = jsonData;
+      state.jsonData = formatStringToJsonObjectWithRegex(pattern, payload);
     },
     getRevitFileName: (state, {payload}) => {
       state.revitFileName = payload;

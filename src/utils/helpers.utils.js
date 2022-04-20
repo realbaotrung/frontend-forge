@@ -21,9 +21,8 @@ export function isErrorWithMessage(error) {
  * This function help format string of json to json object
  * by using regex pattern
  */
-export const formatStringToJsonObjectWithRegex = (str="", pattern) => {
+export const formatStringToJsonObjectWithRegex = (pattern, str="") => {
   // const regex = /\\/g;
   const newString = str.replace(pattern, "");
-  const jsonObject = JSON.parse(newString)
-  return jsonObject;
+  return JSON.parse(newString);
 }
