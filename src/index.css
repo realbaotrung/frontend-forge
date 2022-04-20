@@ -26,3 +26,18 @@
   background-color: rgb(10, 165, 10);
   color: #FFF;
 }
+
+.noti-info {
+  background-color: rgb(8, 135, 240);
+  color: #FFF;
+}
+
+.noti-error {
+  background-color: rgb(236, 39, 55);
+  color: #FFF;
+}
+
+.noti-warning {
+  background-color: rgb(218, 149, 1);
+  color: #FFF;
+}

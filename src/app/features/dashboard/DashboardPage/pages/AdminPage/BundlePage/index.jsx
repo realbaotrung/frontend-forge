@@ -67,7 +67,7 @@ export default function BundlePage() {
   useEffect(() => {
     if(isSuccess) {
       dispatch(getBundle({index: SystemContants.PAGE_INDEX, size: SystemContants.PAGE_SIZE}));
-      Notification('sssss', 'ssssssssss', 'info')
+      Notification(SystemContants.NOTI_ERROR, 'ssssssssss')
       // openNotification();
     }
   }, [isSuccess])
