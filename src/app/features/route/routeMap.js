@@ -67,6 +67,13 @@ const routes = [
     component: <RedirectDefaultRouteToLoginPage />,
   },
   {
+    id: 'dashboardPageAdmin',
+    path: '/admin',
+    isAuth: true,
+    isAdmin: true,
+    component: <BundlePage />,    
+  },
+  {
     id: 'bundlePage',
     path: '/dashboard/bundle',
     isAuth: true,

@@ -1,20 +1,26 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
 import {api} from '../../../api/axiosClient';
-
-const initialState = {
-  isLoading: false,
-  errorMessage: '',
-  bundles: null,
-  bundle: {},
-};
+import { SystemContants } from '../../../common/systemcontants';
+import Notification from '../../components/Notification';
 
 export const getBundle = createAsyncThunk(
   'bundle/get',
   async ({index, size}, {rejectWithValue}) => {
-    const response = await api.get(`/bundle?PageNumber=${index}&PageSize=${size}`);
-    return response.data;
-  },
+    try {
+      
+      const response = await api.get(`/bundle?PageNumber=${index}&PageSize=${size}`);
+      if (response.status === 200) {
+        return response.data;
+      } 
+        return rejectWithValue(response.data)
+    } catch (e) {
+      console.log("Error", e.response.data)
+      return rejectWithValue(e.response.data)
+    }
+    
+  }
+  
 );
 
 export const getVersionRevit = createAsyncThunk(
@@ -30,11 +36,16 @@ export const postBundle = createAsyncThunk(
   async (data, {rejectWithValue}) => {
     const config = {headers: {'Content-Type': 'multipart/form-data'}};
     try {
+      
       const response = await api.create('/bundle', data, config);
-      return response.data;
+      if (response.status === 200) {
+        return response.data;
+      } 
+        return rejectWithValue(response.data)
     } catch (e) {
-      return e;
+      return rejectWithValue(e.response.data)
     }
+
   },
 );
 
@@ -73,6 +84,7 @@ export const bundleSlice = createSlice({
     bundles: null,
     bundle: {},
     versions: [],
+    noti: SystemContants.NOTI_INFO
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -85,12 +97,14 @@ export const bundleSlice = createSlice({
     builder.addCase(getBundle.fulfilled, (state, action) => {
       state.isLoading = false;
       state.bundles = action.payload;
+      state.noti = SystemContants.NOTI_SUCCESS;
     });
 
     // Request GET error
     builder.addCase(getBundle.rejected, (state, action) => {
       state.isLoading = false;
       state.errorMessage = action.payload.message;
+      state.noti = SystemContants.NOTI_ERROR;
     });
 
      // Start POST  request
@@ -103,12 +117,15 @@ export const bundleSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = true;
       state.bundle = action.payload;
+      Notification(SystemContants.NOTI_SUCCESS, 'Save successful');
+      
     });
     // Request POST error
     builder.addCase(postBundle.rejected, (state, action) => {
       state.isLoading = false;
       state.isSuccess = false;
-      state.errorMessage = action.payload.message;
+      state.errorMessage = action.payload;
+      Notification(SystemContants.NOTI_ERROR, [...action.payload.errors][0])
     });
 
     // Start DELETE request
@@ -120,6 +137,7 @@ export const bundleSlice = createSlice({
     builder.addCase(deleteBundle.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isSuccess = true;
+      state.noti = SystemContants.NOTI_SUCCESS;
       state.bundle = action.payload;
     });
     // Request DELETE error
@@ -127,6 +145,7 @@ export const bundleSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = false;
       state.errorMessage = action.payload.message;
+      state.noti = SystemContants.NOTI_ERROR;
     });
 
     // Start PATCH request
@@ -139,12 +158,14 @@ export const bundleSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = true;
       state.bundle = action.payload;
+      Notification(SystemContants.NOTI_SUCCESS, 'Save successful');
     });
     // Request PATCH error
     builder.addCase(putBundle.rejected, (state, action) => {
       state.isLoading = false;
       state.isSuccess = false;
       state.errorMessage = action.payload.message;
+      Notification(SystemContants.NOTI_ERROR, [...action.payload.errors][0])
     });
 
     // Request VersionRevit successful
@@ -163,5 +184,8 @@ export const selectErrorMessage = (state) => state.bundle.errorMessage;
 export const selectVersion = (state) => state.bundle.versions;
 export const addBundle = (state) => state.bundle.bundle;
 export const updateBundle = (state) => state.bundle.bundle;
+
+export const selectBundleSlice = (state) => state.bundle
+
 // Export reducer
 export default bundleSlice.reducer;

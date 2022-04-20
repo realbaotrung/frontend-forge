@@ -10,7 +10,8 @@ import {
   selectBundle,
   deleteBundle,
   selectLoading,
-  selectSuccess
+  selectSuccess,
+  selectBundleSlice
 } from '../../../../../../slices/bundle/bundleSlice';
 
 import {
@@ -26,6 +27,8 @@ export default function BundlePage() {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectLoading);
   const isSuccess = useSelector(selectSuccess)
+
+  const {noti} = useSelector(selectBundleSlice)
 
   useEffect(() => {
     dispatch(getBundle({index: SystemContants.PAGE_INDEX, size: SystemContants.PAGE_SIZE}));
@@ -67,7 +70,7 @@ export default function BundlePage() {
   useEffect(() => {
     if(isSuccess) {
       dispatch(getBundle({index: SystemContants.PAGE_INDEX, size: SystemContants.PAGE_SIZE}));
-      Notification(SystemContants.NOTI_ERROR, 'ssssssssss')
+      // ...noti
       // openNotification();
     }
   }, [isSuccess])

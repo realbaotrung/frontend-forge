@@ -1,25 +1,7 @@
 @import '~antd/dist/antd.css';
 
-#components-layout-demo-custom-trigger .trigger {
-  padding: 0 24px;
-  font-size: 18px;
-  line-height: 64px;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-#components-layout-demo-custom-trigger .trigger:hover {
-  color: #1890ff;
-}
-
-#components-layout-demo-custom-trigger .logo {
-  height: 32px;
-  margin: 16px;
-  background: rgba(255, 255, 255, 0.3);
-}
-
-.site-layout .site-layout-background {
-  background: #fff;
+.layout {
+  min-height: 100vh;
 }
 
 .noti-success {
@@ -40,4 +22,38 @@
 .noti-warning {
   background-color: rgb(218, 149, 1);
   color: #FFF;
+}
+
+.main-content {
+  margin: 16px 0;
+}
+
+.site-layout-content {
+  min-height: 380px;
+  padding: 24px;
+  background: #fff;
+}
+.ant-layout-header{
+  background-color: #FFF;
+}
+.logo {
+  float: left;
+  width: 120px;
+  height: 31px;
+  margin: 16px 24px 16px 0;
+  background: rgba(255, 255, 255, 0.3);
+  display: flex;
+}
+.ant-row-rtl #components-layout-demo-top .logo {
+  float: right;
+  margin: 16px 0 16px 24px;
+}
+.ant-layout-header .nav-user-info p {
+  line-height: 20px;
+}
+.ant-layout-header .user-login-info{
+  float: right;
+}
+.ant-layout-header .user-login-info span.chakra-avatar {
+  margin: 15px 5px 0;
 }
