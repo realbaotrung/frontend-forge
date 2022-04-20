@@ -6,7 +6,6 @@
  * contain code that should be seen on all pages. (e.g. navigation bar)
  */
 import React from 'react';
-import store from '../store/configureStore';
 
 import RouterOutlet from './features/route/RouterOutlet';
 

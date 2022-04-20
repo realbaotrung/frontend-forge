@@ -93,13 +93,13 @@ const variantDanger = () => ({
 
 // const variantSolid = (): SystemStyleObject => ({
 const variantSolid = () => ({
-  bg: 'NeutralLightAlpha.N20A',
+  bg: 'NeutralLightAlpha.N30A',
   color: 'NeutralLight.N500',
   _hover: {
-    bg: 'NeutralLightAlpha.N30A',
+    bg: 'NeutralLightAlpha.N40A',
     color: 'NeutralLight.N500',
     _disabled: {
-      bg: 'NeutralLightAlpha.N20A',
+      bg: 'NeutralLightAlpha.N30A',
     },
   },
   _active: {
@@ -107,7 +107,7 @@ const variantSolid = () => ({
     color: 'Blue.B400',
   },
   _disabled: {
-    bg: 'NeutralLightAlpha.N20A',
+    bg: 'NeutralLightAlpha.N30A',
   },
 });
 

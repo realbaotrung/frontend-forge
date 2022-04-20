@@ -1,17 +1,26 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {designAutomationApi, designAutomationAdapter, initialState} from '.';
+import {
+  initialState,
+} from './designAutomationSlice';
 
-const selectDomain =
-  designAutomationApi.endpoints.postDesignAutomationGetInfoProject.select();
+const selectDomain = (state) => state.designAutomation || initialState;
 
-const selectDesignAutomationGetInfoProject = createSelector(
-  selectDomain,
-  (state) => state.result,
+export const selectHasLoadingFromDA = createSelector(
+  [selectDomain],
+  (designAutomationState) => designAutomationState.hasLoading,
 );
 
-// export const {
-//   selectAll: selectAllInfoProject,
-//   selectById: selectInfoProjectById,
-// } = designAutomationAdapter.getSelectors(
-//   (state) => selectDesignAutomationGetInfoProject(state) ?? initialState,
-// );
+export const selectIdFromDA = createSelector(
+  [selectDomain],
+  (designAutomationState) => designAutomationState.id,
+);
+
+export const selectRevitFileNameFromDA = createSelector(
+  [selectDomain],
+  (designAutomationState) => designAutomationState.revitFileName,
+);
+
+export const selectJsonDataFromDA = createSelector(
+  [selectDomain],
+  (designAutomationState) => designAutomationState.jsonData,
+);

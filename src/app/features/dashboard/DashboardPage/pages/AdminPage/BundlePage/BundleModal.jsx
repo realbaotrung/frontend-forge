@@ -80,6 +80,17 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
       onCancel={() => {
         resetEditing();
       }} 
+      onOk={() => {
+        form
+          .validateFields()
+          .then((values) => {
+            form.resetFields();
+            onFinish(values);
+          })
+          .catch((info) => {
+            console.log('Validate Failed:', info);
+          });
+      }}
     >
       <Form
         form={form} 
@@ -87,7 +98,12 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
         labelCol={{span: 8}}
         wrapperCol={{span: 16}}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
+        onFinishFailed={onFinishFailed} 
+        initialValues={{
+          description : editingBundle?.description,
+          bundleCategoryId :editingBundle?.bundleCategoryId,
+          versionRevit: editingBundle?.versionRevit
+        }}
         autoComplete='off'
       >
         <Form.Item
@@ -95,11 +111,11 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
           name='description' 
           rules={[{required: true, message: 'Please input Description!'}]}
         >
-          <Input defaultValue={editingBundle?.description} />
+          <Input />
         </Form.Item>
 
         <Form.Item label='Bundle Category' name='bundleCategoryId'>
-          <Select defaultValue={editingBundle?.bundleCategoryId}>
+          <Select>
             {bundleCategories?.result.map((value) => {
               return (
                 <Select.Option key={value.id} value={value.id}>
@@ -111,7 +127,7 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
         </Form.Item>
 
         <Form.Item label='Version Revit' name='versionRevit'>
-          <Select defaultValue={editingBundle?.versionRevit}>
+          <Select >
             {versionrevits?.result?.map((value) => {
               return (
                 <Select.Option key={value} value={value}>
@@ -128,11 +144,11 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
           </Upload>
         </Form.Item>
 
-        <Form.Item wrapperCol={{offset: 8, span: 16}}>
+        {/* <Form.Item wrapperCol={{offset: 8, span: 16}}>
           <Button type='primary' htmlType='submit'>
             Submit
           </Button>
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </Modal>
   );
