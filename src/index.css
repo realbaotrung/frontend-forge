@@ -21,3 +21,8 @@
 .site-layout .site-layout-background {
   background: #fff;
 }
+
+.noti-success {
+  background-color: rgb(10, 165, 10);
+  color: #FFF;
+}

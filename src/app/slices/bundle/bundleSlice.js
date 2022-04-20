@@ -114,15 +114,18 @@ export const bundleSlice = createSlice({
     // Start DELETE request
     builder.addCase(deleteBundle.pending, (state) => {
       state.isLoading = true;
+      state.isSuccess = false;
     });
     // Request DELETE successful
     builder.addCase(deleteBundle.fulfilled, (state, action) => {
       state.isLoading = false;
+      state.isSuccess = true;
       state.bundle = action.payload;
     });
     // Request DELETE error
     builder.addCase(deleteBundle.rejected, (state, action) => {
       state.isLoading = false;
+      state.isSuccess = false;
       state.errorMessage = action.payload.message;
     });
 

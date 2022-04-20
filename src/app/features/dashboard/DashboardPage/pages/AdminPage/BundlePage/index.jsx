@@ -16,6 +16,7 @@ import {
 import {
   BundleModel
 } from '../../../../../../slices/bundle/bundleModel';
+import Notification from '../../../../../../components/Notification';
 
 export default function BundlePage() {
   const [isEditing, setIsEditing] = useState(false);
@@ -29,10 +30,6 @@ export default function BundlePage() {
   useEffect(() => {
     dispatch(getBundle({index: SystemContants.PAGE_INDEX, size: SystemContants.PAGE_SIZE}));
   }, [dispatch]);
-
-  useEffect(() => {
-    
-  }, [editingBundle]);
 
   const onAddBundle = () => {
     setIsEditing(true);
@@ -67,6 +64,17 @@ export default function BundlePage() {
     });
   };
 
+  useEffect(() => {
+    if(isSuccess) {
+      dispatch(getBundle({index: SystemContants.PAGE_INDEX, size: SystemContants.PAGE_SIZE}));
+      Notification('sssss', 'ssssssssss', 'info')
+      // openNotification();
+    }
+  }, [isSuccess])
+
+  useEffect(() => {
+
+  }, [editingBundle])
 
   const paginationChange =(page, pageSize) =>{
     setCurrentPage(page);
