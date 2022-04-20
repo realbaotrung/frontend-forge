@@ -26,20 +26,22 @@ const MOUNT_NODE = document.getElementById('root');
 
 
 ReactDOM.render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <ChakraProvider theme={theme}>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <Box minW='2xl' p={0} minH='100vh'>
           <BrowserRouter>
-            <Routes>
+            {/* <Routes>
               <Route path='/*' element={<App />} />
-            </Routes>
+            </Routes> */}
+            <App />
           </BrowserRouter>
         </Box>
       </ChakraProvider>
     </Provider>
-  </StrictMode>,
+  // </StrictMode>
+  ,
   MOUNT_NODE,
 );
 

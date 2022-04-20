@@ -1,7 +1,10 @@
-import {useEffect} from 'react';
+import React, {useEffect} from 'react';
+import PropTypes from 'prop-types';
 import {useNavigate} from 'react-router-dom';
+import NavBar from '../../components/Navbar';
 import {loadable as LoginPage} from '../auth/LoginPage/Loadable';
 import {loadable as DashboardPage} from '../dashboard/DashboardPage/Loadable';
+import BundlePage from '../dashboard/DashboardPage/pages/AdminPage/BundlePage';
 import {loadable as MissingPage} from '../notfound/MissingPage/Loadable';
 import RequireAuth from './RequireAuth';
 import routePaths from './routePaths';
@@ -21,36 +24,60 @@ function RedirectDefaultRouteToLoginPage() {
   return null;
 }
 
-function DashboardPageRequireAuth() {
-  return (
-    <RequireAuth>
-      <DashboardPage />
-    </RequireAuth>
-  );
-}
+// function DashboardPageRequireAuth() {
+//   return (
+//     <RequireAuth>
+//       <DashboardPage></DashboardPage>
+//     </RequireAuth>
+//   );
+// }
+
+// function NavbarWithPage({children}) {
+//   return (
+//     <RequireAuth>
+//       <NavBar />
+//       {children}
+//     </RequireAuth>
+//   );
+// }
+// NavbarWithPage.propTypes = {
+//   children: PropTypes.node.isRequired,
+// };
+
 
 const routes = [
   {
     id: 'loginPage',
     path: routePaths.LOGIN_URL,
-    component: LoginPage,
+    isAuth: false,
+    component: <LoginPage />,
   },
   {
     id: 'dashboardPage',
     path: routePaths.DASHBOARD_URL,
-    component: DashboardPageRequireAuth,
+    isAuth: true,
+    component: <DashboardPage />,    
   },
   {
     id: 'homePage',
     path: routePaths.HOME_URL,
-    component: RedirectDefaultRouteToLoginPage,
+    isAuth: true,
+    component: <RedirectDefaultRouteToLoginPage />,
+  },
+  {
+    id: 'bundlePage',
+    path: '/dashboard/bundle',
+    isAuth: true,
+    component: <BundlePage />,    
   },
   {
     id: 'missingPage',
     path: '*',
-    component: MissingPage,
+    isAuth: false,
+    component: <MissingPage />,
   },
 ];
+
 
 export default routes;
 
