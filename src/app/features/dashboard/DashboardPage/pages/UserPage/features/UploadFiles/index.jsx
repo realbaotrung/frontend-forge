@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Modal,
@@ -7,17 +8,28 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
   ModalBody,
   ModalFooter,
+  ModalCloseButton,
+  Progress,
+  Box,
+  Stack,
+  Text,
 } from '@chakra-ui/react';
 
 import {AiOutlineCloudUpload} from 'react-icons/ai';
-import ButtonUploadFiles from './features/ButtonUploadFiles';
+import ButtonUploadFilesFromLocal from './features/ButtonUploadFiles';
 import DragFilesFromLocal from './features/DragFilesFromLocal';
-import ListChosenFiles from './features/ListChosenFiles';
+import RefetchToShowLoadingAndGetJsonData from './features/RefetchToShowLoadingAndGetJsonData';
 
-// TODO: IMplement Button UploadFile
+import {
+  selectHasLoadingFromDA,
+  selectJsonDataFromDA,
+  selectRevitFileNameFromDA,
+} from '../../../../../../../slices/designAutomation/selectors';
+import CategoryFromJsonData from './features/CategoryFromJsonData';
+import {resetDesignAutomationState} from '../../../../../../../slices/designAutomation/designAutomationSlice';
+
 function ButtonModalUploadFiles({onOpen}) {
   return (
     <Button
@@ -44,17 +56,17 @@ function ButtonModalUploadFiles({onOpen}) {
 }
 
 ButtonModalUploadFiles.propTypes = {
-  onOpen: PropTypes.func.isRequired
+  onOpen: PropTypes.func.isRequired,
+};
+
+function FileIsUploading() {
+  return (
+    <Stack w='full' h='18.125rem' justify='center' align='center'>
+      <Text fontSize='1.25em'>Your file is uploading to cloud ...</Text>
+    </Stack>
+  );
 }
 
-/**
- * 1. Initilizing
-//  * 2. upload progress bar (tinh)
-//  * 3. Pending
-//  * 4. Processing
- * 5. Uploaded..
- * @returns 
- */
 
 const modelHeaderCSS = {
   fontWeight: '300',
@@ -67,7 +79,7 @@ const modelFooterCSS = {
   borderBlockStart: '1px solid',
   borderBlockStartColor: 'gray.300',
 };
-const closeButtonCSS = {
+const modalCloseButtonCSS = {
   color: 'gray.400',
   borderColor: 'transparent',
   _hover: {
@@ -79,15 +91,37 @@ const closeButtonCSS = {
     borderColor: 'transparent',
   },
 };
+const compoundComponentsCSS = {
+  mt: '1.25rem',
+  border: '1px solid',
+  borderColor: 'gray.300',
+  w: 'full',
+  fontSize: '0.875rem',
+  fontWeight: '300',
+};
 
-/**
- * //TODO: Implement share state between components...
- */
 export default function UploadFiles() {
-  const [haveChosenFiles, setHaveChosenFiles] = useState(false)
+  const [haveChosenFiles, setHaveChosenFiles] = useState(false);
   const {isOpen, onOpen, onClose} = useDisclosure();
 
-  // TODO: Implement haveChosenFiles state to show ListChosenFile
+  const dispatch = useDispatch();
+
+  // Check loading when file is taken and push to the server
+  const hasLoadingFromDA = useSelector(selectHasLoadingFromDA);
+  const revitFileName = useSelector(selectRevitFileNameFromDA);
+  const jsonDatafromDA = useSelector(selectJsonDataFromDA);
+
+  useEffect(() => {
+    if (!hasLoadingFromDA && revitFileName) {
+      setHaveChosenFiles(true);
+    }
+  });
+
+  const handleOnClose = () => {
+    dispatch(resetDesignAutomationState());
+    setHaveChosenFiles(false);
+    onClose();
+  };
 
   return (
     <>
@@ -102,13 +136,31 @@ export default function UploadFiles() {
         <ModalOverlay />
         <ModalContent maxW='37.5rem' w='full'>
           <ModalHeader sx={modelHeaderCSS}>Upload files</ModalHeader>
-          <ModalCloseButton sx={closeButtonCSS} />
+          <ModalCloseButton
+            onClick={() => handleOnClose()}
+            sx={modalCloseButtonCSS}
+          />
           <ModalBody p='1rem 1.5rem'>
-            <ButtonUploadFiles />
-            {!haveChosenFiles ? <DragFilesFromLocal /> : <ListChosenFiles /> }
+            <ButtonUploadFilesFromLocal />
+            {hasLoadingFromDA && (
+              <Progress size='xs' isAnimated isIndeterminate />
+            )}
+            <Box sx={compoundComponentsCSS}>
+              {/* <CategoryFromJsonData /> */}
+              {hasLoadingFromDA && <FileIsUploading />}
+              {!haveChosenFiles && !hasLoadingFromDA && <DragFilesFromLocal />}
+              {haveChosenFiles && !jsonDatafromDA && (
+                <RefetchToShowLoadingAndGetJsonData />
+              )}
+              {haveChosenFiles && jsonDatafromDA && <CategoryFromJsonData />}
+            </Box>
           </ModalBody>
           <ModalFooter sx={modelFooterCSS}>
-            <Button mr={3} onClick={onClose} isDisabled={!haveChosenFiles}>
+            <Button
+              onClick={() => handleOnClose()}
+              mr={3}
+              isDisabled={!revitFileName}
+            >
               Done
             </Button>
           </ModalFooter>

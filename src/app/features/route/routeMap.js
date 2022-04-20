@@ -50,12 +50,14 @@ const routes = [
     id: 'loginPage',
     path: routePaths.LOGIN_URL,
     isAuth: false,
+    isAdmin: false,
     component: <LoginPage />,
   },
   {
     id: 'dashboardPage',
     path: routePaths.DASHBOARD_URL,
     isAuth: true,
+    isAdmin: false,
     component: <DashboardPage />,    
   },
   {
@@ -68,12 +70,14 @@ const routes = [
     id: 'bundlePage',
     path: '/dashboard/bundle',
     isAuth: true,
+    isAdmin: true,
     component: <BundlePage />,    
   },
   {
     id: 'missingPage',
     path: '*',
     isAuth: false,
+    isAdmin: false,
     component: <MissingPage />,
   },
 ];

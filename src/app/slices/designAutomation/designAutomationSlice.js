@@ -1,7 +1,9 @@
 // import {createEntityAdapter} from '@reduxjs/toolkit';
 // import qs from 'qs';
-import {api} from '../../../api/rtkQuery';
+import {createSlice} from '@reduxjs/toolkit';
+import {apiRtk} from '../../../api/rtkQuery';
 import {apiPaths} from '../../../api/features/apiPaths';
+import {formatStringToJsonObjectWithRegex} from '../../../utils/helpers.utils';
 
 // export const designAutomationAdapter = createEntityAdapter();
 // export const initialState = designAutomationAdapter.getInitialState();
@@ -12,8 +14,7 @@ const getDesignAutomationActivitiesQuery = {
     method: 'GET',
   }),
   transformResponse: (response) => {
-    const data = response;
-    console.log(data);
+    console.log(response);
     return response;
   },
 };
@@ -24,8 +25,7 @@ const getDesignAutomationInfoByIdQuery = {
     method: 'GET',
   }),
   transformResponse: (response) => {
-    const data = response;
-    console.log(data);
+    console.log(response);
     return response;
   },
 };
@@ -36,8 +36,7 @@ const getDesignAutomationEngineQuery = {
     method: 'GET',
   }),
   transformResponse: (response) => {
-    const data = response;
-    console.log(data);
+    console.log(response);
     return response;
   },
 };
@@ -54,25 +53,22 @@ const postDesignAutomationGetInfoProjectMutation = {
     },
   }),
   transformResponse: (response) => {
-    const data = response;
-    console.log(data);
+    console.log(response);
     return response;
   },
 };
 
-export const designAutomationApi = api.injectEndpoints({
+export const designAutomationApi = apiRtk.injectEndpoints({
   endpoints: (builder) => ({
     getDesignAutomationActivities: builder.query(
-      getDesignAutomationActivitiesQuery
+      getDesignAutomationActivitiesQuery,
     ),
     getDesignAutomationInfoById: builder.query(
-      getDesignAutomationInfoByIdQuery
+      getDesignAutomationInfoByIdQuery,
     ),
-    getDesignAutomationEngine: builder.query(
-      getDesignAutomationEngineQuery
-    ),
+    getDesignAutomationEngine: builder.query(getDesignAutomationEngineQuery),
     postDesignAutomationGetInfoProject: builder.mutation(
-      postDesignAutomationGetInfoProjectMutation
+      postDesignAutomationGetInfoProjectMutation,
     ),
   }),
 });
@@ -83,3 +79,63 @@ export const {
   useGetDesignAutomationEngineQuery,
   usePostDesignAutomationGetInfoProjectMutation,
 } = designAutomationApi;
+
+// ============================================================================
+// Slice here...
+// ============================================================================
+
+export const initialState = {
+  id: '',
+  revitFileName: '',
+  hasLoading: false,
+  jsonData: null,
+};
+
+// --- Declaring slice here ---
+
+const designAutomationSlice = createSlice({
+  name: 'designAutomation',
+  initialState,
+  reducers: {
+    getJsonDataForDesignAutomation: (state, {payload}) => {
+      const pattern = /\\/g;
+      state.jsonData = formatStringToJsonObjectWithRegex(pattern, payload);
+    },
+    getRevitFileName: (state, {payload}) => {
+      state.revitFileName = payload;
+    },
+    resetDesignAutomationState: (state) => {
+      state.id = '';
+      state.revitFileName = '';
+      state.hasLoading = false;
+      state.jsonData = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addMatcher(
+        designAutomationApi.endpoints.postDesignAutomationGetInfoProject
+          .matchPending,
+        (state) => {
+          state.hasLoading = true;
+        },
+      )
+      .addMatcher(
+        designAutomationApi.endpoints.postDesignAutomationGetInfoProject
+          .matchFulfilled,
+        (state, {payload}) => {
+          state.hasLoading = false;
+          state.id = payload.result.id;
+        },
+      );
+  },
+});
+
+// --- Export reducer here ---
+
+export const {
+  getJsonDataForDesignAutomation,
+  getRevitFileName,
+  resetDesignAutomationState,
+} = designAutomationSlice.actions;
+export const {reducer} = designAutomationSlice;
