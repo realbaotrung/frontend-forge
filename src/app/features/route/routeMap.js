@@ -8,6 +8,8 @@ import BundlePage from '../dashboard/DashboardPage/pages/AdminPage/BundlePage';
 import {loadable as MissingPage} from '../notfound/MissingPage/Loadable';
 import RequireAuth from './RequireAuth';
 import routePaths from './routePaths';
+import CategoriesPage
+  from "../dashboard/DashboardPage/pages/AdminPage/CategoriesPage";
 
 function RedirectDefaultRouteToLoginPage() {
   const navigate = useNavigate();
@@ -72,6 +74,12 @@ const routes = [
     isAuth: true,
     isAdmin: true,
     component: <BundlePage />,    
+  },
+  {
+    id: 'categoriesPage',
+    path: '/dashboard/categories',
+    isAuth: true,
+    component: <CategoriesPage />,
   },
   {
     id: 'missingPage',
