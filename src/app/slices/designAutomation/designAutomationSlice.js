@@ -88,7 +88,8 @@ export const initialState = {
   id: '',
   revitFileName: '',
   hasLoading: false,
-  jsonData: null,
+  jsonCategoryData: null,
+  isError: false,
 };
 
 // --- Declaring slice here ---
@@ -99,7 +100,7 @@ const designAutomationSlice = createSlice({
   reducers: {
     getJsonDataForDesignAutomation: (state, {payload}) => {
       const pattern = /\\/g;
-      state.jsonData = formatStringToJsonObjectWithRegex(pattern, payload);
+      state.jsonCategoryData = formatStringToJsonObjectWithRegex(pattern, payload);
     },
     getRevitFileName: (state, {payload}) => {
       state.revitFileName = payload;
@@ -108,7 +109,7 @@ const designAutomationSlice = createSlice({
       state.id = '';
       state.revitFileName = '';
       state.hasLoading = false;
-      state.jsonData = null;
+      state.isError = false;
     },
   },
   extraReducers: (builder) => {
@@ -126,6 +127,17 @@ const designAutomationSlice = createSlice({
         (state, {payload}) => {
           state.hasLoading = false;
           state.id = payload.result.id;
+        },
+      )
+      .addMatcher(
+        designAutomationApi.endpoints.postDesignAutomationGetInfoProject
+          .matchRejected,
+        (state) => {
+          state.id = '';
+          state.revitFileName = '';
+          state.hasLoading = false;
+          state.jsonCategoryData = null;
+          state.isError = true;
         },
       );
   },
