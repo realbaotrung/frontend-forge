@@ -89,6 +89,10 @@ export const initialState = {
   revitFileName: '',
   hasLoading: false,
   jsonCategoryData: null,
+  categoryNames: null,
+  categoryKeyName: '',
+  categoryValuesByKeyName: null,
+  jsonTargetCategoryData: null,
   isError: false,
 };
 
@@ -98,17 +102,40 @@ const designAutomationSlice = createSlice({
   name: 'designAutomation',
   initialState,
   reducers: {
-    getJsonDataForDesignAutomation: (state, {payload}) => {
+    getJsonDataFromServer: (state, {payload}) => {
       const pattern = /\\/g;
-      state.jsonCategoryData = formatStringToJsonObjectWithRegex(pattern, payload);
+      state.jsonCategoryData = formatStringToJsonObjectWithRegex(
+        pattern,
+        payload,
+      );
+    },
+    getJsonCategoryData: (state, {payload}) => {
+      state.jsonCategoryData = JSON.parse(payload);
     },
     getRevitFileName: (state, {payload}) => {
       state.revitFileName = payload;
+    },
+    getCategoryNames: (state, {payload}) => {
+      state.categoryNames = payload;
+    },
+    getCategoryKeyName: (state, {payload}) => {
+      state.categoryKeyName = payload;
+    },
+    getCategoryValuesByKeyName: (state, {payload}) => {
+      state.categoryValuesByKeyName = payload;
+    },
+    getJsonTargetCategoryData: (state, {payload}) => {
+      state.jsonTargetCategoryData = payload;
     },
     resetDesignAutomationState: (state) => {
       state.id = '';
       state.revitFileName = '';
       state.hasLoading = false;
+      state.jsonCategoryData = null;
+      state.categoryNames = null;
+      state.categoryKeyName = '';
+      state.categoryValuesByKeyName = null;
+      state.jsonTargetCategoryData = null;
       state.isError = false;
     },
   },
@@ -146,8 +173,13 @@ const designAutomationSlice = createSlice({
 // --- Export reducer here ---
 
 export const {
-  getJsonDataForDesignAutomation,
+  getJsonDataFromServer,
   getRevitFileName,
+  getJsonCategoryData,
+  getCategoryNames,
+  getCategoryKeyName,
+  getCategoryValuesByKeyName,
+  getJsonTargetCategoryData,
   resetDesignAutomationState,
 } = designAutomationSlice.actions;
 export const {reducer} = designAutomationSlice;

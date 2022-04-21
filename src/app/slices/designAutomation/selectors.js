@@ -29,3 +29,23 @@ export const selectIsErrorFromDA = createSelector(
   [selectDomain],
   (designAutomationState) => designAutomationState.isError,
 );
+
+export const selectCategoryNamesFromDA = createSelector(
+  [selectDomain],
+  (designAutomationState) => designAutomationState.categoryNames,
+);
+
+export const selectCategoryKeyNameFromDA = createSelector(
+  [selectDomain],
+  (designAutomationState) => designAutomationState.categoryKeyName,
+);
+
+export const selectCategoryValuesByKeyNameFromDA = createSelector(
+  [selectDomain],
+  (designAutomationState) => designAutomationState.categoryValuesByKeyName,
+);
+
+export const selectJsonTargetCategoryDataFromDA = createSelector(
+  [selectDomain],
+  (designAutomationState) => designAutomationState.jsonTargetCategoryData,
+);

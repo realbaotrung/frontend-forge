@@ -5,7 +5,7 @@ import {
   selectIdFromDA,
 } from '../../../../../../../../../slices/designAutomation/selectors';
 import {
-  getJsonDataForDesignAutomation,
+  getJsonDataFromServer,
   useGetDesignAutomationInfoByIdQuery,
 } from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
 
@@ -37,7 +37,7 @@ export default function RefetchToShowLoadingAndGetJsonData() {
           setCount(0);
           setPollInterval(10000);
         } else {
-          dispatch(getJsonDataForDesignAutomation(stringJsonData));
+          dispatch(getJsonDataFromServer(stringJsonData));
         }
       }
     }
