@@ -23,11 +23,10 @@ import DragFilesFromLocal from './features/DragFilesFromLocal';
 import RefetchToShowLoadingAndGetJsonData from './features/RefetchToShowLoadingAndGetJsonData';
 
 import {
-  selectHasLoadingFromDA,
-  selectJsonDataFromDA,
+  selectHasLoadingFromDA, selectIsErrorFromDA,
+  selectJsonCategoryDataFromDA,
   selectRevitFileNameFromDA,
 } from '../../../../../../../slices/designAutomation/selectors';
-import CategoryFromJsonData from './features/CategoryFromJsonData';
 import {resetDesignAutomationState} from '../../../../../../../slices/designAutomation/designAutomationSlice';
 
 function ButtonModalUploadFiles({onOpen}) {
@@ -67,6 +66,21 @@ function FileIsUploading() {
   );
 }
 
+function FileIsUploaded() {
+  return (
+    <Stack w='full' h='18.125rem' justify='center' align='center'>
+      <Text fontSize='1.25em'>File is uploaded successfully!</Text>
+    </Stack>
+  );
+}
+
+function FailToUploadFile() {
+  return (
+    <Stack w='full' h='18.125rem' justify='center' align='center'>
+      <Text fontSize='1.25em'>Fail to upload file to server!</Text>
+    </Stack>
+  );
+}
 
 const modelHeaderCSS = {
   fontWeight: '300',
@@ -100,7 +114,7 @@ const compoundComponentsCSS = {
   fontWeight: '300',
 };
 
-export default function UploadFiles() {
+export default function FormUploadFiles() {
   const [haveChosenFiles, setHaveChosenFiles] = useState(false);
   const {isOpen, onOpen, onClose} = useDisclosure();
 
@@ -109,7 +123,8 @@ export default function UploadFiles() {
   // Check loading when file is taken and push to the server
   const hasLoadingFromDA = useSelector(selectHasLoadingFromDA);
   const revitFileName = useSelector(selectRevitFileNameFromDA);
-  const jsonDatafromDA = useSelector(selectJsonDataFromDA);
+  const jsonCategoryDatafromDA = useSelector(selectJsonCategoryDataFromDA);
+  const isError = useSelector(selectIsErrorFromDA);
 
   useEffect(() => {
     if (!hasLoadingFromDA && revitFileName) {
@@ -142,24 +157,24 @@ export default function UploadFiles() {
           />
           <ModalBody p='1rem 1.5rem'>
             <ButtonUploadFilesFromLocal />
-            {hasLoadingFromDA && (
-              <Progress size='xs' isAnimated isIndeterminate />
+            {hasLoadingFromDA && !isError && (
+              <Progress size='xs' isIndeterminate />
             )}
             <Box sx={compoundComponentsCSS}>
-              {/* <CategoryFromJsonData /> */}
-              {hasLoadingFromDA && <FileIsUploading />}
-              {!haveChosenFiles && !hasLoadingFromDA && <DragFilesFromLocal />}
-              {haveChosenFiles && !jsonDatafromDA && (
+              {hasLoadingFromDA && !isError && <FileIsUploading />}
+              {isError && <FailToUploadFile />}
+              {!haveChosenFiles && !hasLoadingFromDA && !isError && <DragFilesFromLocal />}
+              {haveChosenFiles && !jsonCategoryDatafromDA && !isError && (
                 <RefetchToShowLoadingAndGetJsonData />
               )}
-              {haveChosenFiles && jsonDatafromDA && <CategoryFromJsonData />}
+              {haveChosenFiles && jsonCategoryDatafromDA && !isError && <FileIsUploaded />}
             </Box>
           </ModalBody>
           <ModalFooter sx={modelFooterCSS}>
             <Button
               onClick={() => handleOnClose()}
               mr={3}
-              isDisabled={!revitFileName}
+              isDisabled={(!revitFileName && !isError)}
             >
               Done
             </Button>
