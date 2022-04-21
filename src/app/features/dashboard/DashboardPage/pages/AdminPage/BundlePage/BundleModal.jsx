@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Button, Form, Modal, Input, Upload, Select, Spin} from 'antd';
-import {UploadOutlined} from '@ant-design/icons';
+import {UploadOutlined, StarOutlined} from '@ant-design/icons';
 import {
   getVersionRevit,
   postBundle,
@@ -60,6 +60,7 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
   };
   const onFinishFailed = (errorInfo) => {};
 
+  
   const props = {
     onRemove: (file) => {
       setUploadFile(null);
@@ -67,6 +68,18 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
     beforeUpload: (file) => {
       return false;
     },
+    defaultFileList: editingBundle.path !== undefined ? [
+      {
+        uid: '1',
+        name: editingBundle.path.split('\\').pop().split('/').pop(),
+        status: 'done',
+        url: 'http://www.baidu.com/xxx.png',
+      }
+    ] : [],
+    showUploadList: {
+      showDownloadIcon: false,
+      showRemoveIcon: false,
+    }
   };
 
   return (
@@ -136,8 +149,8 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
           </Select>
         </Form.Item>
 
-        <Form.Item>
-          <Upload {...props} onChange={(e) => setUploadFile(e.file)}>
+        <Form.Item label='File upload' name='fileUpload'>
+          <Upload {...props} onChange={(e) => setUploadFile(e.file)} multiple={false}  maxCount={1}>
             <Button icon={<UploadOutlined />}>Click to Upload</Button>
           </Upload>
         </Form.Item>
