@@ -52,7 +52,7 @@ export default function CategoriesPage() {
       } else {
         setCurrentPage(1)
       }
-      dispatch(getBundleCategory({index: SystemContants.PAGE_INDEX, size: SystemContants.PAGE_SIZE}));
+      dispatch(getBundleCategory({index: currentPage, size: SystemContants.PAGE_SIZE}));
     }
   }, [isSuccess])
 

@@ -52,7 +52,7 @@ export default function BundlePage() {
       } else {
         setCurrentPage(1)
       }
-      dispatch(getBundle({index: SystemContants.PAGE_INDEX, size: SystemContants.PAGE_SIZE}));
+      dispatch(getBundle({index: currentPage, size: SystemContants.PAGE_SIZE}));
     }
   }, [isSuccess])
 
