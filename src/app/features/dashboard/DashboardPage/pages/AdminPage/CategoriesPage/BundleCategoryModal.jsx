@@ -52,6 +52,7 @@ export default function BundleCategoryModal({
 
   return (
       <Modal
+        forceRender 
         onOk={() => {
           form
             .validateFields()

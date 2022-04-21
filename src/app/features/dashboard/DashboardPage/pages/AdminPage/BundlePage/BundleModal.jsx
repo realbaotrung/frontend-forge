@@ -74,7 +74,7 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
       title={editingBundle != null ? 'Edit' : 'Add'}
       visible={isEditing}
       okText='Save' 
-      getContainer={false} 
+      forceRender 
       onCancel={() => {
         resetEditing();
       }} 

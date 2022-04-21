@@ -92,7 +92,6 @@ export const bundleCategorySlice = createSlice({
     // Request error
     builder.addCase(getBundleCategory.rejected, (state, action) => {
       state.isLoading = false;
-      state.errorMessage = action.payload.message;
     });
 
     // Requset DELETE ----------------------------------------------------------
