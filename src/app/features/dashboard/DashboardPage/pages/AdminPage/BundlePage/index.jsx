@@ -98,18 +98,23 @@ export default function BundlePage() {
 
   const columns = [
     {
+      key: 'name',
+      title: 'Name',
+      dataIndex: 'name',
+    },
+    {
       key: 'description',
       title: 'Description',
       dataIndex: 'description',
     },
-    {
-      key: 'path',
-      title: 'path',
-      dataIndex: 'path',
-    },
+    // {
+    //   key: 'path',
+    //   title: 'path',
+    //   dataIndex: 'path',
+    // },
     {
       key: 'bundleCategory',
-      title: 'bundleCategory',
+      title: 'BundleCategory',
       render: (record) => {
         return <p>{record?.name}</p>;
       },

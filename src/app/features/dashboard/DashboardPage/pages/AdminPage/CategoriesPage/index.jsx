@@ -65,12 +65,12 @@ export default function CategoriesPage() {
   const columns = [
     {
       key: "name",
-      title: "name",
+      title: "Name",
       dataIndex: "name",
     },
     {
       key: "Type",
-      title: "type",
+      title: "Type",
       dataIndex: "typeName",
     },
     {

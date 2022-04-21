@@ -33,15 +33,16 @@ export default function NavBar({children, isAdmin}) {
       </Col>
         <Col span={17} order={2} xs={{ span: 4 }} md={{ span: 10 }} lg={{ span: 17 }}>
           {isAdmin ? <Menu theme='light' mode='horizontal'>
-          <Menu.Item key='1' icon={<UserOutlined />}>
+          {/* <Menu.Item key='1' icon={<UserOutlined />}>
             <Link to='/dashboard'>Home</Link>
+          </Menu.Item> */}
+          <Menu.Item key='1' icon={<VideoCameraOutlined />}>
+            <Link to='/admin/bundle'>Bundle</Link>
           </Menu.Item>
           <Menu.Item key='2' icon={<VideoCameraOutlined />}>
-            <Link to='/dashboard/categories'>Bundle Category</Link>
+            <Link to='/admin/categories'>Bundle Category</Link>
           </Menu.Item>
-          <Menu.Item key='3' icon={<VideoCameraOutlined />}>
-            <Link to='/dashboard/bundle'>Bundle</Link>
-          </Menu.Item>
+          
         </Menu> : <div></div>}
         
         </Col>

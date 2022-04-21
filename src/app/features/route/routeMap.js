@@ -11,20 +11,20 @@ import routePaths from './routePaths';
 import CategoriesPage
   from "../dashboard/DashboardPage/pages/AdminPage/CategoriesPage";
 
-function RedirectDefaultRouteToLoginPage() {
-  const navigate = useNavigate();
-  useEffect(() => {
-    // Navigate to login page when first access default URL
-    navigate(routePaths.LOGIN_URL);
-    // We want to reload the current window because, we have
-    // stored info in Session Storage. When user click a new
-    // tab in browser, they will redirect to DASHBOARD URL
-    // without sign-in again.
-    // combine with method 'shareSessionStorageBetweenTabs'
-    window.location.reload();
-  }, [navigate]);
-  return null;
-}
+// function RedirectDefaultRouteToLoginPage() {
+//   const navigate = useNavigate();
+//   useEffect(() => {
+//     // Navigate to login page when first access default URL
+//     navigate(routePaths.LOGIN_URL);
+//     // We want to reload the current window because, we have
+//     // stored info in Session Storage. When user click a new
+//     // tab in browser, they will redirect to DASHBOARD URL
+//     // without sign-in again.
+//     // combine with method 'shareSessionStorageBetweenTabs'
+//     window.location.reload();
+//   }, [navigate]);
+//   return null;
+// }
 
 // function DashboardPageRequireAuth() {
 //   return (
@@ -49,6 +49,13 @@ function RedirectDefaultRouteToLoginPage() {
 
 const routes = [
   {
+    id: 'default',
+    path: routePaths.HOME_URL,
+    isAuth: false,
+    isAdmin: false,
+    component: <LoginPage />,
+  },
+  {
     id: 'loginPage',
     path: routePaths.LOGIN_URL,
     isAuth: false,
@@ -62,12 +69,13 @@ const routes = [
     isAdmin: false,
     component: <DashboardPage />,    
   },
-  {
-    id: 'homePage',
-    path: routePaths.HOME_URL,
-    isAuth: true,
-    component: <RedirectDefaultRouteToLoginPage />,
-  },
+  // {
+  //   id: 'homePage',
+  //   path: routePaths.HOME_URL,
+  //   isAuth: true,
+  //   isAdmin: true,
+  //   component: <RedirectDefaultRouteToLoginPage />,
+  // },
   {
     id: 'dashboardPageAdmin',
     path: '/admin',
@@ -77,15 +85,16 @@ const routes = [
   },
   {
     id: 'bundlePage',
-    path: '/dashboard/bundle',
+    path: '/admin/bundle',
     isAuth: true,
     isAdmin: true,
     component: <BundlePage />,    
   },
   {
     id: 'categoriesPage',
-    path: '/dashboard/categories',
+    path: '/admin/categories',
     isAuth: true,
+    isAdmin: true,
     component: <CategoriesPage />,
   },
   {
