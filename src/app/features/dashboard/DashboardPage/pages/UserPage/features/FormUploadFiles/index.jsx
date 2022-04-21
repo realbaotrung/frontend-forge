@@ -29,7 +29,7 @@ import {
 } from '../../../../../../../slices/designAutomation/selectors';
 import {resetDesignAutomationState} from '../../../../../../../slices/designAutomation/designAutomationSlice';
 
-function ButtonModalUploadFiles({onOpen}) {
+function ButtonShowModalUploadFiles({onOpen}) {
   return (
     <Button
       onClick={onOpen}
@@ -54,7 +54,7 @@ function ButtonModalUploadFiles({onOpen}) {
   );
 }
 
-ButtonModalUploadFiles.propTypes = {
+ButtonShowModalUploadFiles.propTypes = {
   onOpen: PropTypes.func.isRequired,
 };
 
@@ -123,7 +123,7 @@ export default function FormUploadFiles() {
   // Check loading when file is taken and push to the server
   const hasLoadingFromDA = useSelector(selectHasLoadingFromDA);
   const revitFileName = useSelector(selectRevitFileNameFromDA);
-  const jsonCategoryDatafromDA = useSelector(selectJsonCategoryDataFromDA);
+  const jsonCategoryDataFromDA = useSelector(selectJsonCategoryDataFromDA);
   const isError = useSelector(selectIsErrorFromDA);
 
   useEffect(() => {
@@ -140,7 +140,7 @@ export default function FormUploadFiles() {
 
   return (
     <>
-      <ButtonModalUploadFiles onOpen={onOpen} />
+      <ButtonShowModalUploadFiles onOpen={onOpen} />
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -161,13 +161,13 @@ export default function FormUploadFiles() {
               <Progress size='xs' isIndeterminate />
             )}
             <Box sx={compoundComponentsCSS}>
-              {hasLoadingFromDA && !isError && <FileIsUploading />}
               {isError && <FailToUploadFile />}
+              {hasLoadingFromDA && !isError && <FileIsUploading />}
               {!haveChosenFiles && !hasLoadingFromDA && !isError && <DragFilesFromLocal />}
-              {haveChosenFiles && !jsonCategoryDatafromDA && !isError && (
+              {haveChosenFiles && !jsonCategoryDataFromDA && !isError && (
                 <RefetchToShowLoadingAndGetJsonData />
               )}
-              {haveChosenFiles && jsonCategoryDatafromDA && !isError && <FileIsUploaded />}
+              {haveChosenFiles && jsonCategoryDataFromDA && !isError && <FileIsUploaded />}
             </Box>
           </ModalBody>
           <ModalFooter sx={modelFooterCSS}>

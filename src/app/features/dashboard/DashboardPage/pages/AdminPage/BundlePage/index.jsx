@@ -29,6 +29,7 @@ export default function BundlePage() {
 
   useEffect(() => {
     dispatch(getBundle({index: SystemContants.PAGE_INDEX, size: SystemContants.PAGE_SIZE}));
+    console.log(bundle)
   }, [dispatch]);
 
   const onAddBundle = () => {
@@ -97,7 +98,7 @@ export default function BundlePage() {
       key: 'bundleCategory',
       title: 'BundleCategory',
       render: (record) => {
-        return <p>{record?.name}</p>;
+        return <p>{record?.bundleCategory.name}</p>;
       },
     },
     {

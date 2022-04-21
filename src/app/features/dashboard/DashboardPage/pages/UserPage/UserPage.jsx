@@ -1,5 +1,5 @@
 import FormUploadFiles from './features/FormUploadFiles';
-import FormCategoryRevitFile from './features/FormCategoryRevitFile';
+import FormScheduleCategory from './features/FormScheduleCategory';
 
 const containerCss = {
   display: 'flex',
@@ -12,7 +12,7 @@ export default function UserPage() {
     <div style={containerCss}>
       <div style={{display: 'flex', gap: '8px', padding: '8px'}}>
         <FormUploadFiles />
-        <FormCategoryRevitFile />
+        <FormScheduleCategory />
       </div>
       <h1>User</h1>
       <p>This is user page</p>

@@ -11,8 +11,8 @@ import {
   selectSuccess,
 } from '../../../../../../slices/bundle/bundleSlice';
 import {
-  getBundleCategory,
-  selectBundleCategory,
+  getBundleCategoryAll,
+  selectBundleCategoryAll,
 } from '../../../../../../slices/bundleCategory/bundleCategorySlice';
 
 export default function BundleModal({resetEditing, isEditing, editingBundle}) {
@@ -20,12 +20,12 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
   const [uploadFile, setUploadFile] = useState();
   const dispatch = useDispatch();
 
-  const bundleCategories = useSelector(selectBundleCategory);
+  const bundleCategoryAlls = useSelector(selectBundleCategoryAll);
   const versionrevits = useSelector(selectVersion);
   const isSuccess = useSelector(selectSuccess);
 
   useEffect(() => {
-    dispatch(getBundleCategory());
+    dispatch(getBundleCategoryAll());
   }, []);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
 
   useEffect(() => {
     dispatch(getVersionRevit());
-    dispatch(getBundleCategory());
+    dispatch(getBundleCategoryAll());
   }, []);
 
   useEffect(() => {
@@ -114,7 +114,7 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
 
         <Form.Item label='Bundle Category' name='bundleCategoryId'>
           <Select>
-            {bundleCategories?.result.map((value) => {
+            {bundleCategoryAlls?.result.map((value) => {
               return (
                 <Select.Option key={value.id} value={value.id}>
                   {value.name}

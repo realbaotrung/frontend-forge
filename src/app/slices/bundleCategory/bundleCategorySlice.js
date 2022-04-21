@@ -4,6 +4,22 @@ import { SystemContants } from '../../../common/systemcontants';
 import Notification from '../../components/Notification';
 
 
+export const getBundleCategoryAll = createAsyncThunk(
+  "bundleCategory/getall",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await api.get('/bundleCategory');
+      if (response.status >= 400) {
+        return rejectWithValue(response.data)
+      } 
+        return response.data;
+    } catch (e) {
+      console.log("Error", e.response.data)
+      return rejectWithValue(e.response.data)
+    }
+  }
+);
+
 export const getBundleCategory = createAsyncThunk(
   "bundleCategory/get",
   async ({index, size}, { rejectWithValue }) => {
@@ -74,10 +90,27 @@ export const bundleCategorySlice = createSlice({
     isSuccess: false,
     errorMessage: '',
     bundleCategories: null,
+    bundleCategoryAlls: null,
     noti: SystemContants.NOTI_INFO
   } ,
   reducers: {},
   extraReducers: (builder) => {
+    // Requset GET ALL ----------------------------------------------------------
+    builder.addCase(getBundleCategoryAll.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    // Request successful
+    builder.addCase(getBundleCategoryAll.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.bundleCategoryAlls = action.payload;
+    });
+
+    // Request error
+    builder.addCase(getBundleCategoryAll.rejected, (state, action) => {
+      state.isLoading = false;
+    });
+
     // Requset GET ----------------------------------------------------------
     builder.addCase(getBundleCategory.pending, (state) => {
       state.isLoading = true;
@@ -163,6 +196,7 @@ export const bundleCategorySlice = createSlice({
 
 // Select state currentUser from slice
 export const selectBundleCategory = (state) => state.bundleCategory.bundleCategories;
+export const selectBundleCategoryAll = (state) => state.bundleCategory.bundleCategoryAlls;
 export const selectLoading = (state) => state.bundleCategory.isLoading;
 export const selectSuccess = (state) => state.bundleCategory.isSuccess;
 export const deleteDeleting = (state) => state.bundleCategory.isDeleting;
