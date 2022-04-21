@@ -10,6 +10,7 @@ import RequireAuth from './RequireAuth';
 import routePaths from './routePaths';
 import CategoriesPage
   from "../dashboard/DashboardPage/pages/AdminPage/CategoriesPage";
+import BucketPage from '../dashboard/DashboardPage/pages/UserPage/BucketPage';
 
 // function RedirectDefaultRouteToLoginPage() {
 //   const navigate = useNavigate();
@@ -68,6 +69,13 @@ const routes = [
     isAuth: true,
     isAdmin: false,
     component: <DashboardPage />,    
+  },
+  {
+    id: 'bucketPage',
+    path: '/dashboard/bucket',
+    isAuth: true,
+    isAdmin: false,
+    component: <BucketPage />,    
   },
   // {
   //   id: 'homePage',
