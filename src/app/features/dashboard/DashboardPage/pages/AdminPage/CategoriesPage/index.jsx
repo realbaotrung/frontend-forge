@@ -4,7 +4,7 @@ import {Button, Table, Modal, Spin} from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
   deleteBundleCategory,
-  getBundleCategory, selectBundleCategory, selectLoading
+  getBundleCategory, selectBundleCategory, selectLoading, selectSuccess
 } from "../../../../../../slices/bundleCategory/bundleCategorySlice";
 import BundleCategoryModal from "./BundleCategoryModal";
 import {SystemContants} from "../../../../../../../common/systemcontants";
@@ -14,13 +14,31 @@ export default function CategoriesPage() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [statusModal, setstatusModal] = useState(0);
   const bundleCategories = useSelector(selectBundleCategory);
-
   const dispatch = useDispatch();
-
   const isLoading = useSelector(selectLoading);
-  // const isDeleting = useSelector(deleteLoading);
+  const isSuccess = useSelector(selectSuccess);
+  
+
+  useEffect(() => {
+    dispatch(getBundleCategory({index: SystemContants.PAGE_INDEX, size: SystemContants.PAGE_SIZE}));
+  }, [dispatch])
+
+  const onAddCategory = () => {
+    setstatusModal(0);
+    setIsEditing(true);
+    setEditingCategory({});
+  };
+
+  const resetEditing = (isReset = false) => {
+    setIsEditing(false);
+    setEditingCategory(null);
+    if(isReset) {
+      dispatch(getBundleCategory({index: currentPage, size: SystemContants.PAGE_SIZE}));
+    }
+  };
 
   const paginationChange =(page, pageSize) =>{
     setCurrentPage(page);
@@ -28,39 +46,38 @@ export default function CategoriesPage() {
   }
 
   useEffect(() => {
-    dispatch(getBundleCategory());
-  }, [dispatch])
-
-  const onAddCategory = () => {
-    setIsEditing(true);
-    setEditingCategory({});
-  };
-
-  const resetEditing = () => {
-    setIsEditing(false);
-    setEditingCategory(null);
-  };
-
-  const closeModal = (isLoad) => {
-    setIsEditing(false);
-    if(isLoad) {
-      dispatch(getBundleCategory());
+    if(isSuccess) {
+      if(isEditing && statusModal === 1) {
+        setCurrentPage(currentPage)
+      } else {
+        setCurrentPage(1)
+      }
+      dispatch(getBundleCategory({index: SystemContants.PAGE_INDEX, size: SystemContants.PAGE_SIZE}));
     }
-  };
+  }, [isSuccess])
+
+  useEffect(() => {
+  }, [editingCategory])
+
   const onEditCategory = (record) => {
+    setstatusModal(1);
     setIsEditing(true);
     setEditingCategory({ ...record });
   };
+
   const onDeleteCategory = (record) => {
     Modal.confirm({
       title: "Are you sure, you want to delete this category record?",
       okText: "Yes",
       okType: "danger",
       onOk: () => {
-        dispatch(deleteBundleCategory(record))
+        dispatch(deleteBundleCategory(record));
+        setCurrentPage(1);
       },
     });
   };
+
+
 
   const columns = [
     {
@@ -105,8 +122,8 @@ export default function CategoriesPage() {
             name = "Function"
           }
         return {...value, typeName: name, key:value.id}
-        })} pagination={{pageSize: SystemContants.PAGE_SIZE, total:bundleCategories?.totalRecords,  defaultCurrent: 1, onChange: paginationChange}}  ></Table>
-      <BundleCategoryModal resetEditing={resetEditing} isEditing={isEditing} editingCategory={editingCategory} closeModal={closeModal}/>
+        })} pagination={{pageSize: SystemContants.PAGE_SIZE, total:bundleCategories?.totalRecords, onChange: paginationChange, current:currentPage}}  ></Table>
+      <BundleCategoryModal resetEditing={resetEditing} isEditing={isEditing} editingCategory={editingCategory} />
     </Spin>
   );  
 }

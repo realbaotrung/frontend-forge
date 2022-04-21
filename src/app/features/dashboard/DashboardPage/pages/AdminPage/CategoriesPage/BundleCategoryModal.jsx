@@ -1,24 +1,19 @@
 /* eslint-disable react/prop-types */
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Button, Form, Modal, Input, Select, Spin} from 'antd';
+import {Form, Modal, Input, Select} from 'antd';
 import {
-  getBundleCategory,
-  postBundleCategory, putBundleCategory, selectBundleCategory
+  postBundleCategory, putBundleCategory, selectSuccess
 } from "../../../../../../slices/bundleCategory/bundleCategorySlice";
-import {selectSuccess} from "../../../../../../slices/bundle/bundleSlice";
 
 export default function BundleCategoryModal({
   resetEditing,
   isEditing,
   editingCategory,
-  closeModal,
 }) {
 
   const dispatch = useDispatch();
-  const bundleCategories = useSelector(selectBundleCategory);
   const isSuccess = useSelector(selectSuccess);
-
 
   const [form] = Form.useForm();
   useEffect(() => {
@@ -28,12 +23,11 @@ export default function BundleCategoryModal({
 
   const onFinish = (values) => {
     // form.resetFields();
-
     if(editingCategory.id !== undefined){
       dispatch(putBundleCategory({data: {Name: values.Name}, id: editingCategory.id}))
     }
     else {
-        dispatch(postBundleCategory(values));
+      dispatch(postBundleCategory(values));
     }
   };
 
@@ -88,7 +82,7 @@ export default function BundleCategoryModal({
           wrapperCol={{span: 16}}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
-          autoComplete='off'
+          autoComplete='off' 
         >
           <Form.Item
             label='Name'

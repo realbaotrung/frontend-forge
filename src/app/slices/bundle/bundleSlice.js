@@ -1,5 +1,4 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import axios from 'axios';
 import {api} from '../../../api/axiosClient';
 import { SystemContants } from '../../../common/systemcontants';
 import Notification from '../../components/Notification';
@@ -8,12 +7,11 @@ export const getBundle = createAsyncThunk(
   'bundle/get',
   async ({index, size}, {rejectWithValue}) => {
     try {
-      
       const response = await api.get(`/bundle?PageNumber=${index}&PageSize=${size}`);
-      if (response.status === 200) {
-        return response.data;
-      } 
+      if (response.status >= 400) {
         return rejectWithValue(response.data)
+      } 
+      return response.data;
     } catch (e) {
       console.log("Error", e.response.data)
       return rejectWithValue(e.response.data)
@@ -36,12 +34,11 @@ export const postBundle = createAsyncThunk(
   async (data, {rejectWithValue}) => {
     const config = {headers: {'Content-Type': 'multipart/form-data'}};
     try {
-      
       const response = await api.create('/bundle', data, config);
-      if (response.status === 200) {
-        return response.data;
-      } 
+      if (response.status >= 400) {
         return rejectWithValue(response.data)
+      } 
+      return response.data;
     } catch (e) {
       return rejectWithValue(e.response.data)
     }
@@ -51,13 +48,17 @@ export const postBundle = createAsyncThunk(
 
 export const putBundle = createAsyncThunk(
   'bundle/update',
-  async ({data, id}) => {
-    const config = {headers: {'Content-Type': 'multipart/form-data'}};
+  async ({data, id}, {rejectWithValue}) => {
     try {
+      const config = {headers: {'Content-Type': 'multipart/form-data'}};
       const response = await api.patch(`/bundle/${id}`, data, config);
+      if (response.status >= 400) {
+        return rejectWithValue(response.data)
+      } 
       return response.data;
     } catch (e) {
-      return e;
+      console.log("Error", e.response.data)
+      return rejectWithValue(e.response.data)
     }
   },
 );
@@ -97,7 +98,6 @@ export const bundleSlice = createSlice({
     builder.addCase(getBundle.fulfilled, (state, action) => {
       state.isLoading = false;
       state.bundles = action.payload;
-      state.noti = SystemContants.NOTI_SUCCESS;
     });
 
     // Request GET error
@@ -125,7 +125,7 @@ export const bundleSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = false;
       state.errorMessage = action.payload;
-      Notification(SystemContants.NOTI_ERROR, [...action.payload.errors][0])
+      Notification(SystemContants.NOTI_ERROR, [...action.payload.errors][0]);
     });
 
     // Start DELETE request
@@ -137,8 +137,8 @@ export const bundleSlice = createSlice({
     builder.addCase(deleteBundle.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isSuccess = true;
-      state.noti = SystemContants.NOTI_SUCCESS;
       state.bundle = action.payload;
+      state.noti = SystemContants.NOTI_SUCCESS;
     });
     // Request DELETE error
     builder.addCase(deleteBundle.rejected, (state, action) => {
@@ -157,7 +157,6 @@ export const bundleSlice = createSlice({
     builder.addCase(putBundle.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isSuccess = true;
-      state.bundle = action.payload;
       Notification(SystemContants.NOTI_SUCCESS, 'Save successful');
     });
     // Request PATCH error
@@ -185,7 +184,7 @@ export const selectVersion = (state) => state.bundle.versions;
 export const addBundle = (state) => state.bundle.bundle;
 export const updateBundle = (state) => state.bundle.bundle;
 
-export const selectBundleSlice = (state) => state.bundle
+export const selectBundleSlice = (state) => state.bundle;
 
 // Export reducer
 export default bundleSlice.reducer;

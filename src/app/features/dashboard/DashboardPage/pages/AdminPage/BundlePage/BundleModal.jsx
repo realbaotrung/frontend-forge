@@ -8,7 +8,6 @@ import {
   postBundle,
   putBundle,
   selectVersion,
-  selectLoading,
   selectSuccess,
 } from '../../../../../../slices/bundle/bundleSlice';
 import {
@@ -23,7 +22,6 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
 
   const bundleCategories = useSelector(selectBundleCategory);
   const versionrevits = useSelector(selectVersion);
-  const isLoading = useSelector(selectLoading);
   const isSuccess = useSelector(selectSuccess);
 
   useEffect(() => {
