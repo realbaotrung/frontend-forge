@@ -11,6 +11,7 @@ import routePaths from './routePaths';
 import CategoriesPage
   from "../dashboard/DashboardPage/pages/AdminPage/CategoriesPage";
 import BucketPage from '../dashboard/DashboardPage/pages/UserPage/BucketPage';
+import NamTest from '../dashboard/DashboardPage/pages/AdminPage/NamTest';
 
 // function RedirectDefaultRouteToLoginPage() {
 //   const navigate = useNavigate();
@@ -97,6 +98,13 @@ const routes = [
     isAuth: true,
     isAdmin: true,
     component: <BundlePage />,    
+  },
+  {
+    id: 'namtest',
+    path: '/admin/namtest',
+    isAuth: true,
+    isAdmin: true,
+    component: <NamTest />,    
   },
   {
     id: 'categoriesPage',

@@ -57,3 +57,9 @@
 .ant-layout-header .user-login-info span.chakra-avatar {
   margin: 15px 5px 0;
 }
+.customTree{
+  border: 1px solid #d9d9d9;
+  width: 280px;
+  height: 450px;
+  overflow: auto;
+}
