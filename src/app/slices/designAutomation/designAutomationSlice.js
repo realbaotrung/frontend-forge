@@ -93,6 +93,7 @@ export const initialState = {
   categoryKeyName: '',
   categoryValuesByKeyName: null,
   jsonTargetCategoryData: null,
+  jsonFinalCategoryDataToUpload: null,
   isError: false,
 };
 
@@ -127,17 +128,27 @@ const designAutomationSlice = createSlice({
     getJsonTargetCategoryData: (state, {payload}) => {
       state.jsonTargetCategoryData = payload;
     },
-    resetDesignAutomationState: (state) => {
+    getJsonFinalCategoryDataToUpload: (state, {payload}) => {
+      const {categoryKeyName, jsonTargetCategoryData} = payload;
+      const jsonFinal = {};
+      jsonFinal[categoryKeyName] = jsonTargetCategoryData;
+      state.jsonFinalCategoryDataToUpload = jsonFinal;
+    },
+    resetFormUploadFilesState: (state) => {
       state.id = '';
       state.revitFileName = '';
       state.hasLoading = false;
+      state.isError = false;
+    },
+    resetFormScheduleCategory: (state) => {
       state.jsonCategoryData = null;
       state.categoryNames = null;
       state.categoryKeyName = '';
       state.categoryValuesByKeyName = null;
       state.jsonTargetCategoryData = null;
+      state.jsonFinalCategoryDataToUpload = null;
       state.isError = false;
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -180,6 +191,8 @@ export const {
   getCategoryKeyName,
   getCategoryValuesByKeyName,
   getJsonTargetCategoryData,
-  resetDesignAutomationState,
+  getJsonFinalCategoryDataToUpload,
+  resetFormUploadFilesState,
+  resetFormScheduleCategory,
 } = designAutomationSlice.actions;
 export const {reducer} = designAutomationSlice;

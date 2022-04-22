@@ -1,4 +1,4 @@
-import {useCallback, useMemo} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Typography, Space, Select} from 'antd';
 import {
@@ -10,11 +10,19 @@ const {Text} = Typography;
 const {Option} = Select;
 
 export default function CategorySelector() {
+  const [names, setNames] = useState([]);
+
   const categoryNames = useSelector(selectCategoryNamesFromDA);
+
+  useEffect(() => {
+    if (categoryNames) {
+      setNames(categoryNames);
+    }
+  }, []);
 
   const dispatch = useDispatch();
 
-  const optionCategoryNames = categoryNames.map((name) => (
+  const optionCategoryNames = names.map((name) => (
     <Option key={name} value={name}>
       {name}
     </Option>

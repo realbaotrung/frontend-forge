@@ -1,24 +1,28 @@
 import {useEffect, useMemo, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {produce} from 'immer';
 import {Transfer, Space, Row, Col} from 'antd';
-import {selectCategoryValuesByKeyNameFromDA} from '../../../../../../../../../slices/designAutomation/selectors';
-import { getJsonTargetCategoryData } from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
+import {
+  selectCategoryValuesByKeyNameFromDA,
+} from '../../../../../../../../../slices/designAutomation/selectors';
+import {
+  getJsonTargetCategoryData
+} from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
 
 export default function TransferProperties() {
-  const [targetDataChange, setTargetDataChange] = useState(null);
-  const [targetKeys, setTargetKeys] = useState('');
+  const [haveTargetData, setHaveTargetData] = useState(false)
+  const [targetKeys, setTargetKeys] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
 
-  // implement choose value by category key name
   const categoryValuesByKeyName = useSelector(selectCategoryValuesByKeyNameFromDA);
 
   const dispatch = useDispatch();
 
   const mockData = useMemo(() => {
     const data = [];
-    
     if (categoryValuesByKeyName) {
+      // Reset both SelectedKeys and TargetKeys
+      setSelectedKeys([]);
+      setTargetKeys([]);
       for (const value of categoryValuesByKeyName) {
         data.push({
           key: value,
@@ -27,45 +31,23 @@ export default function TransferProperties() {
         });
       }
     }
-
     return data
   }, [categoryValuesByKeyName]);
 
+  useEffect(() => {
+    if (haveTargetData) {
+      dispatch(getJsonTargetCategoryData(targetKeys));
+    }
+  }, [targetKeys, haveTargetData])
+
   const onChange = (nextTargetKeys) => {
     setTargetKeys(nextTargetKeys);
-    setTargetDataChange(nextTargetKeys);
+    setHaveTargetData(true);
   };
 
   const onSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
     setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
   };
-
-  useEffect(() => {
-    if (targetDataChange) {
-      dispatch(getJsonTargetCategoryData(
-        produce(targetDataChange, (draft) => {
-          draft.pop();
-        }),
-      ))
-    }
-  }, [targetDataChange]);
-
-  const transferProps = useMemo(() => {
-    return {
-      listStyle: {
-        width: 256,
-        height: 250,
-      },
-      dataSource: mockData,
-      titles: ['Source', 'Target'],
-      targetKeys,
-      selectedKeys,
-      onChange,
-      onSelectChange,
-      render: (item) => item.title,
-      showSelectAll: false,
-    };
-  }, [onchange, onSelectChange, mockData]);
 
   return (
     <Space direction='vertical' size={[0, 8]}>
@@ -73,12 +55,26 @@ export default function TransferProperties() {
         <Col flex='53.6%'>Available fields</Col>
         <Col flex='auto'>Scheduled fields</Col>
       </Row>
-      <Transfer {...transferProps} />
+      <Transfer
+        listStyle={{
+          width: 256,
+          height: 250,
+        }}
+        dataSource={mockData}
+        titles={['Source', 'Target']}
+        targetKeys={targetKeys}
+        selectedKeys={selectedKeys}
+        onChange={(nextTargetKeys) => onChange(nextTargetKeys)}
+        onSelectChange={(sourceSelectedKeys, targetSelectedKeys) => onSelectChange(sourceSelectedKeys, targetSelectedKeys)}
+        render={item => item?.title}
+        showSelectAll={false}
+      />
     </Space>
   );
 }
+
 /*
 eslint
   no-plusplus: 0,
-  no-restricted-syntax: 0
+  no-restricted-syntax: 0,
 */

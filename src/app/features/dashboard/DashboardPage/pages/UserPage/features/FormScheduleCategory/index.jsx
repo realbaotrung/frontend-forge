@@ -1,13 +1,24 @@
-import {useEffect, useMemo} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Button, useDisclosure} from '@chakra-ui/react';
 import {Typography, Space, Modal} from 'antd';
 import TransferProperties from './features/TransferProperties';
 import CategorySelector from './features/CategorySelector';
-import { category } from '../../share/category';
-import { getCategoryNames, getCategoryValuesByKeyName, getJsonCategoryData, resetDesignAutomationState } from '../../../../../../../slices/designAutomation/designAutomationSlice';
-import { selectCategoryKeyNameFromDA, selectCategoryNamesFromDA, selectJsonCategoryDataFromDA } from '../../../../../../../slices/designAutomation/selectors';
+import {category} from '../../share/category';
+import {
+  getCategoryNames,
+  getCategoryValuesByKeyName,
+  getJsonCategoryData,
+  getJsonFinalCategoryDataToUpload,
+  resetFormScheduleCategory
+} from '../../../../../../../slices/designAutomation/designAutomationSlice';
+import {
+  selectCategoryKeyNameFromDA,
+  selectCategoryNamesFromDA,
+  selectJsonCategoryDataFromDA,
+  selectJsonTargetCategoryDataFromDA
+} from '../../../../../../../slices/designAutomation/selectors';
 
 const {Text} = Typography;
 
@@ -45,13 +56,15 @@ export default function FormScheduleCategory() {
   const categoryNames = useSelector(selectCategoryNamesFromDA);
   const categoryKeyName = useSelector(selectCategoryKeyNameFromDA);
   const jsonCategoryData = useSelector(selectJsonCategoryDataFromDA);
+  const jsonTargetCategoryData = useSelector(selectJsonTargetCategoryDataFromDA);
 
   const dispatch = useDispatch();
 
   // TODO: should delete when connect again to Server...
   useEffect(() => {
-    if (!jsonCategoryData)
-    dispatch(getJsonCategoryData(category));
+    if (!jsonCategoryData) {
+      dispatch(getJsonCategoryData(category));
+    }
   }, [jsonCategoryData])
 
   useEffect(() => {
@@ -66,43 +79,44 @@ export default function FormScheduleCategory() {
     }
   }, [categoryKeyName, jsonCategoryData])
 
-  const handleOnDone = () => {
+  useEffect(() => {
+    if (jsonTargetCategoryData) {
+      const scheduleObject = {categoryKeyName, jsonTargetCategoryData};
+      dispatch(getJsonFinalCategoryDataToUpload(scheduleObject));
+    }
+  }, [jsonTargetCategoryData])
 
-    // TODO: create json target file with category name and children
-    dispatch(resetDesignAutomationState());
+  const handleOnDone = () => {
+    // TODO: Post method jsonFinalCategoryData (as string) to server
+    dispatch(resetFormScheduleCategory());
     onClose();
   };
 
   const handleOnCancel = () => {
-    dispatch(resetDesignAutomationState());
+    dispatch(resetFormScheduleCategory());
     onClose();
   };
 
-  const modalProps = useMemo(() => {
-    return {
-      centered: true,
-      visible: isOpen,
-      onCancel: () => handleOnCancel(),
-      onOk: () => handleOnDone(),
-      okText: 'Done',
-      title: [
-        <Text key='schedule' style={{fontSize: '20px', fontWeight: '300'}}>
-          Schedule
-        </Text>,
-      ],
-      width: '600px',
-      bodyStyle: {height: '400px'},
-      destroyOnClose: true,
-    };
-  }, [isOpen, onClose, handleOnDone]);
-
   return (
     <>
-      <ButtonShowCategoryForm title='Schedule' onOpen={onOpen} />
-      <Modal {...modalProps}>
+      <ButtonShowCategoryForm title='Schedule' onOpen={onOpen}/>
+      <Modal
+        centered
+        visible={isOpen}
+        onCancel={() => handleOnCancel()}
+        onOk={() => handleOnDone()}
+        okText='Done'
+        title={[
+          <Text key='schedule' style={{fontSize: '20px', fontWeight: '300'}}>
+            Schedule
+          </Text>
+        ]}
+        width='600px'
+        bodyStyle={{height: '400px'}}
+        destroyOnClose='true'>
         <Space direction='vertical' size={[0, 16]} align='start'>
-          <CategorySelector />
-          <TransferProperties />
+          <CategorySelector/>
+          <TransferProperties/>
         </Space>
       </Modal>
     </>

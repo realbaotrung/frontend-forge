@@ -49,3 +49,8 @@ export const selectJsonTargetCategoryDataFromDA = createSelector(
   [selectDomain],
   (designAutomationState) => designAutomationState.jsonTargetCategoryData,
 );
+
+export const selectJsonFinalCategoryDataToUploadFromDA = createSelector(
+  [selectDomain],
+  (designAutomationState) => designAutomationState.jsonFinalCategoryDataToUpload,
+);
