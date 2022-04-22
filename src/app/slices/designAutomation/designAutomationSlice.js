@@ -58,6 +58,18 @@ const postDesignAutomationGetInfoProjectMutation = {
   },
 };
 
+const postJsonFinalCategoryDataToServerMutation = {
+  query: (data) => ({
+    url: apiPaths.API_DESIGNAUTOMATION_START,
+    method: 'POST',
+    data,
+  }),
+  transformResponse: (response) => {
+    console.log(response);
+    return response;
+  },
+};
+
 export const designAutomationApi = apiRtk.injectEndpoints({
   endpoints: (builder) => ({
     getDesignAutomationActivities: builder.query(
@@ -70,6 +82,9 @@ export const designAutomationApi = apiRtk.injectEndpoints({
     postDesignAutomationGetInfoProject: builder.mutation(
       postDesignAutomationGetInfoProjectMutation,
     ),
+    postJsonFinalCategoryDataToServer: builder.mutation(
+      postJsonFinalCategoryDataToServerMutation,
+    ),
   }),
 });
 
@@ -78,6 +93,7 @@ export const {
   useGetDesignAutomationInfoByIdQuery,
   useGetDesignAutomationEngineQuery,
   usePostDesignAutomationGetInfoProjectMutation,
+  usePostJsonFinalCategoryDataToServerMutation,
 } = designAutomationApi;
 
 // ============================================================================
@@ -135,13 +151,11 @@ const designAutomationSlice = createSlice({
       state.jsonFinalCategoryDataToUpload = jsonFinal;
     },
     resetFormUploadFilesState: (state) => {
-      state.id = '';
       state.revitFileName = '';
       state.hasLoading = false;
       state.isError = false;
     },
     resetFormScheduleCategory: (state) => {
-      state.jsonCategoryData = null;
       state.categoryNames = null;
       state.categoryKeyName = '';
       state.categoryValuesByKeyName = null;
@@ -175,6 +189,32 @@ const designAutomationSlice = createSlice({
           state.revitFileName = '';
           state.hasLoading = false;
           state.jsonCategoryData = null;
+          state.isError = true;
+        },
+      )
+      .addMatcher(
+        designAutomationApi.endpoints.postJsonFinalCategoryDataToServer
+          .matchPending,
+        (state) => {
+          state.hasLoading = true;
+        },
+      )
+      .addMatcher(
+        designAutomationApi.endpoints.postJsonFinalCategoryDataToServer
+          .matchFulfilled,
+        (state) => {
+          state.hasLoading = false;
+        },
+      )
+      .addMatcher(
+        designAutomationApi.endpoints.postJsonFinalCategoryDataToServer
+          .matchRejected,
+        (state) => {
+          state.categoryNames = null;
+          state.categoryKeyName = '';
+          state.categoryValuesByKeyName = null;
+          state.jsonTargetCategoryData = null;
+          state.jsonFinalCategoryDataToUpload = null;
           state.isError = true;
         },
       );

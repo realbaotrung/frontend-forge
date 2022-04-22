@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Button, useDisclosure} from '@chakra-ui/react';
@@ -11,12 +11,12 @@ import {
   getCategoryValuesByKeyName,
   getJsonCategoryData,
   getJsonFinalCategoryDataToUpload,
-  resetFormScheduleCategory
+  resetFormScheduleCategory, usePostJsonFinalCategoryDataToServerMutation
 } from '../../../../../../../slices/designAutomation/designAutomationSlice';
 import {
   selectCategoryKeyNameFromDA,
-  selectCategoryNamesFromDA,
-  selectJsonCategoryDataFromDA,
+  selectCategoryNamesFromDA, selectIdFromDA,
+  selectJsonCategoryDataFromDA, selectJsonFinalCategoryDataToUploadFromDA,
   selectJsonTargetCategoryDataFromDA
 } from '../../../../../../../slices/designAutomation/selectors';
 
@@ -57,15 +57,19 @@ export default function FormScheduleCategory() {
   const categoryKeyName = useSelector(selectCategoryKeyNameFromDA);
   const jsonCategoryData = useSelector(selectJsonCategoryDataFromDA);
   const jsonTargetCategoryData = useSelector(selectJsonTargetCategoryDataFromDA);
+  const jsonFinalCategoryDataToUpload = useSelector(selectJsonFinalCategoryDataToUploadFromDA);
+
+  const designInfoId = useSelector(selectIdFromDA);
+  const [postJsonFinalCategoryDataToServer] = usePostJsonFinalCategoryDataToServerMutation();
 
   const dispatch = useDispatch();
 
   // TODO: should delete when connect again to Server...
-  useEffect(() => {
-    if (!jsonCategoryData) {
-      dispatch(getJsonCategoryData(category));
-    }
-  }, [jsonCategoryData])
+  // useEffect(() => {
+  //   if (!jsonCategoryData) {
+  //     dispatch(getJsonCategoryData(category));
+  //   }
+  // }, [jsonCategoryData])
 
   useEffect(() => {
     if (!categoryNames && jsonCategoryData) {
@@ -86,11 +90,32 @@ export default function FormScheduleCategory() {
     }
   }, [jsonTargetCategoryData])
 
-  const handleOnDone = () => {
-    // TODO: Post method jsonFinalCategoryData (as string) to server
-    dispatch(resetFormScheduleCategory());
-    onClose();
-  };
+  // {
+  //   "designInfoId": "tra ve luc get info",
+  //   "clientId": "random",
+  //   "data": "..."
+  // }
+
+  const handleOnDone = useCallback(async() => {
+    // TODO: Implement Loading UI when post data to server
+    if (jsonFinalCategoryDataToUpload) {
+      try {
+        const jsonString = JSON.stringify(jsonFinalCategoryDataToUpload);
+        const data = {
+          "designInfoId": designInfoId,
+          "clientId": "randomClientId",
+          "data": jsonString
+        }
+        await postJsonFinalCategoryDataToServer(data).unwrap().then(() => {
+          dispatch(resetFormScheduleCategory());
+        });
+      } catch (error) {
+        console.log(error)
+      } finally {
+        onClose();
+      }
+    }
+  }, [jsonFinalCategoryDataToUpload]);
 
   const handleOnCancel = () => {
     dispatch(resetFormScheduleCategory());
