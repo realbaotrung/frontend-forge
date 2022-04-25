@@ -1,0 +1,4 @@
+.forge-viewer {
+  width: calc(100vw - 256px);
+  height: calc(100vh - 96px);
+}
