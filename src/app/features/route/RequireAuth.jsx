@@ -2,7 +2,6 @@ import {useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {createStructuredSelector} from 'reselect';
 import {Box} from '@chakra-ui/react';
 import {selectAccessToken} from '../../slices/auth/selectors';
 import routePaths from './routePaths';

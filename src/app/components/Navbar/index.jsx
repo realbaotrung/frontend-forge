@@ -9,8 +9,6 @@ import Logo from './features/Logo';
 
 const {Header, Content, Footer} = Layout;
 
-export default function NavBar({children, isAdmin}) {
-  return (
     // <HStack
     //   sx={{
     //     padding: '8px',
@@ -24,7 +22,8 @@ export default function NavBar({children, isAdmin}) {
     //   <Logo />
     //   <Nav />
     // </HStack>
-
+export default function NavBar({children, isAdmin}) {
+  return (
      <Layout className='layout'>
       <Header>
         <Row>
@@ -33,9 +32,6 @@ export default function NavBar({children, isAdmin}) {
       </Col>
         <Col span={17} order={2} xs={{ span: 4 }} md={{ span: 10 }} lg={{ span: 17 }}>
           {isAdmin ? <Menu theme='light' mode='horizontal'>
-          {/* <Menu.Item key='1' icon={<UserOutlined />}>
-            <Link to='/dashboard'>Home</Link>
-          </Menu.Item> */}
           <Menu.Item key='1' icon={<VideoCameraOutlined />}>
             <Link to='/admin/bundle'>Bundle</Link>
           </Menu.Item>
@@ -50,13 +46,6 @@ export default function NavBar({children, isAdmin}) {
       <Nav />
       </Col>
         </Row>
-        {/* <div className='logo'>
-         
-        </div>
-       
-        <div className='user-info'>
-          
-        </div> */}
       </Header>
       <Content className='main-content' style={{padding: '0 50px'}}>
         <div className='site-layout-content'>

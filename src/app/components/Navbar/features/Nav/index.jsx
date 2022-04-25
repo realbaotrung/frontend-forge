@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useSelector} from 'react-redux';
-import {createStructuredSelector} from 'reselect';
 import {ChevronDownIcon, ChevronUpIcon} from '@chakra-ui/icons';
 import {
   Avatar,

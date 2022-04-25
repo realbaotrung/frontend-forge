@@ -62,7 +62,7 @@ export default function LoginForm() {
       await signIn(formValue)
         .unwrap()
         .then(() => {
-          navigate(routePaths.DASHBOARD_URL, {replace: true});
+          navigate(routePaths.USER_URL, {replace: true});
         });
     } catch (error) {
       if (error?.status === 'FETCH_ERROR') {
@@ -87,7 +87,7 @@ export default function LoginForm() {
       if(role === 'admin')
         navigate('/admin');
       else
-        navigate(routePaths.DASHBOARD_URL);
+        navigate(routePaths.USER_URL);
     }
   });
 

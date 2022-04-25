@@ -4,6 +4,7 @@ const routePaths = {
   DASHBOARD_URL: '/dashboard',
   LOGIN_URL: '/auth/signin',
   REGISTER_URL: '/auth/signup',
+  USER_URL: '/user'
 
 };
 
