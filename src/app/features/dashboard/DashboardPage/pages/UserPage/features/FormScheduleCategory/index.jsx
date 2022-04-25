@@ -5,7 +5,7 @@ import {Button as CButton, useDisclosure} from '@chakra-ui/react';
 import {Typography, Space, Modal, message, Button} from 'antd';
 import TransferProperties from './features/TransferProperties';
 import CategorySelector from './features/CategorySelector';
-import {category} from '../../share/category';
+// import {category} from '../../share/category';
 import {
   getCategoryNames,
   getCategoryValuesByKeyName,
@@ -65,11 +65,11 @@ export default function FormScheduleCategory() {
   const dispatch = useDispatch();
 
   // TODO: should delete when connect again to Server...
-  useEffect(() => {
-    if (!jsonCategoryData) {
-      dispatch(getJsonCategoryData(category));
-    }
-  }, [jsonCategoryData])
+  // useEffect(() => {
+  //   if (!jsonCategoryData) {
+  //     dispatch(getJsonCategoryData(category));
+  //   }
+  // }, [jsonCategoryData])
 
   useEffect(() => {
     if (!categoryNames && jsonCategoryData) {
