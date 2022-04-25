@@ -1,8 +1,8 @@
 import {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
-import {Button, useDisclosure} from '@chakra-ui/react';
-import {Typography, Space, Modal} from 'antd';
+import {Button as CButton, useDisclosure} from '@chakra-ui/react';
+import {Typography, Space, Modal, message, Button} from 'antd';
 import TransferProperties from './features/TransferProperties';
 import CategorySelector from './features/CategorySelector';
 import {category} from '../../share/category';
@@ -24,7 +24,7 @@ const {Text} = Typography;
 
 function ButtonShowCategoryForm({title, onOpen}) {
   return (
-    <Button
+    <CButton
       onClick={onOpen}
       variant='primary'
       sx={{
@@ -42,7 +42,7 @@ function ButtonShowCategoryForm({title, onOpen}) {
       }}
     >
       {title}
-    </Button>
+    </CButton>
   );
 }
 
@@ -60,16 +60,16 @@ export default function FormScheduleCategory() {
   const jsonFinalCategoryDataToUpload = useSelector(selectJsonFinalCategoryDataToUploadFromDA);
 
   const designInfoId = useSelector(selectIdFromDA);
-  const [postJsonFinalCategoryDataToServer] = usePostJsonFinalCategoryDataToServerMutation();
+  const [postJsonFinalCategoryDataToServer, {isError, isSuccess}] = usePostJsonFinalCategoryDataToServerMutation();
 
   const dispatch = useDispatch();
 
   // TODO: should delete when connect again to Server...
-  // useEffect(() => {
-  //   if (!jsonCategoryData) {
-  //     dispatch(getJsonCategoryData(category));
-  //   }
-  // }, [jsonCategoryData])
+  useEffect(() => {
+    if (!jsonCategoryData) {
+      dispatch(getJsonCategoryData(category));
+    }
+  }, [jsonCategoryData])
 
   useEffect(() => {
     if (!categoryNames && jsonCategoryData) {
@@ -90,14 +90,10 @@ export default function FormScheduleCategory() {
     }
   }, [jsonTargetCategoryData])
 
-  // {
-  //   "designInfoId": "tra ve luc get info",
-  //   "clientId": "random",
-  //   "data": "..."
-  // }
+  const handleOnSend = useCallback(async() => {
+    // TODO: 
+    onClose();
 
-  const handleOnDone = useCallback(async() => {
-    // TODO: Implement Loading UI when post data to server
     if (jsonFinalCategoryDataToUpload) {
       try {
         const jsonString = JSON.stringify(jsonFinalCategoryDataToUpload);
@@ -111,8 +107,6 @@ export default function FormScheduleCategory() {
         });
       } catch (error) {
         console.log(error)
-      } finally {
-        onClose();
       }
     }
   }, [jsonFinalCategoryDataToUpload]);
@@ -122,6 +116,16 @@ export default function FormScheduleCategory() {
     onClose();
   };
 
+  useEffect(() => {
+    if (isError) {
+      message.error("Fail to send options to server!", 2.5)
+    }
+
+    if (isSuccess) {
+      message.success("You options were sent successfully!", 2.5)
+    }
+  }, [isError, isSuccess])
+
   return (
     <>
       <ButtonShowCategoryForm title='Schedule' onOpen={onOpen}/>
@@ -129,16 +133,20 @@ export default function FormScheduleCategory() {
         centered
         visible={isOpen}
         onCancel={() => handleOnCancel()}
-        onOk={() => handleOnDone()}
-        okText='Done'
+        onOk={() => handleOnSend()}
+        okText='Send'
+        width='600px'
+        bodyStyle={{height: '400px'}}
         title={[
           <Text key='schedule' style={{fontSize: '20px', fontWeight: '300'}}>
             Schedule
           </Text>
         ]}
-        width='600px'
-        bodyStyle={{height: '400px'}}
-        destroyOnClose='true'>
+        footer={[
+          <Button onClick={() => handleOnCancel()}>Cancel</Button>,
+          <Button type='primary' onClick={() => handleOnSend()} disabled={!categoryKeyName}>Send</Button>
+        ]}
+        >
         <Space direction='vertical' size={[0, 16]} align='start'>
           <CategorySelector/>
           <TransferProperties/>

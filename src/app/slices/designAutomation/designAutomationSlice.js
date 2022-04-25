@@ -194,20 +194,6 @@ const designAutomationSlice = createSlice({
       )
       .addMatcher(
         designAutomationApi.endpoints.postJsonFinalCategoryDataToServer
-          .matchPending,
-        (state) => {
-          state.hasLoading = true;
-        },
-      )
-      .addMatcher(
-        designAutomationApi.endpoints.postJsonFinalCategoryDataToServer
-          .matchFulfilled,
-        (state) => {
-          state.hasLoading = false;
-        },
-      )
-      .addMatcher(
-        designAutomationApi.endpoints.postJsonFinalCategoryDataToServer
           .matchRejected,
         (state) => {
           state.categoryNames = null;
