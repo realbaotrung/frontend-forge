@@ -70,7 +70,7 @@ export default function Nav() {
     setUserEmail(user.email);
   }, []);
 
-  const handleSignOut = useCallback(async () => {
+  const handleSignOut = useCallback(async() => {
     removeItemFromSS(storageItem.auth);
     if (!sessionStorage.length) {
       navigate(routePaths.HOME_URL);
@@ -79,8 +79,9 @@ export default function Nav() {
   }, [navigate]);
 
   return (
-    <HStack spacing={2.5} h='2rem' borderColor='gray.400'>
-      <Divider orientation='vertical' />
+    // <HStack spacing={2.5} h='2rem' borderColor='gray.400'>
+    <div className='user-login-info'>
+      {/* <Divider orientation='vertical' /> */}
       <Avatar size='sm' name={userFullName} />
       <Popover isOpen={isOpen} onClose={onClose}>
         <PopoverTrigger>
@@ -102,7 +103,7 @@ export default function Nav() {
         <PopoverContent sx={popoverContentCSS}>
           <PopoverArrow />
           <PopoverBody p={0}>
-            <VStack spacing={10} justify='flex-start' align='flex-start'>
+            <VStack spacing={10} justify='flex-start' align='flex-start' className='nav-user-info'>
               <Box>
                 <Text fontSize='14px' fontWeight='700'>
                   {userFullName}
@@ -112,12 +113,7 @@ export default function Nav() {
                 </Text>
               </Box>
               <Box>
-                <Button
-                  variant='primary'
-                  size='sm'
-                  onClick={handleSignOut}
-                  sx={{marginBlockStart: '16px'}}
-                >
+                <Button variant='primary' size='sm' onClick={handleSignOut}>
                   Sign out
                 </Button>
               </Box>
@@ -125,6 +121,7 @@ export default function Nav() {
           </PopoverBody>
         </PopoverContent>
       </Popover>
-    </HStack>
+</div>
+
   );
 }

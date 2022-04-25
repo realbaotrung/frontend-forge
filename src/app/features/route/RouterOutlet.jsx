@@ -2,7 +2,8 @@ import {Route, Routes} from 'react-router-dom';
 import routes from './routeMap';
 import RequireAuth from './RequireAuth';
 
-import NavBar from '../../components/Navbar';
+import NavBarAdmin from '../../components/NavbarAdmin';
+import Navbar from '../../components/Navbar'
 
 export default function RouterOutlet() {
   const routeComponents = routes.map((routeItem) => {
@@ -21,7 +22,8 @@ export default function RouterOutlet() {
         path={routeItem.path}
         element={
           <RequireAuth>
-            <NavBar isAdmin={routeItem.isAdmin}>{routeItem.component}</NavBar>
+            {routeItem.isAdmin && <NavBarAdmin>{routeItem.component}</NavBarAdmin>}
+            {!routeItem.isAdmin && <><Navbar />{routeItem.component}</>}
           </RequireAuth>
         }
       />
