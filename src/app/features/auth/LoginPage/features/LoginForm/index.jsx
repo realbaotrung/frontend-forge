@@ -25,7 +25,7 @@ import {BsFillEyeFill, BsFillEyeSlashFill} from 'react-icons/bs';
 import {useMessageSlice} from '../../../../../slices/message';
 import LoginFormMessage from './features/LoginFormMessage';
 import routePaths from '../../../../route/routePaths';
-import {selectUser} from '../../../../../slices/auth/selectors';
+import {selectUser, selectRole} from '../../../../../slices/auth/selectors';
 import { useSignInMutation } from '../../../../../slices/auth/authSlice';
 
 // =====================================================================
@@ -80,9 +80,14 @@ export default function LoginForm() {
   // =======================================================
   // If user is already logged in, show turn Login page off.
   // =======================================================
+  const role = useSelector(selectRole);
+
   useEffect(() => {
     if (user) {
-      navigate(routePaths.DASHBOARD_URL);
+      if(role === 'admin')
+        navigate('/admin');
+      else
+        navigate(routePaths.DASHBOARD_URL);
     }
   });
 

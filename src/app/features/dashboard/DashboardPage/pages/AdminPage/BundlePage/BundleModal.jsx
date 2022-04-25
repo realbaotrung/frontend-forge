@@ -2,72 +2,65 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Button, Form, Modal, Input, Upload, Select, Spin} from 'antd';
-import {FastBackwardFilled, UploadOutlined} from '@ant-design/icons';
+import {UploadOutlined, StarOutlined} from '@ant-design/icons';
 import {
   getVersionRevit,
   postBundle,
   putBundle,
   selectVersion,
-  selectLoading,
+  selectSuccess,
 } from '../../../../../../slices/bundle/bundleSlice';
 import {
-  getBundleCategory,
-  selectBundleCategory,
+  getBundleCategoryAll,
+  selectBundleCategoryAll,
 } from '../../../../../../slices/bundleCategory/bundleCategorySlice';
-import {
-  BundleModel
-} from '../../../../../../slices/bundle/bundleModel';
 
-export default function BundleModal({
-  resetEditing,
-  isEditing,
-  editingBundle,
-  closeModal,
-}) {
+export default function BundleModal({resetEditing, isEditing, editingBundle}) {
   const [form] = Form.useForm();
   const [uploadFile, setUploadFile] = useState();
   const dispatch = useDispatch();
 
-  const bundleCategories = useSelector(selectBundleCategory);
+  const bundleCategoryAlls = useSelector(selectBundleCategoryAll);
   const versionrevits = useSelector(selectVersion);
-  const isLoading = useSelector(selectLoading);
-
+  const isSuccess = useSelector(selectSuccess);
 
   useEffect(() => {
-    dispatch(getBundleCategory());
+    dispatch(getBundleCategoryAll());
   }, []);
 
   useEffect(() => {
-    form.setFieldsValue(new BundleModel());
     form.resetFields();
+    form.setFieldsValue(editingBundle);
   }, [editingBundle]);
 
-
-  
   useEffect(() => {
     dispatch(getVersionRevit());
-  }, [isEditing]);
+    dispatch(getBundleCategoryAll());
+  }, []);
 
   useEffect(() => {
-    dispatch(getBundleCategory());
-    dispatch(getVersionRevit());
-  }, [isLoading]);
+    if(isSuccess) {
+      resetEditing(true)
+    }
+  }, [isSuccess]);
 
   const onFinish = (value) => {
     const formData = new FormData();
     formData.append('Description', value.description);
     formData.append('VersionRevit', value.versionRevit);
     formData.append('BundleCategoryId', value.bundleCategoryId);
-    formData.append('File', uploadFile);
-    if (value.id !== undefined) {
+    if(uploadFile) {
+      formData.append('File', uploadFile);
+    }
+    if (editingBundle.id === undefined) {
       dispatch(postBundle(formData));
     } else {
-      dispatch(putBundle(formData));
+      dispatch(putBundle({data: formData, id: editingBundle.id}));
     }
-    closeModal(true);
   };
   const onFinishFailed = (errorInfo) => {};
 
+  
   const props = {
     onRemove: (file) => {
       setUploadFile(null);
@@ -75,38 +68,66 @@ export default function BundleModal({
     beforeUpload: (file) => {
       return false;
     },
+    defaultFileList: editingBundle.path !== undefined ? [
+      {
+        uid: '1',
+        name: editingBundle.path.split('\\').pop().split('/').pop(),
+        status: 'done',
+        url: 'http://www.baidu.com/xxx.png',
+      }
+    ] : [],
+    showUploadList: {
+      showDownloadIcon: false,
+      showRemoveIcon: false,
+    }
   };
 
   return (
     <Modal
       title={editingBundle != null ? 'Edit' : 'Add'}
       visible={isEditing}
-      okText='Save'
+      okText='Save' 
+      forceRender 
       onCancel={() => {
         resetEditing();
+      }} 
+      onOk={() => {
+        form
+          .validateFields()
+          .then((values) => {
+            form.resetFields();
+            onFinish(values);
+          })
+          .catch((info) => {
+            console.log('Validate Failed:', info);
+          });
       }}
     >
       <Form
-        form={form}   
-        name='basic' 
-        initialValues={new BundleModel()}
+        form={form} 
+        name='basic'
         labelCol={{span: 8}}
         wrapperCol={{span: 16}}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
+        onFinishFailed={onFinishFailed} 
+        initialValues={{
+          description : editingBundle?.description,
+          bundleCategoryId :editingBundle?.bundleCategoryId,
+          versionRevit: editingBundle?.versionRevit
+        }}
         autoComplete='off'
       >
         <Form.Item
           label='Description'
-          name='description'
+          name='description' 
           rules={[{required: true, message: 'Please input Description!'}]}
         >
-          <Input defaultValue={editingBundle?.description} />
+          <Input />
         </Form.Item>
 
         <Form.Item label='Bundle Category' name='bundleCategoryId'>
-          <Select defaultValue={editingBundle?.bundleCategory?.id}>
-            {bundleCategories?.result.map((value) => {
+          <Select>
+            {bundleCategoryAlls?.result.map((value) => {
               return (
                 <Select.Option key={value.id} value={value.id}>
                   {value.name}
@@ -117,7 +138,7 @@ export default function BundleModal({
         </Form.Item>
 
         <Form.Item label='Version Revit' name='versionRevit'>
-          <Select defaultValue={editingBundle?.versionRevit}>
+          <Select >
             {versionrevits?.result?.map((value) => {
               return (
                 <Select.Option key={value} value={value}>
@@ -128,23 +149,18 @@ export default function BundleModal({
           </Select>
         </Form.Item>
 
-        <Form.Item>
-          <Upload {...props} onChange={(e) => setUploadFile(e.file)}>
+        <Form.Item label='File upload' name='fileUpload'>
+          <Upload {...props} onChange={(e) => setUploadFile(e.file)} multiple={false}  maxCount={1}>
             <Button icon={<UploadOutlined />}>Click to Upload</Button>
           </Upload>
-          {/* <input
-              type="file"
-              onChange={(e) => setUploadFile(e.target.files[0])}
-            /> */}
         </Form.Item>
-        <Form.Item wrapperCol={{offset: 8, span: 16}}>
+
+        {/* <Form.Item wrapperCol={{offset: 8, span: 16}}>
           <Button type='primary' htmlType='submit'>
             Submit
           </Button>
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </Modal>
   );
 }
-
-

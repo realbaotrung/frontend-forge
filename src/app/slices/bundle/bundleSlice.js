@@ -1,21 +1,24 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import axios from 'axios';
 import {api} from '../../../api/axiosClient';
-
-const initialState = {
-  isLoading: false,
-  isDeleting: false,
-  errorMessage: '',
-  bundles: null,
-  bundle: {},
-};
+import { SystemContants } from '../../../common/systemcontants';
+import Notification from '../../components/Notification';
 
 export const getBundle = createAsyncThunk(
   'bundle/get',
-  async (data, {rejectWithValue}) => {
-    const response = await api.get('/bundle');
-    return response.data;
-  },
+  async ({index, size}, {rejectWithValue}) => {
+    try {
+      const response = await api.get(`/bundle?PageNumber=${index}&PageSize=${size}`);
+      if (response.status >= 400) {
+        return rejectWithValue(response.data)
+      } 
+      return response.data;
+    } catch (e) {
+      console.log("Error", e.response.data)
+      return rejectWithValue(e.response.data)
+    }
+    
+  }
+  
 );
 
 export const getVersionRevit = createAsyncThunk(
@@ -32,22 +35,30 @@ export const postBundle = createAsyncThunk(
     const config = {headers: {'Content-Type': 'multipart/form-data'}};
     try {
       const response = await api.create('/bundle', data, config);
+      if (response.status >= 400) {
+        return rejectWithValue(response.data)
+      } 
       return response.data;
     } catch (e) {
-      return e;
+      return rejectWithValue(e.response.data)
     }
+
   },
 );
 
 export const putBundle = createAsyncThunk(
   'bundle/update',
-  async (data, {rejectWithValue}) => {
-    const config = {headers: {'Content-Type': 'multipart/form-data'}};
+  async ({data, id}, {rejectWithValue}) => {
     try {
-      const response = await api.patch('/bundle', data, config);
+      const config = {headers: {'Content-Type': 'multipart/form-data'}};
+      const response = await api.patch(`/bundle/${id}`, data, config);
+      if (response.status >= 400) {
+        return rejectWithValue(response.data)
+      } 
       return response.data;
     } catch (e) {
-      return e;
+      console.log("Error", e.response.data)
+      return rejectWithValue(e.response.data)
     }
   },
 );
@@ -69,72 +80,94 @@ export const bundleSlice = createSlice({
   name: 'bundle',
   initialState: {
     isLoading: false,
+    isSuccess: false,
     errorMessage: '',
     bundles: null,
     bundle: {},
     versions: [],
+    noti: SystemContants.NOTI_INFO
   },
   reducers: {},
   extraReducers: (builder) => {
-    // Start get request
+    // Start GET request
     builder.addCase(getBundle.pending, (state) => {
       state.isLoading = true;
     });
 
-    // Request successful
+    // Request GET successful
     builder.addCase(getBundle.fulfilled, (state, action) => {
       state.isLoading = false;
       state.bundles = action.payload;
     });
 
-    // Request error
+    // Request GET error
     builder.addCase(getBundle.rejected, (state, action) => {
       state.isLoading = false;
       state.errorMessage = action.payload.message;
+      state.noti = SystemContants.NOTI_ERROR;
     });
 
-    // Request successful
+     // Start POST  request
+     builder.addCase(postBundle.pending, (state) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+    });
+    // Request POST successful
     builder.addCase(postBundle.fulfilled, (state, action) => {
       state.isLoading = false;
+      state.isSuccess = true;
       state.bundle = action.payload;
+      Notification(SystemContants.NOTI_SUCCESS, 'Save successful');
+      
     });
-    // Request error
+    // Request POST error
     builder.addCase(postBundle.rejected, (state, action) => {
       state.isLoading = false;
-      state.errorMessage = action.payload.message;
+      state.isSuccess = false;
+      state.errorMessage = action.payload;
+      Notification(SystemContants.NOTI_ERROR, [...action.payload.errors][0]);
     });
 
-    // Start get request
+    // Start DELETE request
     builder.addCase(deleteBundle.pending, (state) => {
-      state.isDeleting = true;
+      state.isLoading = true;
+      state.isSuccess = false;
     });
-    // Request successful
+    // Request DELETE successful
     builder.addCase(deleteBundle.fulfilled, (state, action) => {
-      state.isDeleting = false;
+      state.isLoading = false;
+      state.isSuccess = true;
       state.bundle = action.payload;
+      state.noti = SystemContants.NOTI_SUCCESS;
     });
-    // Request error
+    // Request DELETE error
     builder.addCase(deleteBundle.rejected, (state, action) => {
-      state.isDeleting = false;
+      state.isLoading = false;
+      state.isSuccess = false;
       state.errorMessage = action.payload.message;
+      state.noti = SystemContants.NOTI_ERROR;
     });
 
-    // Start get request
+    // Start PATCH request
     builder.addCase(putBundle.pending, (state) => {
       state.isLoading = true;
+      state.isSuccess = false;
     });
-    // Request successful
+    // Request PATCH successful
     builder.addCase(putBundle.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.bundle = action.payload;
+      state.isSuccess = true;
+      Notification(SystemContants.NOTI_SUCCESS, 'Save successful');
     });
-    // Request error
+    // Request PATCH error
     builder.addCase(putBundle.rejected, (state, action) => {
       state.isLoading = false;
+      state.isSuccess = false;
       state.errorMessage = action.payload.message;
+      Notification(SystemContants.NOTI_ERROR, [...action.payload.errors][0])
     });
 
-    // Request successful
+    // Request VersionRevit successful
     builder.addCase(getVersionRevit.fulfilled, (state, action) => {
       state.isLoading = false;
       state.versions = action.payload;
@@ -145,10 +178,13 @@ export const bundleSlice = createSlice({
 // Select state currentUser from slice
 export const selectBundle = (state) => state.bundle.bundles;
 export const selectLoading = (state) => state.bundle.isLoading;
-export const deleteLoading = (state) => state.bundle.isDeleting;
+export const selectSuccess = (state) => state.bundle.isSuccess;
 export const selectErrorMessage = (state) => state.bundle.errorMessage;
 export const selectVersion = (state) => state.bundle.versions;
 export const addBundle = (state) => state.bundle.bundle;
 export const updateBundle = (state) => state.bundle.bundle;
+
+export const selectBundleSlice = (state) => state.bundle;
+
 // Export reducer
 export default bundleSlice.reducer;

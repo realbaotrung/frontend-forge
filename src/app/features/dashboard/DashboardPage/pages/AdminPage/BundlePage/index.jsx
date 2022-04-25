@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Button, Table, Modal} from 'antd';
+import {Button, Table, Modal, Spin } from 'antd';
 import {EditOutlined, DeleteOutlined} from '@ant-design/icons';
 import BundleModal from './BundleModal';
+import { SystemContants } from '../../../../../../../common/systemcontants';
 import {
   getBundle,
   selectBundle,
   deleteBundle,
   selectLoading,
-  deleteLoading,
+  selectSuccess
 } from '../../../../../../slices/bundle/bundleSlice';
 
 import {
@@ -17,40 +18,52 @@ import {
 
 export default function BundlePage() {
   const [isEditing, setIsEditing] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [statusModal, setstatusModal] = useState(0);
   const [editingBundle, setEditingBundle] = useState(new BundleModel());
-
   const bundle = useSelector(selectBundle);
   const dispatch = useDispatch();
+  const isLoading = useSelector(selectLoading);
+  const isSuccess = useSelector(selectSuccess);
 
-  const isDeleting = useSelector(deleteLoading);
 
   useEffect(() => {
-    dispatch(getBundle());
+    dispatch(getBundle({index: SystemContants.PAGE_INDEX, size: SystemContants.PAGE_SIZE}));
+    console.log(bundle)
   }, [dispatch]);
 
-  useEffect(() => {
-    
-  }, [editingBundle]);
-
-  useEffect(() => {
-    if (isDeleting) {
-      dispatch(getBundle());
-    }
-  }, [isDeleting]);
-
   const onAddBundle = () => {
+    setstatusModal(0);
     setIsEditing(true);
     setEditingBundle(new BundleModel());
   };
 
-  const onEditBundle = (record) => {
-    setEditingBundle({...record});
-    setIsEditing(true);
-  };
-
-  const resetEditing = () => {
+  const resetEditing = (isReset = false) => {
     setIsEditing(false);
     setEditingBundle(new BundleModel());
+    if(isReset) {
+      dispatch(getBundle({index: currentPage, size: SystemContants.PAGE_SIZE}));
+    }
+  };
+
+  useEffect(() => {
+    if(isSuccess) {
+      if(isEditing && statusModal === 1) {
+        setCurrentPage(currentPage)
+      } else {
+        setCurrentPage(1)
+      }
+      dispatch(getBundle({index: currentPage, size: SystemContants.PAGE_SIZE}));
+    }
+  }, [isSuccess])
+
+  useEffect(() => {
+  }, [editingBundle])
+
+  const onEditBundle = (record) => {
+    setstatusModal(1);
+    setIsEditing(true);
+    setEditingBundle({...record, bundleCategoryId: record.bundleCategory.id});
   };
 
   const onDeleteBundle = (record) => {
@@ -60,26 +73,32 @@ export default function BundlePage() {
       okType: 'danger',
       onOk: () => {
         dispatch(deleteBundle(record));
+        setCurrentPage(1);
       },
     });
   };
 
+  const paginationChange =(page, pageSize) =>{
+    setCurrentPage(page);
+    dispatch(getBundle({index: page, size: pageSize}));
+  }
+
   const columns = [
     {
       key: 'name',
-      title: 'name',
+      title: 'Name',
       dataIndex: 'name',
     },
     {
-      key: 'path',
-      title: 'path',
-      dataIndex: 'path',
+      key: 'description',
+      title: 'Description',
+      dataIndex: 'description',
     },
     {
       key: 'bundleCategory',
-      title: 'bundleCategory',
+      title: 'BundleCategory',
       render: (record) => {
-        return <p>{record?.name}</p>;
+        return <p>{record?.bundleCategory.name}</p>;
       },
     },
     {
@@ -105,14 +124,16 @@ export default function BundlePage() {
     },
   ];
   return (
-    <>
+    <Spin spinning={isLoading}>
       <Button onClick={onAddBundle}>Add a new Bundle</Button>
-      <Table columns={columns} dataSource={bundle?.result}></Table>
+      <Table columns={columns} dataSource={bundle?.result.map((value) => {
+        return {...value, key:value.id}
+      })} pagination={{pageSize: SystemContants.PAGE_SIZE, total:bundle?.totalRecords, onChange: paginationChange, current:currentPage}}  ></Table>
       <BundleModal
         resetEditing={resetEditing}
         isEditing={isEditing}
         editingBundle={editingBundle}
       />
-    </>
+      </Spin>
   );
 }
