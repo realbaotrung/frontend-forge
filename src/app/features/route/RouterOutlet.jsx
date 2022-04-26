@@ -1,4 +1,5 @@
 import {Route, Routes} from 'react-router-dom';
+
 import routes from './routeMap';
 import RequireAuth from './RequireAuth';
 
@@ -21,7 +22,7 @@ export default function RouterOutlet() {
         key={routeItem.id}
         path={routeItem.path}
         element={
-          <RequireAuth>
+          <RequireAuth isAdmin={routeItem?.isAdmin}>
             {routeItem.isAdmin && <NavBarAdmin>{routeItem.component}</NavBarAdmin>}
             {!routeItem.isAdmin && <><Navbar />{routeItem.component}</>}
           </RequireAuth>

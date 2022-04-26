@@ -3,22 +3,26 @@ import {useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {Box} from '@chakra-ui/react';
-import {selectAccessToken} from '../../slices/auth/selectors';
+import {selectAccessToken, selectRole} from '../../slices/auth/selectors';
 import routePaths from './routePaths';
 
-export default function RequireAuth({children}) {
+export default function RequireAuth({children, isAdmin}) {
   const accessToken = useSelector(selectAccessToken);
+  const role = useSelector(selectRole);
   const navigate = useNavigate();
 
+  console.log('role', role)
+
   useEffect(() => {
-    if (!accessToken) {
+    if (!accessToken || isAdmin && role !== 'admin' || !isAdmin && role !== 'normal') {
       navigate(routePaths.HOME_URL);
     }
-  }, [accessToken]);
+  }, [accessToken, role]);
 
   return <Box>{children}</Box>;
 }
 
 RequireAuth.propTypes = {
   children: PropTypes.node.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
 };
