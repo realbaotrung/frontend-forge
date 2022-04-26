@@ -1,109 +1,94 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 import {Tree} from 'antd';
-import './forgeTree.css';
-import {useTreeData} from './useTreeData';
 import {selectBucketsFromOSS} from '../../../../../../slices/oss/selectors';
-import { useGetOssBucketByIdQuery } from '../../../../../../slices/oss/ossSlice';
-import { api } from '../../../../../../../api/axiosClient';
+import {api} from '../../../../../../../api/axiosClient';
+import {usePostModelDerivativeJobsMutation} from '../../../../../../slices/modelDerivative/modelDerivativeSlice';
+import './forgeTree.css';
 
-const {TreeNode, DirectoryTree} = Tree;
+const {DirectoryTree} = Tree;
+
+function updateTreeData(list, key, children) {
+  return list.map((node) => {
+    if (node.key === key) {
+      return {...node, children};
+    }
+    if (node.children) {
+      return {
+        ...node,
+        children: updateTreeData(node.children, key, children),
+      };
+    }
+    return node;
+  });
+}
 
 // eslint-disable-next-line react/prop-types
-export default function ForgeTree({setUrn}) {
-  // const {treeData} = useTreeData();
-const [buckets, setBuckets] = useState([]);
+export default function ForgeTree() {
+  const [buckets, setBuckets] = useState([]);
   const dataBucket = useSelector(selectBucketsFromOSS);
 
-  // const dispatch = useDispatch();
+  const [postModelDerivativeJobs] = usePostModelDerivativeJobsMutation();
 
   useEffect(() => {
-    if (dataBucket){
+    if (dataBucket) {
       const nodes = [];
       dataBucket.map((node) =>
         nodes.push({
-          title: node.text,
           key: node.id,
+          title: node.text,
         }),
       );
       setBuckets(nodes);
     }
   }, [dataBucket]);
 
-  const onSelect = (selectedKeys, info) => {
-    console.log('selected', selectedKeys, info);
-    const data = {
-      "bucketKey": info.node.parent,
-      "objectName": info.node.key,
+  const onSelect = useCallback(async (selectedKeys, info) => {
+    try {
+      console.log('selected', selectedKeys, info);
+      const isLeaf = info?.node?.isLeaf;
+      if (isLeaf) {
+        const data = {
+          bucketKey: info.node.parent,
+          objectName: info.node.key,
+        };
+        await postModelDerivativeJobs(data).unwrap();
+      }
+    } catch (error) {
+      console.log(error);
     }
-    api.create(`/forge/modelderivative/jobs`, data).then((res) => {
-        console.log(res.data.urn);
-        setUrn(res.data?.urn)
-    });
-  };
+  }, []);
 
-  //   const onSelect = (selectedKeys, info) => {
-  //   console.log(selectedKeys);
-  //   console.log(info);
-  // };
-
-  function updateTreeData(list, key, children) {
-    return list.map((node) => {
-      if (node.key === key) {
-        return {...node, children};
-      }
-
-      if (node.children) {
-        return { ...node, children: updateTreeData(node.children, key, children) };
-      }
-
-      return node;
-    });
-  }
-
-  const handleOnLoad = ({key, children}) =>
-    new Promise((resolve) => {
-      if (children) {
-        resolve();
-        return;
-      }
-      api.get(`/forge/oss/buckets/${key}`).then((res) => {
-        const arr = [];
-        res.data?.result?.map((value) => 
-          arr.push({
-            key: value.id,
-            title: value.text,
-            isLeaf: true,
-            parent: key
-          })
-        )
-        setBuckets(
-          (origin) =>
-          updateTreeData(origin, key, arr),
-        );
-        resolve();
-      });
-    });
-
-  // processing data
-  // const renderTreeNodes = (data) =>
-  //   data.map((item) => {
-  //     if (item.children) {
-  //         return (
-  //           <TreeNode title={item.title} key={item.key} isLeaf={item.isLeaf}>
-  //             {renderTreeNodes(item.children)}
-  //           </TreeNode>
-  //         );
-  //     }
-  //     return <TreeNode key={item.key} title={item.title} isLeaf={item.isLeaf} />;
-  //   });
+  const handleOnLoad = useCallback(async ({key, children}) => {
+    try {
+      if (children) return;
+      const arr = [];
+      const res = await api.get(`/forge/oss/buckets/${key}`);
+      res.data?.result?.map((value) =>
+        arr.push({
+          key: value.id,
+          title: value.text,
+          isLeaf: true,
+          parent: key,
+        }),
+      );
+      setBuckets((origin) => updateTreeData(origin, key, arr));
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   return (
-    <div>
-      {/* <DirectoryTree onSelect={onSelect} onLoad>
-        {renderTreeNodes(buckets)}
-      </DirectoryTree> */}
-      <Tree treeData={buckets} loadData={handleOnLoad} onSelect={onSelect}/>
-    </div>
+    <Tree
+      showLine
+      treeData={buckets}
+      loadData={handleOnLoad}
+      onSelect={onSelect}
+      style={{
+        overflow: 'auto',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+      }}
+    />
   );
 }

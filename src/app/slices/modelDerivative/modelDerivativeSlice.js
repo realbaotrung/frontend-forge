@@ -31,6 +31,7 @@ export const {usePostModelDerivativeJobsMutation} = modelDerivativeApi;
 export const initialState = {
   urn: '',
   acceptedJobs: null,
+  isLoadingModel: false
 };
 
 const modelDerivativeSlice = createSlice({
@@ -40,10 +41,17 @@ const modelDerivativeSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addMatcher(
+        modelDerivativeApi.endpoints.postModelDerivativeJobs.matchPending,
+        (state) => {
+          state.isLoadingModel = true;
+        },
+      )
+      .addMatcher(
         modelDerivativeApi.endpoints.postModelDerivativeJobs.matchFulfilled,
         (state, {payload}) => {
           state.urn = payload.urn;
           state.acceptedJobs = payload.acceptedJobs;
+          state.isLoadingModel = false;
         },
       )
   },

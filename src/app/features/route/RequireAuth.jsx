@@ -2,7 +2,6 @@ import {useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {Box} from '@chakra-ui/react';
 import {selectAccessToken, selectRole} from '../../slices/auth/selectors';
 import routePaths from './routePaths';
 
@@ -19,7 +18,7 @@ export default function RequireAuth({children, isAdmin}) {
     }
   }, [accessToken, role]);
 
-  return <Box>{children}</Box>;
+  return <div>{children}</div>;
 }
 
 RequireAuth.propTypes = {
