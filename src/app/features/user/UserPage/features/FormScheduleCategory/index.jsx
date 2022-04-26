@@ -64,6 +64,7 @@ export default function FormScheduleCategory() {
 
   const dispatch = useDispatch();
 
+  // TODO: Should Use component RefreshToShowLoadingAndJsonData to get Data (10s per Request)
   // TODO: should delete when connect again to Server...
   // useEffect(() => {
   //   if (!jsonCategoryData) {
@@ -91,7 +92,6 @@ export default function FormScheduleCategory() {
   }, [jsonTargetCategoryData])
 
   const handleOnSend = useCallback(async() => {
-    // TODO: 
     onClose();
 
     if (jsonFinalCategoryDataToUpload) {

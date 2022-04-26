@@ -145,6 +145,20 @@ const designAutomationSlice = createSlice({
       state.jsonTargetCategoryData = payload;
     },
     getJsonFinalCategoryDataToUpload: (state, {payload}) => {
+    // TODO: create structure JSON file for uploading to server
+    //   {
+    //     "Pies": {
+    //      "scheduleName": "default",
+    //      "sheetName": "default",
+    //      "data": [
+    //        "Keynote",
+    //        "Type IFC Predefined Type",
+    //        "IFC Predefined Type",
+    //        "Export Type to IFC As",
+    //      ]
+    //    }
+    //   }
+    //  },
       const {categoryKeyName, jsonTargetCategoryData} = payload;
       const jsonFinal = {};
       jsonFinal[categoryKeyName] = jsonTargetCategoryData;

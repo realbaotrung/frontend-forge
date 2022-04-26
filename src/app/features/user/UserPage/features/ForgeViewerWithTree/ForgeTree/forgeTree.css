@@ -1,0 +1,7 @@
+/* .custom-tree-treenode > .ant-tree-list > .ant-tree-list-holder > .ant-tree-list-holder-inner > .ant-tree-treenode > .ant-tree-node-content-wrapper > .ant-tree-title{
+  overflow-x: auto;
+} */
+
+.custom-tree-treenode {
+  overflow: auto;
+}

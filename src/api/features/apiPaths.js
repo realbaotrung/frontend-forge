@@ -21,7 +21,7 @@ export const apiPaths = {
   API_DESIGNAUTOMATION_DESIGN_INFO : '/forge/design-info',
 
   // Model Derivative
-  API_MODEL_DERIVATIVE: '/forge/modelderivative/jobs',
+  API_MODEL_DERIVATIVE_JOBS: '/forge/modelderivative/jobs',
 
   // OAuth
   API_OAUTH_TOKEN_2_LEGGED: '/forge/oauth/token-2-legged',

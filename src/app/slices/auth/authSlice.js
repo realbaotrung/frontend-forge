@@ -1,4 +1,3 @@
-import qs from 'qs';
 import {createSlice} from '@reduxjs/toolkit';
 import {apiPrivate} from '../../../api/rtkQuery'
 import {apiPaths} from '../../../api/features/apiPaths'
