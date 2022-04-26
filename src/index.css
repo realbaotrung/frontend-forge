@@ -57,3 +57,10 @@
 .ant-layout-header .user-login-info span.chakra-avatar {
   margin: 15px 5px 0;
 }
+.modal-category{
+  width: auto;
+}
+.modal-category .ant-modal-body{
+  height: 500px;
+  overflow-y: scroll;
+}

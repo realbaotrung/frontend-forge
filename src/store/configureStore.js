@@ -5,6 +5,7 @@ import {reducer as designAutomationReducer} from '../app/slices/designAutomation
 import {apiRtk, apiPrivate} from '../api/rtkQuery';
 import bundleReducer from '../app/slices/bundle/bundleSlice';
 import bundleCategoryReducer from '../app/slices/bundleCategory/bundleCategorySlice';
+import propertiesSliceReducer from "../app/slices/properties/propertiesSlice";
 
 /**
  * All reducers put here...
@@ -15,6 +16,7 @@ const store = configureStore({
     auth: authReducer,
     bundle: bundleReducer,
     bundleCategory: bundleCategoryReducer,
+    propertiesInfo: propertiesSliceReducer,
     designAutomation: designAutomationReducer,
     message: messageReducer,
     [apiRtk.reducerPath]: apiRtk.reducer,

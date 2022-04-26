@@ -1,13 +1,17 @@
 import {Typography, Space, Select } from "antd";
+import React from "react";
 
 const {Text} = Typography
 const {Option} = Select;
 
-export default function CategorySelector() {
+// eslint-disable-next-line react/prop-types
+export default function CategorySelector({data}) {
+  const keys = Object.keys(data)
   return (
     <Space size={[0, 8]} direction='vertical'>
       <Text>Categories</Text>
       <Select
+        mode="multiple"
         showSearch
         autoFocus
         style={{width: 256}}
@@ -22,14 +26,13 @@ export default function CategorySelector() {
             .localeCompare(optionB.children.toLowerCase())
         }
       >
-        <Option value='1'>a</Option>
-        <Option value='2'>b</Option>
-        <Option value='3'>d</Option>
-        <Option value='4'>e</Option>
-        <Option value='5'>f</Option>
-        <Option value='6'>g</Option>
-        <Option value='7'>h</Option>
-        <Option value='8'>y</Option>
+        {keys.map((value) => {
+          return (
+            <Select.Option key={value} value={value}>
+              {value}
+            </Select.Option>
+          );
+        })}
       </Select>
     </Space>
   );

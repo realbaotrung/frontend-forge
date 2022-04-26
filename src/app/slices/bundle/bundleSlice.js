@@ -7,6 +7,7 @@ export const getBundle = createAsyncThunk(
   'bundle/get',
   async ({index, size}, {rejectWithValue}) => {
     try {
+      console.log(111111)
       const response = await api.get(`/bundle?PageNumber=${index}&PageSize=${size}`);
       if (response.status >= 400) {
         return rejectWithValue(response.data)

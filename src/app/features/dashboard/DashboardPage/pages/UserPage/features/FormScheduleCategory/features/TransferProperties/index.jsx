@@ -1,38 +1,34 @@
 import {useState} from 'react';
 import {Transfer, Space, Row, Col} from 'antd';
 
-const mockData = [];
-for (let i = 0; i < 20; i++) {
-  mockData.push({
-    key: i.toString(),
-    title: `content${i + 1}`,
-    description: `description of content${i + 1}`,
-  });
-}
 
-const initialTargetKeys = mockData
-  .filter((item) => +item.key > 10)
-  .map((item) => item.key);
+// eslint-disable-next-line react/prop-types
+export default function TransferProperties({data, mainKey}) {
+  const proData = [];
 
-export default function TransferProperties() {
+  // eslint-disable-next-line react/prop-types
+  data[mainKey].map((value, index) => (
+    proData.push({
+      key: index.toString(),
+      title: value
+    })
+  ));
+
+  const initialTargetKeys = [];
+
   const [targetKeys, setTargetKeys] = useState(initialTargetKeys);
   const [selectedKeys, setSelectedKeys] = useState([]);
   const onChange = (nextTargetKeys, direction, moveKeys) => {
-    console.log('targetKeys:', nextTargetKeys);
-    console.log('direction:', direction);
-    console.log('moveKeys:', moveKeys);
     setTargetKeys(nextTargetKeys);
   };
 
   const onSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
-    console.log('sourceSelectedKeys:', sourceSelectedKeys);
-    console.log('targetSelectedKeys:', targetSelectedKeys);
     setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
   };
 
   const onScroll = (direction, e) => {
-    console.log('direction:', direction);
-    console.log('target:', e.target);
+    // console.log('direction:', direction);
+    // console.log('target:', e.target);
   };
 
   return (
@@ -46,7 +42,7 @@ export default function TransferProperties() {
         width: 256,
         height: 250,
       }}
-      dataSource={mockData}
+      dataSource={proData}
       titles={['Source', 'Target']}
       targetKeys={targetKeys}
       selectedKeys={selectedKeys}
