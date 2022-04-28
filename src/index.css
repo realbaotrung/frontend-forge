@@ -57,3 +57,19 @@
 .ant-layout-header .user-login-info span.chakra-avatar {
   margin: 15px 5px 0;
 }
+
+ /* scrollbar css */
+ ::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+  ::-webkit-scrollbar-track {
+  background: #ffffff
+}
+  ::-webkit-scrollbar-thumb {
+  background: #dce0e6; 
+    border-radius: 100vw;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 139, 139, 0.652); 
+} 
