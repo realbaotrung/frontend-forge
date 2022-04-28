@@ -106,14 +106,12 @@ export default function FormScheduleCategory() {
 
     if (jsonFinalCategoryDataToUpload) {
       try {
-        debugger;
         const jsonString = JSON.stringify(jsonFinalCategoryDataToUpload);
         const data = {
           "designInfoId": designInfoId,
           "clientId": "randomClientId",
           "data": jsonString
         }
-        console.log('data', data);
         await postJsonFinalCategoryDataToServer(data).unwrap().then(() => {
           dispatch(resetFormScheduleCategory());
         });

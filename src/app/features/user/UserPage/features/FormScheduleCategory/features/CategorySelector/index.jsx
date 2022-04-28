@@ -15,9 +15,9 @@ const {Option} = Select;
 
 export default function CategorySelector() {
   const [names, setNames] = useState([]);
+  const [nameSchedule, setNameSchedule] = useState([]);
 
   const categoryNames = useSelector(selectCategoryNamesFromDA);
-
   useEffect(() => {
     if (categoryNames) {
       setNames(categoryNames);
@@ -34,10 +34,14 @@ export default function CategorySelector() {
 
   const handleOnSelect = useCallback((value) => {
     dispatch(getCategoryKeyName(value));
+    const timestamp = new Date().getTime();
+    setNameSchedule(`${value.toString()  } ${  timestamp.toString()}`)
+    dispatch(getScheduleName(`${value.toString()  } ${  timestamp.toString()}`));
   }, []);
 
-  const handleOnInputScheduleName = useCallback((value) => {
-    dispatch(getScheduleName(value));
+  const handleOnInputScheduleName = useCallback((e) => {
+    setNameSchedule(e.target.value);
+    dispatch(getScheduleName(e.target.value));
   }, []);
 
   const handleOnCheckbox = useCallback((e) => {
@@ -63,13 +67,13 @@ export default function CategorySelector() {
 
   return (
     <Space size={[0, 8]} direction='vertical'>
-      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-      <label>Schedule Name</label>
-      <input onInput={e => handleOnInputScheduleName(e.target.value)} className='ant-input'placeholder='Schedule Name' />
       <Text>Categories</Text>
       <Select {...selectProps} onSelect={handleOnSelect}>
         {optionCategoryNames}
       </Select>
+      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+      <label>Schedule Name</label>
+      <input value={nameSchedule} onChange={e => handleOnInputScheduleName(e)} className='ant-input'placeholder='Schedule Name' />
       <Checkbox style={{ lineHeight: '32px' }} onClick={e => handleOnCheckbox(e)}>
         Create Sheet
       </Checkbox>
