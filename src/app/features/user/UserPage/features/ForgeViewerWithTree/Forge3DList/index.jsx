@@ -56,6 +56,7 @@ export default function Forge3DList() {
         overflow: 'auto',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
+        maxHeight: '140px',
       }}
     />
   );

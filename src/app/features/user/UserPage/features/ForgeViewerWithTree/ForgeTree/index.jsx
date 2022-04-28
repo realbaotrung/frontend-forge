@@ -94,6 +94,8 @@ export default function ForgeTree() {
         overflow: 'auto',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
+        maxHeight: '170px',
+        paddingLeft: '1.5rem'
       }}
     />
   );

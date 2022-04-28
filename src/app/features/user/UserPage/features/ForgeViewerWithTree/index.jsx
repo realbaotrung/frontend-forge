@@ -1,6 +1,11 @@
 import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {Empty, Spin} from 'antd';
+import {Typography, Empty, Menu, Spin} from 'antd';
+import {
+  Html5Outlined,
+  WindowsOutlined,
+  CodeSandboxOutlined,
+} from '@ant-design/icons';
 import {useGetOssBucketsQuery} from '../../../../../slices/oss/ossSlice';
 import {
   selectIsLoadingModelFromMD,
@@ -13,7 +18,7 @@ import {
   selectView3DsFromFV,
   selectHaveSelectedViewFromFV,
   selectGuid2dViewFromFV,
-  selectGuid3dViewFromFV
+  selectGuid3dViewFromFV,
 } from '../../../../../slices/forgeViewer/selectors';
 import ForgeTree from './ForgeTree';
 import Forge2DViewer from './Forge2DViewer';
@@ -21,6 +26,9 @@ import Forge2DList from './Forge2DList';
 import Forge3DViewer from './Forge3DViewer';
 import Forge3DList from './Forge3DList';
 import ForgeViewerFirstTime from './ForgeViewerFirstTime';
+
+const {SubMenu} = Menu;
+const {Text} = Typography;
 
 export default function ForgeViewerWithTree() {
   const [urn, setUrn] = useState('');
@@ -42,10 +50,8 @@ export default function ForgeViewerWithTree() {
   const haveSelectedView = useSelector(selectHaveSelectedViewFromFV);
   const view2Ds = useSelector(selectView2DsFromFV);
   const view3Ds = useSelector(selectView3DsFromFV);
-  const guid2D = useSelector(selectGuid2dViewFromFV)
-  const guid3D = useSelector(selectGuid3dViewFromFV)
-  console.log('guid3d', guid3D);
-  console.log('guid2d', guid2D);
+  const guid2D = useSelector(selectGuid2dViewFromFV);
+  const guid3D = useSelector(selectGuid3dViewFromFV);
 
   // const dispatch = useDispatch();
 
@@ -56,7 +62,7 @@ export default function ForgeViewerWithTree() {
     if (isError) {
       console.log(error);
     }
-  }, [buckets]);
+  }, [isSuccessGetBuckets]);
 
   useEffect(() => {
     if (urnFromMD) {
@@ -81,20 +87,58 @@ export default function ForgeViewerWithTree() {
     >
       <div
         style={{
-          minWidth: '256px',
-          width: '256px',
+          minWidth: '272px',
+          width: '272px',
           backgroundColor: '#fff',
           position: 'relative',
+          height: 'calc(100vh - 96px)',
+          overflow: 'auto',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
         }}
       >
         {isLoading ? (
           <Spin tip='Loading Tree data...' className='center-position' />
         ) : (
-          <>
-            <ForgeTree />
-            {view2Ds && <Forge2DList />}
-            {view3Ds && <Forge3DList />}
-          </>
+          <Menu mode='inline' defaultOpenKeys={['ForgeTreeSubMenu']}>
+            <SubMenu
+              icon={<Html5Outlined style={{fontSize: '1.5em'}} />}
+              key='ForgeTreeSubMenu'
+              title={[
+                <Text key='Document' style={{fontWeight: '600'}}>
+                  Documents {`(${buckets.length})`}
+                </Text>,
+              ]}
+            >
+              <ForgeTree />
+            </SubMenu>
+            {view2Ds && (
+              <SubMenu
+                icon={<WindowsOutlined style={{fontSize: '1.5em'}} />}
+                key='Forge2DListSubMenu'
+                title={[
+                  <Text key='Sheets' style={{fontWeight: '600'}}>
+                    Sheets {`(${view2Ds.length})`}
+                  </Text>,
+                ]}
+              >
+                <Forge2DList />
+              </SubMenu>
+            )}
+            {view3Ds && (
+              <SubMenu
+                icon={<CodeSandboxOutlined style={{fontSize: '1.5em'}} />}
+                key='Forge3DListSubMenu'
+                title={[
+                  <Text key='3dViews' style={{fontWeight: '600'}}>
+                    3D Views {`(${view3Ds.length})`}
+                  </Text>,
+                ]}
+              >
+                <Forge3DList />
+              </SubMenu>
+            )}
+          </Menu>
           // <Forge3DList />
         )}
       </div>
@@ -136,8 +180,6 @@ export default function ForgeViewerWithTree() {
           token2Legged &&
           guid3D &&
           !haveSelectedView && <Forge3DViewer token={token} urn={urn} />}
-        {/* <Forge2DViewer token={getToken} urn={getUrn}/> */}
-        {/* <ForgeViewerFirstTime token={getToken} urn={getUrn} /> */}
       </div>
     </div>
   );
