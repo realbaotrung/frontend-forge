@@ -1,13 +1,11 @@
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Typography, Space, Select, Checkbox} from 'antd';
-import {
-  selectCategoryNamesFromDA,
-} from '../../../../../../../slices/designAutomation/selectors';
+import {Typography, Space, Select, Checkbox, Input} from 'antd';
+import {selectCategoryNamesFromDA} from '../../../../../../../slices/designAutomation/selectors';
 import {
   getCategoryKeyName,
   getScheduleName,
-  getCheckboxSheet
+  getCheckboxSheet,
 } from '../../../../../../../slices/designAutomation/designAutomationSlice';
 
 const {Text} = Typography;
@@ -34,9 +32,10 @@ export default function CategorySelector() {
 
   const handleOnSelect = useCallback((value) => {
     dispatch(getCategoryKeyName(value));
+
     const timestamp = new Date().getTime();
-    setNameSchedule(`${value.toString()  } ${  timestamp.toString()}`)
-    dispatch(getScheduleName(`${value.toString()  } ${  timestamp.toString()}`));
+    setNameSchedule(`${value.toString()} ${timestamp.toString()}`);
+    dispatch(getScheduleName(`${value.toString()} ${timestamp.toString()}`));
   }, []);
 
   const handleOnInputScheduleName = useCallback((e) => {
@@ -72,9 +71,17 @@ export default function CategorySelector() {
         {optionCategoryNames}
       </Select>
       {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-      <label>Schedule Name</label>
-      <input value={nameSchedule} onChange={e => handleOnInputScheduleName(e)} className='ant-input'placeholder='Schedule Name' />
-      <Checkbox style={{ lineHeight: '32px' }} onClick={e => handleOnCheckbox(e)}>
+      {/* <label>Schedule Name</label> */}
+      <Text>Schedule Name</Text>
+      <Input
+        value={nameSchedule}
+        onChange={(e) => handleOnInputScheduleName(e)}
+        placeholder='Schedule Name'
+      />
+      <Checkbox
+        style={{lineHeight: '32px'}}
+        onClick={(e) => handleOnCheckbox(e)}
+      >
         Create Sheet
       </Checkbox>
     </Space>

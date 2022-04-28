@@ -110,6 +110,8 @@ export const initialState = {
   categoryValuesByKeyName: null,
   jsonTargetCategoryData: null,
   jsonFinalCategoryDataToUpload: null,
+  scheduleName: '',
+  isSheet: false,
   isError: false,
 };
 
@@ -139,7 +141,7 @@ const designAutomationSlice = createSlice({
       state.categoryKeyName = payload;
     },
     getScheduleName: (state, {payload}) => {
-      state.ScheduleName = payload;
+      state.scheduleName = payload;
     },
     getCheckboxSheet: (state, {payload}) => {
       state.isSheet = payload;
@@ -196,7 +198,7 @@ const designAutomationSlice = createSlice({
     resetFormScheduleCategory: (state) => {
       state.categoryNames = null;
       state.categoryKeyName = '';
-      state.ScheduleName = '';
+      state.scheduleName = '';
       state.isSheet = false;
       state.jsonTargetCategoryData = null;
       state.jsonFinalCategoryDataToUpload = null;

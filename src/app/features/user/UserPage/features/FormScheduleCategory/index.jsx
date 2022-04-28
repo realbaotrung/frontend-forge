@@ -14,8 +14,8 @@ import {
   resetFormScheduleCategory, usePostJsonFinalCategoryDataToServerMutation
 } from '../../../../../slices/designAutomation/designAutomationSlice';
 import {
-  checkboxSheetFromDA,
-  inputScheduleNameFromDA,
+  selectIsSheetFromDA,
+  selectScheduleNameFromDA,
   selectCategoryKeyNameFromDA,
   selectCategoryNamesFromDA, selectIdFromDA,
   selectJsonCategoryDataFromDA, selectJsonFinalCategoryDataToUploadFromDA,
@@ -57,8 +57,8 @@ export default function FormScheduleCategory() {
   const {onClose, onOpen, isOpen} = useDisclosure();
   const categoryNames = useSelector(selectCategoryNamesFromDA);
   const categoryKeyName = useSelector(selectCategoryKeyNameFromDA);
-  let scheduleName = useSelector(inputScheduleNameFromDA);
-  let isSheet = useSelector(checkboxSheetFromDA);
+  const scheduleName = useSelector(selectScheduleNameFromDA);
+  const isSheet = useSelector(selectIsSheetFromDA);
   const jsonCategoryData = useSelector(selectJsonCategoryDataFromDA);
   const jsonTargetCategoryData = useSelector(selectJsonTargetCategoryDataFromDA);
   const jsonFinalCategoryDataToUpload = useSelector(selectJsonFinalCategoryDataToUploadFromDA);
@@ -70,11 +70,11 @@ export default function FormScheduleCategory() {
 
   // TODO: Should Use component RefreshToShowLoadingAndJsonData to get Data (10s per Request)
   // TODO: should delete when connect again to Server...
-  useEffect(() => {
-    if (!jsonCategoryData) {
-      dispatch(getJsonCategoryData(category));
-    }
-  }, [jsonCategoryData])
+  // useEffect(() => {
+  //   if (!jsonCategoryData) {
+  //     dispatch(getJsonCategoryData(category));
+  //   }
+  // }, [jsonCategoryData])
 
   useEffect(() => {
     if (!categoryNames && jsonCategoryData) {
@@ -88,14 +88,9 @@ export default function FormScheduleCategory() {
     }
   }, [categoryKeyName, jsonCategoryData])
 
+  // ????
   useEffect(() => {
-    if (jsonTargetCategoryData) {
-      if(scheduleName === undefined){
-        scheduleName = '';
-      }
-      if(isSheet === undefined){
-        isSheet = false;
-      }
+    if (jsonTargetCategoryData && scheduleName && isSheet) {
       const scheduleObject = {categoryKeyName, jsonTargetCategoryData, scheduleName, isSheet};
       dispatch(getJsonFinalCategoryDataToUpload(scheduleObject));
     }
@@ -112,6 +107,7 @@ export default function FormScheduleCategory() {
           "clientId": "randomClientId",
           "data": jsonString
         }
+        debugger
         await postJsonFinalCategoryDataToServer(data).unwrap().then(() => {
           dispatch(resetFormScheduleCategory());
         });
