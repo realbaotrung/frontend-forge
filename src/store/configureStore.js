@@ -4,6 +4,8 @@ import {reducer as authReducer} from '../app/slices/auth/authSlice';
 import {reducer as designAutomationReducer} from '../app/slices/designAutomation/designAutomationSlice';
 import {reducer as ossReducer} from '../app/slices/oss/ossSlice';
 import {reducer as modelDerivativeReducer} from '../app/slices/modelDerivative/modelDerivativeSlice';
+import {reducer as oAuthReducer} from '../app/slices/oAuth/oAuthSlice';
+import {reducer as forgeViewerReducer} from '../app/slices/forgeViewer/forgeViewerSlice';
 import {apiRtk, apiPrivate} from '../api/rtkQuery';
 import bundleReducer from '../app/slices/bundle/bundleSlice';
 import bundleCategoryReducer from '../app/slices/bundleCategory/bundleCategorySlice';
@@ -15,11 +17,13 @@ import bundleCategoryReducer from '../app/slices/bundleCategory/bundleCategorySl
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    oAuth: oAuthReducer,
     bundle: bundleReducer,
     bundleCategory: bundleCategoryReducer,
     designAutomation: designAutomationReducer,
     oss: ossReducer,
     modelDerivative: modelDerivativeReducer,
+    forgeViewer: forgeViewerReducer,
     message: messageReducer,
     [apiRtk.reducerPath]: apiRtk.reducer,
     [apiPrivate.reducerPath]: apiPrivate.reducer,

@@ -1,12 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Tree} from 'antd';
 import {selectBucketsFromOSS} from '../../../../../../slices/oss/selectors';
 import {api} from '../../../../../../../api/axiosClient';
 import {usePostModelDerivativeJobsMutation} from '../../../../../../slices/modelDerivative/modelDerivativeSlice';
-import './forgeTree.css';
-
-const {DirectoryTree} = Tree;
+import {setTokenOAuth2Legged} from '../../../../../../slices/oAuth/oAuthSlice';
+import { resetAllFromForgeViewerSlice } from '../../../../../../slices/forgeViewer/forgeViewerSlice';
 
 function updateTreeData(list, key, children) {
   return list.map((node) => {
@@ -30,6 +29,8 @@ export default function ForgeTree() {
 
   const [postModelDerivativeJobs] = usePostModelDerivativeJobsMutation();
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (dataBucket) {
       const nodes = [];
@@ -45,6 +46,7 @@ export default function ForgeTree() {
 
   const onSelect = useCallback(async (selectedKeys, info) => {
     try {
+      dispatch(resetAllFromForgeViewerSlice());
       console.log('selected', selectedKeys, info);
       const isLeaf = info?.node?.isLeaf;
       if (isLeaf) {
@@ -53,6 +55,10 @@ export default function ForgeTree() {
           objectName: info.node.key,
         };
         await postModelDerivativeJobs(data).unwrap();
+
+        // Get new 2 legged token each post request
+        const resToken2Legged = await api.get('forge/oauth/token-2-legged');
+        dispatch(setTokenOAuth2Legged(resToken2Legged.data?.access_token));
       }
     } catch (error) {
       console.log(error);

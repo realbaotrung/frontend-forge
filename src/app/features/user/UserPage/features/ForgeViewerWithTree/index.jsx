@@ -2,36 +2,55 @@ import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Empty, Spin} from 'antd';
 import {useGetOssBucketsQuery} from '../../../../../slices/oss/ossSlice';
-import ForgeTree from './ForgeTree';
-import ForgeViewer from '../../../../../../utils/ForgeViewer';
 import {
   selectIsLoadingModelFromMD,
   selectUrnFromMD,
 } from '../../../../../slices/modelDerivative/selectors';
-import './forgeViewerWithTree.css';
-
-// TODO: implement get accessToken from 2 legged ( or 3 legged )
-
-const centerCSS = {};
-
-const getToken =
-  'eyJhbGciOiJSUzI1NiIsImtpZCI6IlU3c0dGRldUTzlBekNhSzBqZURRM2dQZXBURVdWN2VhIn0.eyJzY29wZSI6WyJ2aWV3YWJsZXM6cmVhZCJdLCJjbGllbnRfaWQiOiJORjh6Rlk0Uk5VQzc4Mmc2T3ZsY2NtMG45MkI3eFVncSIsImF1ZCI6Imh0dHBzOi8vYXV0b2Rlc2suY29tL2F1ZC9hand0ZXhwNjAiLCJqdGkiOiI5ZWJlcWd1RUpsak94UGU0VHJreHBWRnY1U1lqbFBaS29MaFpsQkdDZ3hPVjZBSUlKNE5CNHVXd2RvN1BqaTFMIiwiZXhwIjoxNjUwOTg2ODE1fQ.hCXVYntQjLLhhCxXEqPvO0lXm5sfbf7bgSML56kuW4YVhcuM8hIBqxgDUGdONy-3J7U_qDmjt9LvfNs-9Vqq_ETXJiwg52pei-wJvTZN0mSu0bIOpv8PBaSGDMn-EI6Rc_OnPeAb2qF2-HQdFC6dlevURFCfsUgvzCqFE_yLxYQFgVmhLD6ihlh1ljz9CcmqPl9cVNgyxB5_wiYaMTH1PIIobd_AwIxgcmXjzPgldSoAEmWW1SKhNetpLX7vYNBClCC1nHg6EjL28LFoMPOVqQWb0OM1LAXH-rkT2siuObJoAh5u2BjGFSn9IgY2Z1MeGvcctLaXiuVK3GxhFxUvqg';
+import {selectTokenOAuth2LeggedFromOAUTH} from '../../../../../slices/oAuth/selectors';
+import {
+  selectIsFirstTimeLoadViewerFromFV,
+  selectView2DsFromFV,
+  selectView3DsFromFV,
+  selectHaveSelectedViewFromFV,
+  selectGuid2dViewFromFV,
+  selectGuid3dViewFromFV
+} from '../../../../../slices/forgeViewer/selectors';
+import ForgeTree from './ForgeTree';
+import Forge2DViewer from './Forge2DViewer';
+import Forge2DList from './Forge2DList';
+import Forge3DViewer from './Forge3DViewer';
+import Forge3DList from './Forge3DList';
+import ForgeViewerFirstTime from './ForgeViewerFirstTime';
 
 export default function ForgeViewerWithTree() {
-  // TODO: add Button refresh to get new Data, (see cache redux...)
+  const [urn, setUrn] = useState('');
+  const [token, setToken] = useState('');
+  const urnFromMD = useSelector(selectUrnFromMD);
+  const isLoadingModel = useSelector(selectIsLoadingModelFromMD);
   const {
     data: buckets = [],
     isLoading,
-    isSuccess,
+    isSuccess: isSuccessGetBuckets,
     isError,
     error,
   } = useGetOssBucketsQuery();
-  const [urn, setUrn] = useState('');
-  const urnFromMD = useSelector(selectUrnFromMD);
-  const isLoadingModel = useSelector(selectIsLoadingModelFromMD);
+
+  const token2Legged = useSelector(selectTokenOAuth2LeggedFromOAUTH);
+  const isFirstTimeLoadViewerFromFV = useSelector(
+    selectIsFirstTimeLoadViewerFromFV,
+  );
+  const haveSelectedView = useSelector(selectHaveSelectedViewFromFV);
+  const view2Ds = useSelector(selectView2DsFromFV);
+  const view3Ds = useSelector(selectView3DsFromFV);
+  const guid2D = useSelector(selectGuid2dViewFromFV)
+  const guid3D = useSelector(selectGuid3dViewFromFV)
+  console.log('guid3d', guid3D);
+  console.log('guid2d', guid2D);
+
+  // const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccessGetBuckets) {
       console.log('Success buckets data:', buckets);
     }
     if (isError) {
@@ -44,6 +63,12 @@ export default function ForgeViewerWithTree() {
       setUrn(urnFromMD);
     }
   }, [urnFromMD]);
+
+  useEffect(() => {
+    if (token2Legged) {
+      setToken(token2Legged);
+    }
+  }, [token2Legged]);
 
   return (
     <div
@@ -65,7 +90,12 @@ export default function ForgeViewerWithTree() {
         {isLoading ? (
           <Spin tip='Loading Tree data...' className='center-position' />
         ) : (
-          <ForgeTree />
+          <>
+            <ForgeTree />
+            {view2Ds && <Forge2DList />}
+            {view3Ds && <Forge3DList />}
+          </>
+          // <Forge3DList />
         )}
       </div>
       <div
@@ -75,15 +105,42 @@ export default function ForgeViewerWithTree() {
           position: 'relative',
         }}
       >
-        {!urnFromMD && <Empty className='center-position' />}
-        {!isLoadingModel && urnFromMD && (
-          <ForgeViewer
-            token={getToken}
-            urn={urn}
-            className='forge-viewer adsk-viewing-viewer'
-          />
-        )}
+        {!urnFromMD && !token2Legged && <Empty className='center-position' />}
+        {!isLoadingModel &&
+          urnFromMD &&
+          token2Legged &&
+          isFirstTimeLoadViewerFromFV && (
+            <ForgeViewerFirstTime token={token} urn={urn} />
+          )}
+        {!isLoadingModel &&
+          !isFirstTimeLoadViewerFromFV &&
+          urnFromMD &&
+          token2Legged &&
+          guid2D &&
+          !haveSelectedView && <Forge2DViewer token={token} urn={urn} />}
+        {!isLoadingModel &&
+          !isFirstTimeLoadViewerFromFV &&
+          urnFromMD &&
+          token2Legged &&
+          guid2D &&
+          haveSelectedView && <Forge2DViewer token={token} urn={urn} />}
+        {!isLoadingModel &&
+          !isFirstTimeLoadViewerFromFV &&
+          urnFromMD &&
+          token2Legged &&
+          guid3D &&
+          haveSelectedView && <Forge3DViewer token={token} urn={urn} />}
+        {!isLoadingModel &&
+          !isFirstTimeLoadViewerFromFV &&
+          urnFromMD &&
+          token2Legged &&
+          guid3D &&
+          !haveSelectedView && <Forge3DViewer token={token} urn={urn} />}
+        {/* <Forge2DViewer token={getToken} urn={getUrn}/> */}
+        {/* <ForgeViewerFirstTime token={getToken} urn={getUrn} /> */}
       </div>
     </div>
   );
 }
+
+// TODO: check reload view2D

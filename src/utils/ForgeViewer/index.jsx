@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
 import {useForgeViewer} from './hooks';
 
-export default function ForgeViewer({urn, token, className, style, ...remainProps}) {
-  const {refs} = useForgeViewer({urn, token, ...remainProps});
+export default function ForgeViewer({className, style, ...remainProps}) {
+  const {refs} = useForgeViewer({...remainProps});
 
   return (
     <div>

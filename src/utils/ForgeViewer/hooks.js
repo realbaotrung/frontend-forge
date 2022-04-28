@@ -42,6 +42,7 @@ export function useForgeViewer({
   const viewerOpts = {...DEFAULT_VIEWER_OPTIONS, ...viewerOptions};
 
   // viewer object
+  // api : https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/GuiViewer3D/
   let viewer; // Autodesk.Viewing.Viewer3D;
 
   // Initialize the viewer
@@ -80,7 +81,48 @@ export function useForgeViewer({
       }
     });
   };
+
+  // ========================================================================
+  // Aggregated View.....
+  // ========================================================================
+  // const initialize = () => {
+  //   Autodesk.Viewing.Initializer(initializerOpts, () => {
+  //     const view = new Autodesk.Viewing.AggregatedView(); // Autodesk.Viewing.AggregatedView;
+  //     view.init(viewerRef.current, initializerOpts).then(() => {
+  //       const bubbleNodes = [];
+  //       Autodesk.Viewing.Document.load(`urn:${urn}`, (doc) => {
+  //         const nodes2D = doc.getRoot().search({role: '2d', type: 'geometry'});
+  //         nodes2D.forEach(node => bubbleNodes.push(node))
+  //         // view.setNodes(bubbleNodes);
+  //         view.switchView([bubbleNodes[1], bubbleNodes[2], bubbleNodes[1]]);
+  //         console.log('bubbleNodes', bubbleNodes)
+  //         console.log('view', view)
+  //       });
+  //       view.switchView([bubbleNodes[1], bubbleNodes[2], bubbleNodes[1]]);
+  //   });
+  // })}
+
+  // =============================================================================================
+
   const handleDocumentLoad = (viewerDocument) => {
+
+    // const onDocumentLoadSuccess1 = (viewerDc) => {
+      // viewerDc is Document
+      // api : https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/Document/
+      // const viewables = viewerDc.getRoot().search({type: 'geometry'});
+      // console.log('viewables', viewables);
+      // const view2Ds = viewables.find((v) => {
+        // v is BubbleNode
+        // api : https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/BubbleNode/
+    //     console.log('viewSmall', v);
+    //     return v.is2D()
+    //   });
+    //   console.log('view2Ds', view2Ds);
+    //   return view2Ds;
+    // };
+
+    // const viewable = onDocumentLoadSuccess1(viewerDocument);
+    // const viewable = onDocumentLoadSuccess2(viewerDocument);
     const viewable = onDocumentLoadSuccess(viewerDocument);
     viewer.loadDocumentNode(viewerDocument, viewable, viewableOptions);
   };

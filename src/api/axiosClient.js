@@ -11,7 +11,6 @@ const axiosClient = axios.create({
     },
 });
 
-
 axiosClient.interceptors.request.use(async (config) => {
     try {
         const accessToken = getItemFromSS(storageItem.auth)?.accessToken;

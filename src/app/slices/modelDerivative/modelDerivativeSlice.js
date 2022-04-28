@@ -30,6 +30,7 @@ export const {usePostModelDerivativeJobsMutation} = modelDerivativeApi;
 
 export const initialState = {
   urn: '',
+  metadata: null,
   acceptedJobs: null,
   isLoadingModel: false
 };
@@ -37,12 +38,18 @@ export const initialState = {
 const modelDerivativeSlice = createSlice({
   name: 'modelDerivative',
   initialState,
-  reducers: {},
+  reducers: {
+    setMetadata: (state, {payload}) => {
+      state.metadata = payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addMatcher(
         modelDerivativeApi.endpoints.postModelDerivativeJobs.matchPending,
         (state) => {
+          state.urn= '';
+          state.acceptedJobs= null;
           state.isLoadingModel = true;
         },
       )
@@ -58,5 +65,6 @@ const modelDerivativeSlice = createSlice({
 });
 
 // --- Export reducer here ---
+export const {setMetadata} = modelDerivativeSlice.actions;
 
 export const {reducer} = modelDerivativeSlice;
