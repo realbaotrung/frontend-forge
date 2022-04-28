@@ -110,6 +110,7 @@ export const initialState = {
   categoryValuesByKeyName: null,
   jsonTargetCategoryData: null,
   jsonFinalCategoryDataToUpload: null,
+  isOpenFormScheduleCategory: false,
   scheduleName: '',
   isSheet: false,
   isError: false,
@@ -190,6 +191,9 @@ const designAutomationSlice = createSlice({
       jsonFinal.push(schedule);
       state.jsonFinalCategoryDataToUpload = jsonFinal;
     },
+    setIsOpenFormScheduleCategory: (state, {payload}) => {
+      state.isOpenFormScheduleCategory = payload;
+    },
     resetFormUploadFilesState: (state) => {
       state.revitFileName = '';
       state.hasLoading = false;
@@ -263,5 +267,6 @@ export const {
   getJsonFinalCategoryDataToUpload,
   resetFormUploadFilesState,
   resetFormScheduleCategory,
+  setIsOpenFormScheduleCategory,
 } = designAutomationSlice.actions;
 export const {reducer} = designAutomationSlice;

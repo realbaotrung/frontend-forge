@@ -27,7 +27,7 @@ import {
   selectJsonCategoryDataFromDA,
   selectRevitFileNameFromDA,
 } from '../../../../../slices/designAutomation/selectors';
-import {resetFormUploadFilesState} from '../../../../../slices/designAutomation/designAutomationSlice';
+import {resetFormUploadFilesState, setIsOpenFormScheduleCategory} from '../../../../../slices/designAutomation/designAutomationSlice';
 
 function ButtonShowModalUploadFiles({onOpen}) {
   return (
@@ -133,6 +133,9 @@ export default function FormUploadFiles() {
   });
 
   const handleOnClose = () => {
+    if (jsonCategoryDataFromDA) {
+      dispatch(setIsOpenFormScheduleCategory(true));
+    }
     dispatch(resetFormUploadFilesState());
     setHaveChosenFiles(false);
     onClose();

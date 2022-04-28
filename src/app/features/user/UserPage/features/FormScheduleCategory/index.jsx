@@ -1,17 +1,15 @@
 import {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
-import {Button as CButton, useDisclosure} from '@chakra-ui/react';
+import {Button as CButton} from '@chakra-ui/react';
 import {Typography, Space, Modal, message, Button} from 'antd';
 import TransferProperties from './features/TransferProperties';
 import CategorySelector from './features/CategorySelector';
-import {category} from '../../share/category';
 import {
   getCategoryNames,
   getCategoryValuesByKeyName,
-  getJsonCategoryData,
   getJsonFinalCategoryDataToUpload,
-  resetFormScheduleCategory, usePostJsonFinalCategoryDataToServerMutation
+  resetFormScheduleCategory, setIsOpenFormScheduleCategory, usePostJsonFinalCategoryDataToServerMutation
 } from '../../../../../slices/designAutomation/designAutomationSlice';
 import {
   selectIsSheetFromDA,
@@ -19,15 +17,17 @@ import {
   selectCategoryKeyNameFromDA,
   selectCategoryNamesFromDA, selectIdFromDA,
   selectJsonCategoryDataFromDA, selectJsonFinalCategoryDataToUploadFromDA,
-  selectJsonTargetCategoryDataFromDA
+  selectJsonTargetCategoryDataFromDA,
+  selectIsOpenFormScheduleCategoryFromDA
 } from '../../../../../slices/designAutomation/selectors';
 
 const {Text} = Typography;
 
-function ButtonShowCategoryForm({title, onOpen}) {
+function ButtonShowCategoryForm({title}) {
+  const dispatch = useDispatch();
   return (
     <CButton
-      onClick={onOpen}
+      onClick={() => dispatch(setIsOpenFormScheduleCategory(true))}
       variant='primary'
       sx={{
         bg: 'Blue.B400',
@@ -50,11 +50,9 @@ function ButtonShowCategoryForm({title, onOpen}) {
 
 ButtonShowCategoryForm.propTypes = {
   title: PropTypes.string.isRequired,
-  onOpen: PropTypes.func.isRequired,
 };
 
 export default function FormScheduleCategory() {
-  const {onClose, onOpen, isOpen} = useDisclosure();
   const categoryNames = useSelector(selectCategoryNamesFromDA);
   const categoryKeyName = useSelector(selectCategoryKeyNameFromDA);
   const scheduleName = useSelector(selectScheduleNameFromDA);
@@ -62,13 +60,13 @@ export default function FormScheduleCategory() {
   const jsonCategoryData = useSelector(selectJsonCategoryDataFromDA);
   const jsonTargetCategoryData = useSelector(selectJsonTargetCategoryDataFromDA);
   const jsonFinalCategoryDataToUpload = useSelector(selectJsonFinalCategoryDataToUploadFromDA);
+  const isOpenFormScheduleCategory = useSelector(selectIsOpenFormScheduleCategoryFromDA);
 
   const designInfoId = useSelector(selectIdFromDA);
   const [postJsonFinalCategoryDataToServer, {isError, isSuccess}] = usePostJsonFinalCategoryDataToServerMutation();
 
   const dispatch = useDispatch();
 
-  // TODO: Should Use component RefreshToShowLoadingAndJsonData to get Data (10s per Request)
   // TODO: should delete when connect again to Server...
   // useEffect(() => {
   //   if (!jsonCategoryData) {
@@ -88,16 +86,15 @@ export default function FormScheduleCategory() {
     }
   }, [categoryKeyName, jsonCategoryData])
 
-  // ????
   useEffect(() => {
     if (jsonTargetCategoryData && scheduleName && isSheet) {
       const scheduleObject = {categoryKeyName, jsonTargetCategoryData, scheduleName, isSheet};
       dispatch(getJsonFinalCategoryDataToUpload(scheduleObject));
     }
-  }, [jsonTargetCategoryData])
+  }, [jsonTargetCategoryData, scheduleName, isSheet])
 
   const handleOnSend = useCallback(async() => {
-    onClose();
+    dispatch(setIsOpenFormScheduleCategory(false))
 
     if (jsonFinalCategoryDataToUpload) {
       try {
@@ -107,7 +104,6 @@ export default function FormScheduleCategory() {
           "clientId": "randomClientId",
           "data": jsonString
         }
-        debugger
         await postJsonFinalCategoryDataToServer(data).unwrap().then(() => {
           dispatch(resetFormScheduleCategory());
         });
@@ -119,15 +115,16 @@ export default function FormScheduleCategory() {
 
   const handleOnCancel = () => {
     dispatch(resetFormScheduleCategory());
-    onClose();
+    dispatch(setIsOpenFormScheduleCategory(false));
   };
 
-  const handleCheckVisibleButton = () =>{
-    if(categoryKeyName && jsonTargetCategoryData?.length >0){
-      return "";
+  const isVisibleButton = () =>{
+    if(categoryKeyName && jsonTargetCategoryData){
+      return false;
     }
-    return "disabled";
-  };
+    return true;
+  }
+
   useEffect(() => {
     if (isError) {
       message.error("Fail to send options to server!", 2.5)
@@ -140,10 +137,10 @@ export default function FormScheduleCategory() {
 
   return (
     <>
-      <ButtonShowCategoryForm title='Schedule' onOpen={onOpen}/>
+      <ButtonShowCategoryForm title='Schedule'/>
       <Modal
         centered
-        visible={isOpen}
+        visible={isOpenFormScheduleCategory}
         onCancel={() => handleOnCancel()}
         onOk={() => handleOnSend()}
         okText='Send'
@@ -156,7 +153,7 @@ export default function FormScheduleCategory() {
         ]}
         footer={[
           <Button key='buttonCancel' onClick={() => handleOnCancel()}>Cancel</Button>,
-          <Button key='buttonSend' type='primary' onClick={() => handleOnSend()} disabled={handleCheckVisibleButton()}>Send</Button>
+          <Button key='buttonSend' type='primary' onClick={() => handleOnSend()} disabled={isVisibleButton()}>Send</Button>
         ]}
         >
         <Space direction='vertical' size={[0, 16]} align='start'>
