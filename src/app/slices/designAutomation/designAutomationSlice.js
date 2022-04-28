@@ -138,6 +138,12 @@ const designAutomationSlice = createSlice({
     getCategoryKeyName: (state, {payload}) => {
       state.categoryKeyName = payload;
     },
+    getScheduleName: (state, {payload}) => {
+      state.ScheduleName = payload;
+    },
+    getCheckboxSheet: (state, {payload}) => {
+      state.isSheet = payload;
+    },
     getCategoryValuesByKeyName: (state, {payload}) => {
       state.categoryValuesByKeyName = payload;
     },
@@ -146,22 +152,40 @@ const designAutomationSlice = createSlice({
     },
     getJsonFinalCategoryDataToUpload: (state, {payload}) => {
     // TODO: create structure JSON file for uploading to server
-    //   {
-    //     "Pies": {
-    //      "scheduleName": "default",
-    //      "sheetName": "default",
-    //      "data": [
-    //        "Keynote",
-    //        "Type IFC Predefined Type",
-    //        "IFC Predefined Type",
-    //        "Export Type to IFC As",
-    //      ]
-    //    }
-    //   }
-    //  },
-      const {categoryKeyName, jsonTargetCategoryData} = payload;
-      const jsonFinal = {};
-      jsonFinal[categoryKeyName] = jsonTargetCategoryData;
+    //   [
+    //     {
+    //       "Category": "Air Systems",
+    //       "ScheduleName": "",
+    //       "Parameters": [
+    //         "Fan",
+    //         "Chilled Water Loop",
+    //         "Cooling Coil"
+    //       ],
+    //       "IsCreateSheet": true,
+    //       "SheetName": ""
+    //     },
+    //     {
+    //       "Category": "aaaa",
+    //       "ScheduleName": "",
+    //       "Parameters": [
+    //         "Fan",
+    //         "Chilled Water Loop",
+    //         "Cooling Coil"
+    //       ],
+    //       "IsCreateSheet": true,
+    //       "SheetName": ""
+    //     }
+    //   ]
+      const {categoryKeyName, jsonTargetCategoryData, scheduleName, isSheet} = payload;
+      const jsonFinal = [];
+      const schedule = {
+        "Category": categoryKeyName,
+        "ScheduleName": scheduleName,
+        "Parameters": jsonTargetCategoryData,
+        "IsCreateSheet": isSheet,
+        "SheetName": ""
+      }
+      jsonFinal.push(schedule);
       state.jsonFinalCategoryDataToUpload = jsonFinal;
     },
     resetFormUploadFilesState: (state) => {
@@ -172,7 +196,8 @@ const designAutomationSlice = createSlice({
     resetFormScheduleCategory: (state) => {
       state.categoryNames = null;
       state.categoryKeyName = '';
-      state.categoryValuesByKeyName = null;
+      state.ScheduleName = '';
+      state.isSheet = false;
       state.jsonTargetCategoryData = null;
       state.jsonFinalCategoryDataToUpload = null;
       state.isError = false;
@@ -229,6 +254,8 @@ export const {
   getJsonCategoryData,
   getCategoryNames,
   getCategoryKeyName,
+  getScheduleName,
+  getCheckboxSheet,
   getCategoryValuesByKeyName,
   getJsonTargetCategoryData,
   getJsonFinalCategoryDataToUpload,

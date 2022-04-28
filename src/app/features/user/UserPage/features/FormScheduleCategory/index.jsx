@@ -5,7 +5,7 @@ import {Button as CButton, useDisclosure} from '@chakra-ui/react';
 import {Typography, Space, Modal, message, Button} from 'antd';
 import TransferProperties from './features/TransferProperties';
 import CategorySelector from './features/CategorySelector';
-// import {category} from '../../share/category';
+import {category} from '../../share/category';
 import {
   getCategoryNames,
   getCategoryValuesByKeyName,
@@ -14,6 +14,8 @@ import {
   resetFormScheduleCategory, usePostJsonFinalCategoryDataToServerMutation
 } from '../../../../../slices/designAutomation/designAutomationSlice';
 import {
+  checkboxSheetFromDA,
+  inputScheduleNameFromDA,
   selectCategoryKeyNameFromDA,
   selectCategoryNamesFromDA, selectIdFromDA,
   selectJsonCategoryDataFromDA, selectJsonFinalCategoryDataToUploadFromDA,
@@ -55,6 +57,8 @@ export default function FormScheduleCategory() {
   const {onClose, onOpen, isOpen} = useDisclosure();
   const categoryNames = useSelector(selectCategoryNamesFromDA);
   const categoryKeyName = useSelector(selectCategoryKeyNameFromDA);
+  let scheduleName = useSelector(inputScheduleNameFromDA);
+  let isSheet = useSelector(checkboxSheetFromDA);
   const jsonCategoryData = useSelector(selectJsonCategoryDataFromDA);
   const jsonTargetCategoryData = useSelector(selectJsonTargetCategoryDataFromDA);
   const jsonFinalCategoryDataToUpload = useSelector(selectJsonFinalCategoryDataToUploadFromDA);
@@ -66,11 +70,11 @@ export default function FormScheduleCategory() {
 
   // TODO: Should Use component RefreshToShowLoadingAndJsonData to get Data (10s per Request)
   // TODO: should delete when connect again to Server...
-  // useEffect(() => {
-  //   if (!jsonCategoryData) {
-  //     dispatch(getJsonCategoryData(category));
-  //   }
-  // }, [jsonCategoryData])
+  useEffect(() => {
+    if (!jsonCategoryData) {
+      dispatch(getJsonCategoryData(category));
+    }
+  }, [jsonCategoryData])
 
   useEffect(() => {
     if (!categoryNames && jsonCategoryData) {
@@ -86,7 +90,13 @@ export default function FormScheduleCategory() {
 
   useEffect(() => {
     if (jsonTargetCategoryData) {
-      const scheduleObject = {categoryKeyName, jsonTargetCategoryData};
+      if(scheduleName === undefined){
+        scheduleName = '';
+      }
+      if(isSheet === undefined){
+        isSheet = false;
+      }
+      const scheduleObject = {categoryKeyName, jsonTargetCategoryData, scheduleName, isSheet};
       dispatch(getJsonFinalCategoryDataToUpload(scheduleObject));
     }
   }, [jsonTargetCategoryData])
@@ -96,12 +106,14 @@ export default function FormScheduleCategory() {
 
     if (jsonFinalCategoryDataToUpload) {
       try {
+        debugger;
         const jsonString = JSON.stringify(jsonFinalCategoryDataToUpload);
         const data = {
           "designInfoId": designInfoId,
           "clientId": "randomClientId",
           "data": jsonString
         }
+        console.log('data', data);
         await postJsonFinalCategoryDataToServer(data).unwrap().then(() => {
           dispatch(resetFormScheduleCategory());
         });
@@ -116,6 +128,12 @@ export default function FormScheduleCategory() {
     onClose();
   };
 
+  const handleCheckVisibleButton = () =>{
+    if(categoryKeyName && jsonTargetCategoryData?.length >0){
+      return "";
+    }
+    return "disabled";
+  };
   useEffect(() => {
     if (isError) {
       message.error("Fail to send options to server!", 2.5)
@@ -136,15 +154,15 @@ export default function FormScheduleCategory() {
         onOk={() => handleOnSend()}
         okText='Send'
         width='600px'
-        bodyStyle={{height: '400px'}}
+        bodyStyle={{height: 'auto'}}
         title={[
           <Text key='schedule' style={{fontSize: '20px', fontWeight: '300'}}>
-            Schedule
+            Schedule {scheduleName}
           </Text>
         ]}
         footer={[
           <Button key='buttonCancel' onClick={() => handleOnCancel()}>Cancel</Button>,
-          <Button key='buttonSend' type='primary' onClick={() => handleOnSend()} disabled={!categoryKeyName}>Send</Button>
+          <Button key='buttonSend' type='primary' onClick={() => handleOnSend()} disabled={handleCheckVisibleButton()}>Send</Button>
         ]}
         >
         <Space direction='vertical' size={[0, 16]} align='start'>

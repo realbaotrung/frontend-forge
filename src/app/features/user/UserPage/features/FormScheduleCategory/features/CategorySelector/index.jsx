@@ -1,10 +1,14 @@
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Typography, Space, Select} from 'antd';
+import {Typography, Space, Select, Checkbox} from 'antd';
 import {
   selectCategoryNamesFromDA,
 } from '../../../../../../../slices/designAutomation/selectors';
-import {getCategoryKeyName} from '../../../../../../../slices/designAutomation/designAutomationSlice';
+import {
+  getCategoryKeyName,
+  getScheduleName,
+  getCheckboxSheet
+} from '../../../../../../../slices/designAutomation/designAutomationSlice';
 
 const {Text} = Typography;
 const {Option} = Select;
@@ -32,6 +36,15 @@ export default function CategorySelector() {
     dispatch(getCategoryKeyName(value));
   }, []);
 
+  const handleOnInputScheduleName = useCallback((value) => {
+    dispatch(getScheduleName(value));
+  }, []);
+
+  const handleOnCheckbox = useCallback((e) => {
+    const isChecked = e.target.checked;
+    dispatch(getCheckboxSheet(isChecked));
+  }, []);
+
   const selectProps = useMemo(() => {
     return {
       showSearch: true,
@@ -50,10 +63,16 @@ export default function CategorySelector() {
 
   return (
     <Space size={[0, 8]} direction='vertical'>
+      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+      <label>Schedule Name</label>
+      <input onInput={e => handleOnInputScheduleName(e.target.value)} className='ant-input'placeholder='Schedule Name' />
       <Text>Categories</Text>
       <Select {...selectProps} onSelect={handleOnSelect}>
         {optionCategoryNames}
       </Select>
+      <Checkbox style={{ lineHeight: '32px' }} onClick={e => handleOnCheckbox(e)}>
+        Create Sheet
+      </Checkbox>
     </Space>
   );
 }

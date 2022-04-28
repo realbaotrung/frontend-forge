@@ -39,7 +39,14 @@ export const selectCategoryKeyNameFromDA = createSelector(
   [selectDomain],
   (designAutomationState) => designAutomationState.categoryKeyName,
 );
-
+export const inputScheduleNameFromDA = createSelector(
+  [selectDomain],
+  (designAutomationState) => designAutomationState.ScheduleName,
+);
+export const checkboxSheetFromDA = createSelector(
+  [selectDomain],
+  (designAutomationState) => designAutomationState.isSheet,
+);
 export const selectCategoryValuesByKeyNameFromDA = createSelector(
   [selectDomain],
   (designAutomationState) => designAutomationState.categoryValuesByKeyName,
