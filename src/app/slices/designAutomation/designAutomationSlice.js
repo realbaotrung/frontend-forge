@@ -161,7 +161,7 @@ const designAutomationSlice = createSlice({
     //         "Chilled Water Loop",
     //         "Cooling Coil"
     //       ],
-    //       "IsCreateSheet": true,
+    //       "IsAddToSheet": true,
     //       "SheetName": ""
     //     },
     //     {
@@ -172,7 +172,7 @@ const designAutomationSlice = createSlice({
     //         "Chilled Water Loop",
     //         "Cooling Coil"
     //       ],
-    //       "IsCreateSheet": true,
+    //       "IsAddToSheet": true,
     //       "SheetName": ""
     //     }
     //   ]
@@ -182,7 +182,7 @@ const designAutomationSlice = createSlice({
         "Category": categoryKeyName,
         "ScheduleName": scheduleName,
         "Parameters": jsonTargetCategoryData,
-        "IsCreateSheet": isSheet,
+        "IsAddToSheet": isSheet,
         "SheetName": ""
       }
       jsonFinal.push(schedule);
