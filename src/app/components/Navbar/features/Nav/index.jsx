@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {ChevronDownIcon, ChevronUpIcon} from '@chakra-ui/icons';
 import {
   Avatar,
@@ -18,11 +18,11 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import {selectUser} from '../../../../slices/auth/selectors';
-import routePaths from '../../../../features/route/routePaths';
 import {
   removeItemFromSS,
   storageItem,
 } from '../../../../../utils/storage.utils';
+import { signOut } from '../../../../slices/auth/authSlice';
 
 const buttonPopoverTriggerCSS = {
   bg: 'transparent',
@@ -62,21 +62,18 @@ export default function Nav() {
   const {isOpen, onOpen, onClose} = useDisclosure();
 
   const user = useSelector(selectUser);
-
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setUserFullname(user.username);
-    setUserEmail(user.email);
+    if (user) {
+      setUserFullname(user.username);
+      setUserEmail(user.email);
+    }
   }, []);
 
   const handleSignOut = useCallback(async () => {
-    removeItemFromSS(storageItem.auth);
-    if (!sessionStorage.length) {
-      navigate(routePaths.HOME_URL);
-      window.location.reload();
-    }
-  }, [navigate]);
+    dispatch(signOut());
+  }, []);
 
   return (
     <HStack spacing={2.5} h='2rem' borderColor='gray.400'>

@@ -95,6 +95,7 @@ export default function ForgeTree() {
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
         maxHeight: '170px',
+        height: '170px',
         paddingLeft: '1.5rem'
       }}
     />

@@ -14,7 +14,7 @@ export default function RequireAuth({children, isAdmin}) {
 
   useEffect(() => {
     if (!accessToken || isAdmin && role !== 'admin' || !isAdmin && role !== 'normal') {
-      navigate(routePaths.HOME_URL);
+      navigate(routePaths.LOGIN_URL);
     }
   }, [accessToken, role]);
 

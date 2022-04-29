@@ -1,10 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {apiPrivate} from '../../../api/rtkQuery'
-import {apiPaths} from '../../../api/features/apiPaths'
+import {apiPrivate} from '../../../api/rtkQuery';
+import {apiPaths} from '../../../api/features/apiPaths';
 import {
   setItemToSS,
   getItemFromSS,
   storageItem,
+  removeItemFromSS,
 } from '../../../utils/storage.utils';
 
 // ============================================================================
@@ -63,7 +64,18 @@ export const initialState = user
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    resetAllFromAuthSlice: (state) => {
+      state.isLoggedIn = false;
+      state.user = null;
+      state.accessToken = '';
+      state.role = '';
+    },
+    signOut: () => {
+      window.location.reload();
+      removeItemFromSS(storageItem.auth);
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addMatcher(
@@ -85,5 +97,7 @@ const authSlice = createSlice({
 });
 
 // --- Export reducer here ---
+
+export const {resetAllFromAuthSlice, signOut} = authSlice.actions;
 
 export const {reducer} = authSlice;

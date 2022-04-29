@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
 
 // ============================================================================
 // Slice here...
@@ -19,13 +19,14 @@ const oAuthSlice = createSlice({
     setTokenOAuth3Legged: (state, {payload}) => {
       state.tokenOAuth3Legged = payload;
     },
+    resetAllFromOAuthSlice: (state) => {
+      state.tokenOAuth2Legged = '';
+      state.tokenOAuth3Legged = '';
+    },
   },
 });
 
 // --- Export reducer here ---
 
-export const {
-  setTokenOAuth2Legged,
-  setTokenOAuth3Legged
-} = oAuthSlice.actions;
+export const {setTokenOAuth2Legged, setTokenOAuth3Legged, resetAllFromOAuthSlice} = oAuthSlice.actions;
 export const {reducer} = oAuthSlice;

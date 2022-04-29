@@ -8,7 +8,7 @@ const getOssBucketsQuery = {
     method: 'GET',
   }),
   transformResponse: (response) => {
-    const data = response.result
+    const data = response.result;
     console.log(data);
     return data;
   },
@@ -91,6 +91,12 @@ const ossSlice = createSlice({
     setOssObjectNameKey: (state, {payload}) => {
       state.ossObjectNameKey = payload;
     },
+    resetAllFromOssSlice: (state) => {
+      state.ossBucketKey = '';
+      state.ossObjectNameKey = '';
+      state.buckets = null;
+      state.bucket = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -111,8 +117,5 @@ const ossSlice = createSlice({
 
 // --- Export reducer here ---
 
-export const {
-  setOssBucketKey,
-  setOssObjectNameKey
-} = ossSlice.actions;
+export const {setOssBucketKey, setOssObjectNameKey, resetAllFromOssSlice} = ossSlice.actions;
 export const {reducer} = ossSlice;

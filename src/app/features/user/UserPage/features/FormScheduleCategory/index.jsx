@@ -94,7 +94,6 @@ export default function FormScheduleCategory() {
   }, [jsonTargetCategoryData, scheduleName, isSheet])
 
   const handleOnSend = useCallback(async() => {
-    dispatch(setIsOpenFormScheduleCategory(false))
 
     if (jsonFinalCategoryDataToUpload) {
       try {
@@ -104,6 +103,8 @@ export default function FormScheduleCategory() {
           "clientId": "randomClientId",
           "data": jsonString
         }
+        dispatch(setIsOpenFormScheduleCategory(false));
+        console.log('from FormScheduleCategory', jsonString);
         await postJsonFinalCategoryDataToServer(data).unwrap().then(() => {
           dispatch(resetFormScheduleCategory());
         });

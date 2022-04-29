@@ -2,6 +2,8 @@ import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import {
+  VStack,
+  Icon,
   Modal,
   Button,
   useDisclosure,
@@ -19,7 +21,7 @@ import {
 
 import {AiOutlineCloudUpload} from 'react-icons/ai';
 import ButtonUploadFilesFromLocal from './features/ButtonUploadFiles';
-import DragFilesFromLocal from './features/DragFilesFromLocal';
+import {ReactComponent as Document} from './assets/document.svg';
 import RefetchToShowLoadingAndGetJsonData from './features/RefetchToShowLoadingAndGetJsonData';
 
 import {
@@ -63,6 +65,17 @@ function FileIsUploading() {
     <Stack w='full' h='18.125rem' justify='center' align='center'>
       <Text fontSize='1.25em'>Your file is uploading to cloud ...</Text>
     </Stack>
+  );
+}
+
+function NotificationSelectFile() {
+  return (
+    <VStack w='full' h='18.125rem' justify='center' align='center'>
+      <Icon as={Document} boxSize='9.375rem' />
+      <Text fontSize='0.875rem' fontWeight='300' color='gray.400'>
+        Choose revit file from an option above
+      </Text>
+    </VStack>
   );
 }
 
@@ -166,7 +179,7 @@ export default function FormUploadFiles() {
             <Box sx={compoundComponentsCSS}>
               {isError && <FailToUploadFile />}
               {hasLoadingFromDA && !isError && <FileIsUploading />}
-              {!haveChosenFiles && !hasLoadingFromDA && !isError && <DragFilesFromLocal />}
+              {!haveChosenFiles && !hasLoadingFromDA && !isError && <NotificationSelectFile />}
               {haveChosenFiles && !jsonCategoryDataFromDA && !isError && (
                 <RefetchToShowLoadingAndGetJsonData />
               )}

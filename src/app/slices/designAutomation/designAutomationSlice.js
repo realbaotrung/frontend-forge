@@ -207,7 +207,22 @@ const designAutomationSlice = createSlice({
       state.jsonTargetCategoryData = null;
       state.jsonFinalCategoryDataToUpload = null;
       state.isError = false;
-    }
+    },
+    resetAllFromDesignAutomation: (state) => {
+      state.id = '';
+      state.revitFileName = '';
+      state.hasLoading = false;
+      state.jsonCategoryData = null;
+      state.categoryNames = null;
+      state.categoryKeyName = '';
+      state.categoryValuesByKeyName = null;
+      state.jsonTargetCategoryData = null;
+      state.jsonFinalCategoryDataToUpload = null;
+      state.isOpenFormScheduleCategory = false;
+      state.scheduleName = '';
+      state.isSheet = false;
+      state.isError = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -268,5 +283,6 @@ export const {
   resetFormUploadFilesState,
   resetFormScheduleCategory,
   setIsOpenFormScheduleCategory,
+  resetAllFromDesignAutomation
 } = designAutomationSlice.actions;
 export const {reducer} = designAutomationSlice;

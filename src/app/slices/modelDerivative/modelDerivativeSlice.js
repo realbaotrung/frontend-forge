@@ -41,6 +41,12 @@ const modelDerivativeSlice = createSlice({
   reducers: {
     setMetadata: (state, {payload}) => {
       state.metadata = payload;
+    },
+    resetAllFromModelDerivative: (state) => {
+      state.urn = '';
+      state.metadata = null;
+      state.acceptedJobs = null;
+      state.isLoadingModel = false;
     }
   },
   extraReducers: (builder) => {
@@ -65,6 +71,6 @@ const modelDerivativeSlice = createSlice({
 });
 
 // --- Export reducer here ---
-export const {setMetadata} = modelDerivativeSlice.actions;
+export const {setMetadata, resetAllFromModelDerivative} = modelDerivativeSlice.actions;
 
 export const {reducer} = modelDerivativeSlice;
