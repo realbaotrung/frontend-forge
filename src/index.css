@@ -6,22 +6,22 @@
 
 .noti-success {
   background-color: rgb(10, 165, 10);
-  color: #FFF;
+  color: #fff;
 }
 
 .noti-info {
   background-color: rgb(8, 135, 240);
-  color: #FFF;
+  color: #fff;
 }
 
 .noti-error {
   background-color: rgb(236, 39, 55);
-  color: #FFF;
+  color: #fff;
 }
 
 .noti-warning {
   background-color: rgb(218, 149, 1);
-  color: #FFF;
+  color: #fff;
 }
 
 .main-content {
@@ -33,8 +33,8 @@
   padding: 24px;
   background: #fff;
 }
-.ant-layout-header{
-  background-color: #FFF;
+.ant-layout-header {
+  background-color: #fff;
 }
 .logo {
   float: left;
@@ -51,25 +51,25 @@
 .ant-layout-header .nav-user-info p {
   line-height: 20px;
 }
-.ant-layout-header .user-login-info{
+.ant-layout-header .user-login-info {
   float: right;
 }
 .ant-layout-header .user-login-info span.chakra-avatar {
   margin: 15px 5px 0;
 }
 
- /* scrollbar css */
- ::-webkit-scrollbar {
+/* scrollbar css */
+::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
-  ::-webkit-scrollbar-track {
-  background: #ffffff
+::-webkit-scrollbar-track {
+  background: #ffffff;
 }
-  ::-webkit-scrollbar-thumb {
-  background: #dce0e6; 
-    border-radius: 100vw;
+::-webkit-scrollbar-thumb {
+  background: #dce0e6;
+  border-radius: 100vw;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 139, 139, 0.652); 
-} 
+  background: rgba(139, 139, 139, 0.652);
+}
