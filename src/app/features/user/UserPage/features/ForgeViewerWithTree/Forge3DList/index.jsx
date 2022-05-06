@@ -1,11 +1,22 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Tree} from 'antd';
-import {selectView3DsFromFV, selectIsFirstTimeLoadViewerFromFV, selectGuid2dViewFromFV} from '../../../../../../slices/forgeViewer/selectors';
-import {setGuid3dView, setIsFirstTimeLoadViewer, setHaveSelectedView, setGuid2dView} from '../../../../../../slices/forgeViewer/forgeViewerSlice';
+import {
+  selectView3DsFromFV,
+  selectIsFirstTimeLoadViewerFromFV,
+  selectGuid2dViewFromFV,
+} from '../../../../../../slices/forgeViewer/selectors';
+import {
+  setGuid3dView,
+  setIsFirstTimeLoadViewer,
+  setHaveSelectedView,
+  setGuid2dView,
+  setCurrentViewName,
+  setDidChosenViewToShowBreadcrumb,
+} from '../../../../../../slices/forgeViewer/forgeViewerSlice';
 
 export default function Forge3DList() {
-  const [toggle, setToggle] = useState(false)
+  const [toggle, setToggle] = useState(false);
   const [listView3D, setListView3D] = useState([]);
 
   const view3Ds = useSelector(selectView3DsFromFV);
@@ -41,9 +52,14 @@ export default function Forge3DList() {
       dispatch(setIsFirstTimeLoadViewer(false));
     }
     if (guid2d) {
-      dispatch(setGuid2dView(''))
+      dispatch(setGuid2dView(''));
     }
-    setToggle(prev => !prev)
+
+    const viewName = info?.node?.title;
+    dispatch(setCurrentViewName(viewName));
+    dispatch(setDidChosenViewToShowBreadcrumb(true));
+
+    setToggle((prev) => !prev);
     dispatch(setGuid3dView(info?.node?.key));
     dispatch(setHaveSelectedView(toggle));
   };
@@ -56,7 +72,8 @@ export default function Forge3DList() {
         overflow: 'auto',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
-        maxHeight: '140px',
+        maxHeight: '300px',
+        paddingBottom: '2rem'
       }}
     />
   );

@@ -14,6 +14,7 @@ const containerCss = {
 export default function UserPage() {
   return (
     <div style={containerCss}>
+      {/*
       <div
         style={{
           display: 'flex',
@@ -26,6 +27,7 @@ export default function UserPage() {
         <FormUploadFiles />
         <FormScheduleCategory />
       </div>
+      */}
       <ForgeViewerWithTree />
     </div>
   );

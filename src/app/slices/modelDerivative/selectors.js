@@ -19,3 +19,13 @@ export const selectIsLoadingModelFromMD = createSelector(
   [selectDomain],
   (modelDerivativeState) => modelDerivativeState.isLoadingModel,
 );
+
+export const selectFileNameFromMD = createSelector(
+  [selectDomain],
+  (modelDerivativeState) => modelDerivativeState.fileName,
+);
+
+export const selectIsChosenFileFromMD = createSelector(
+  [selectDomain],
+  (modelDerivativeState) => modelDerivativeState.isChosenFile,
+);

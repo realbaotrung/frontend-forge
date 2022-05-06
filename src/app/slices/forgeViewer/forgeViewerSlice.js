@@ -5,8 +5,10 @@ import { createSlice } from '@reduxjs/toolkit';
 // ============================================================================
 
 export const initialState = {
+  didChosenViewToShowBreadcrumb: false,
   isFirstTimeLoadViewer: true,
   haveSelectedView: false,
+  currentViewName: '',
   view2Ds: null,
   guid2dView: '',
   view3Ds: null,
@@ -17,6 +19,9 @@ const forgeViewerSlice = createSlice({
   name: 'forgeViewer',
   initialState,
   reducers: {
+    setCurrentViewName: (state, {payload}) => {
+      state.currentViewName = payload;
+    },
     setView2Ds: (state, {payload}) => {
       state.view2Ds = payload;
     },
@@ -35,6 +40,9 @@ const forgeViewerSlice = createSlice({
     setHaveSelectedView: (state, {payload}) => {
       state.haveSelectedView = payload;
     },
+    setDidChosenViewToShowBreadcrumb: (state, {payload}) => {
+      state.didChosenViewToShowBreadcrumb = payload;
+    },
     resetAllFromForgeViewerSlice: (state) => {
       state.isFirstTimeLoadViewer = true;
       state.haveSelectedView = false;
@@ -49,12 +57,14 @@ const forgeViewerSlice = createSlice({
 // --- Export reducer here ---
 
 export const {
+  setCurrentViewName,
   setView2Ds,
   setGuid2dView,
   setView3Ds,
   setGuid3dView,
   setIsFirstTimeLoadViewer,
   setHaveSelectedView,
+  setDidChosenViewToShowBreadcrumb,
   resetAllFromForgeViewerSlice,
 } = forgeViewerSlice.actions;
 export const {reducer} = forgeViewerSlice;

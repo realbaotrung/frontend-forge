@@ -1,9 +1,8 @@
-import {useCallback, useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useCallback} from 'react';
+import {useSelector} from 'react-redux';
 import PropsTypes from 'prop-types';
 import ForgeViewer from '../../../../../../../utils/ForgeViewer';
 import {selectGuid2dViewFromFV} from '../../../../../../slices/forgeViewer/selectors';
-import { setHaveSelectedView } from '../../../../../../slices/forgeViewer/forgeViewerSlice';
 
 export default function Forge2DViewer({token, urn}) {
   const guidFromFV = useSelector(selectGuid2dViewFromFV);

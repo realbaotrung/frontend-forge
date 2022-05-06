@@ -1,13 +1,6 @@
 import {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
-import {
-  Layout,
-  Tabs,
-  Typography,
-  Empty,
-  Menu,
-  Spin,
-} from 'antd';
+import {useDispatch, useSelector} from 'react-redux';
+import {Layout, Tabs, Typography, Empty, Menu, Spin, Badge} from 'antd';
 import {
   WindowsOutlined,
   CodeSandboxOutlined,
@@ -16,6 +9,7 @@ import {
 } from '@ant-design/icons';
 import {useGetOssBucketsQuery} from '../../../../../slices/oss/ossSlice';
 import {
+  selectIsChosenFileFromMD,
   selectIsLoadingModelFromMD,
   selectUrnFromMD,
 } from '../../../../../slices/modelDerivative/selectors';
@@ -35,6 +29,10 @@ import Forge3DViewer from './Forge3DViewer';
 import Forge3DList from './Forge3DList';
 import ForgeViewerFirstTime from './ForgeViewerFirstTime';
 import './style.css';
+import FormScheduleCategory from '../FormScheduleCategory';
+import FormUploadFiles from '../FormUploadFiles';
+import NameOfFileWithView from './NameOfFileAndView';
+import { setIsChosenFile } from '../../../../../slices/modelDerivative/modelDerivativeSlice';
 
 const {Sider} = Layout;
 const {TabPane} = Tabs;
@@ -50,12 +48,12 @@ export default function ForgeViewerWithTree() {
   const isLoadingModel = useSelector(selectIsLoadingModelFromMD);
   const {
     data: buckets = [],
-    isLoading,
     isSuccess: isSuccessGetBuckets,
     isError,
     error,
   } = useGetOssBucketsQuery();
 
+  const currentChosenFile = useSelector(selectIsChosenFileFromMD);
   const token2Legged = useSelector(selectTokenOAuth2LeggedFromOAUTH);
   const isFirstTimeLoadViewerFromFV = useSelector(
     selectIsFirstTimeLoadViewerFromFV,
@@ -66,8 +64,7 @@ export default function ForgeViewerWithTree() {
   const guid2D = useSelector(selectGuid2dViewFromFV);
   const guid3D = useSelector(selectGuid3dViewFromFV);
 
-  const [collapsed, setCollapsed] = useState(false);
-  const handleOnCollapse = () => {};
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isSuccessGetBuckets) {
@@ -108,83 +105,115 @@ export default function ForgeViewerWithTree() {
           collapsedWidth='64'
           className='user-tabs-tab'
         >
+          {/* 
           {isLoading ? (
             <Spin className='center-position' />
           ) : (
-          <Tabs
-            defaultActiveKey='allViewsTabPane'
-            tabBarStyle={{
-              width: '4rem',
-              height: 'calc(100vh - 96px)',
-              borderRight: '1px solid #fff',
-              backgroundColor: '#ececec',
-            }}
-            tabPosition='left'
-            type='card'
-          >
-            <TabPane
-              tab={[
-                <FolderOpenOutlined
-                  key='folderopenoutlined'
-                  style={{fontSize: '1.5em'}}
-                />,
-              ]}
-              key='allViewsTabPane'
+          */}
+          <>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'start',
+                gap: '8px',
+                padding: '8px',
+                width: '100%',
+                height: '48px',
+              }}
             >
-              <div
-                key='Document'
-                style={{
-                  fontSize: '1.1em',
-                  fontWeight: '600',
-                  paddingLeft: '24px',
-                  paddingTop: '16px',
-                }}
+              <FormUploadFiles />
+              <FormScheduleCategory />
+            </div>
+            <Tabs
+              defaultActiveKey='TabPaneDocument'
+              tabBarStyle={{
+                width: '4rem',
+                height: 'calc(100vh - 96px)',
+                borderRight: '1px solid #fff',
+                backgroundColor: '#ececec',
+              }}
+              tabPosition='left'
+              type='card'
+            >
+              <TabPane
+                tab={[
+                  <FolderOpenOutlined
+                    key='FolderOpenOutlined'
+                    style={{fontSize: '1.5em'}}
+                  />,
+                ]}
+                key='TabPaneDocument'
               >
-                Documents {`(${buckets.length})`}
-              </div>
-              <div style={{marginTop: '16px'}}>
-                <ForgeTree />
-              </div>
-            </TabPane>
-            <TabPane
-              tab={[
-                <EyeOutlined
-                  key='eyeoutlined'
-                  style={{fontSize: '1.5em'}}
-                />,
-              ]}
-              key='futureTabPane'
-            >
-            <Menu mode='inline' defaultOpenKeys={['ForgeTreeSubMenu']}>
-                <SubMenu
-                  icon={<WindowsOutlined style={{fontSize: '1.5em'}} />}
-                  key='Forge2DListSubMenu'
-                  title={[
-                    <Text key='Sheets' style={{fontWeight: '600'}}>
-                      Sheets {view2Ds ? `(${view2Ds.length})`: `(0)`}
-                    </Text>,
-                  ]}
+                <div
+                  key='Document'
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '48px',
+                    fontSize: '1.1em',
+                    fontWeight: '600',
+                    paddingLeft: '16px',
+                  }}
                 >
-              {view2Ds && (
-                  <Forge2DList />
-              )}
-                </SubMenu>
-                <SubMenu
-                  icon={<CodeSandboxOutlined style={{fontSize: '1.5em'}} />}
-                  key='Forge3DListSubMenu'
-                  title={[
-                    <Text key='3dViews' style={{fontWeight: '600'}}>
-                      3D Views {view3Ds ? `(${view3Ds.length})` : `(0)`}
-                    </Text>,
-                  ]}
-                >
-              {view3Ds && (
-                  <Forge3DList />
-              )}
-                </SubMenu>
-            </Menu>
-            </TabPane>
-          </Tabs>)}
+                  <span>Documents {`(${buckets.length})`}</span>
+                </div>
+                <div>
+                  <ForgeTree />
+                </div>
+              </TabPane>
+              <TabPane
+                tab={[
+                  // TODO: handle notification view when choose new file
+                  <button type='button' onClick={() => dispatch(setIsChosenFile(false))}>
+                    {currentChosenFile ? (
+                      <Badge count='1'>
+                        <EyeOutlined
+                          key='EyeOutlined'
+                          style={{fontSize: '1.5em'}}
+                        />
+                      </Badge>
+                    ) : (
+                      <Badge count='0'>
+                        <EyeOutlined
+                          key='EyeOutlined'
+                          style={{fontSize: '1.5em'}}
+                        />
+                      </Badge>
+                    )}
+                  </button>,
+                ]}
+                key='TabPaneView2DsAndView3Ds'
+              >
+                <Menu mode='inline'>
+                  <SubMenu
+                    icon={<WindowsOutlined style={{fontSize: '1.5em'}} />}
+                    key='Forge2DListSubMenu'
+                    title={[
+                      <Text key='Sheets' style={{fontWeight: '600'}}>
+                        Sheets {view2Ds ? `(${view2Ds.length})` : `(0)`}
+                      </Text>,
+                    ]}
+                  >
+                    {view2Ds && <Forge2DList />}
+                  </SubMenu>
+                  <SubMenu
+                    icon={<CodeSandboxOutlined style={{fontSize: '1.5em'}} />}
+                    key='Forge3DListSubMenu'
+                    title={[
+                      <Text key='3dViews' style={{fontWeight: '600'}}>
+                        3D Views {view3Ds ? `(${view3Ds.length})` : `(0)`}
+                      </Text>,
+                    ]}
+                  >
+                    {view3Ds && <Forge3DList />}
+                  </SubMenu>
+                </Menu>
+              </TabPane>
+            </Tabs>
+          </>
+          {/* )} */}
         </Sider>
       </Layout>
       <div
@@ -194,37 +223,42 @@ export default function ForgeViewerWithTree() {
           position: 'relative',
         }}
       >
-        {!urnFromMD && !token2Legged && <Empty className='center-position' />}
-        {!isLoadingModel &&
-          urnFromMD &&
-          token2Legged &&
-          isFirstTimeLoadViewerFromFV && (
-            <ForgeViewerFirstTime token={token} urn={urn} />
-          )}
-        {!isLoadingModel &&
-          !isFirstTimeLoadViewerFromFV &&
-          urnFromMD &&
-          token2Legged &&
-          guid2D &&
-          !haveSelectedView && <Forge2DViewer token={token} urn={urn} />}
-        {!isLoadingModel &&
-          !isFirstTimeLoadViewerFromFV &&
-          urnFromMD &&
-          token2Legged &&
-          guid2D &&
-          haveSelectedView && <Forge2DViewer token={token} urn={urn} />}
-        {!isLoadingModel &&
-          !isFirstTimeLoadViewerFromFV &&
-          urnFromMD &&
-          token2Legged &&
-          guid3D &&
-          haveSelectedView && <Forge3DViewer token={token} urn={urn} />}
-        {!isLoadingModel &&
-          !isFirstTimeLoadViewerFromFV &&
-          urnFromMD &&
-          token2Legged &&
-          guid3D &&
-          !haveSelectedView && <Forge3DViewer token={token} urn={urn} />}
+        <div style={{height: '48px', backgroundColor: '#fff'}}>
+          <NameOfFileWithView />
+        </div>
+        <div>
+          {!urnFromMD && !token2Legged && <Empty className='center-position' />}
+          {!isLoadingModel &&
+            urnFromMD &&
+            token2Legged &&
+            isFirstTimeLoadViewerFromFV && (
+              <ForgeViewerFirstTime token={token} urn={urn} />
+            )}
+          {!isLoadingModel &&
+            !isFirstTimeLoadViewerFromFV &&
+            urnFromMD &&
+            token2Legged &&
+            guid2D &&
+            !haveSelectedView && <Forge2DViewer token={token} urn={urn} />}
+          {!isLoadingModel &&
+            !isFirstTimeLoadViewerFromFV &&
+            urnFromMD &&
+            token2Legged &&
+            guid2D &&
+            haveSelectedView && <Forge2DViewer token={token} urn={urn} />}
+          {!isLoadingModel &&
+            !isFirstTimeLoadViewerFromFV &&
+            urnFromMD &&
+            token2Legged &&
+            guid3D &&
+            haveSelectedView && <Forge3DViewer token={token} urn={urn} />}
+          {!isLoadingModel &&
+            !isFirstTimeLoadViewerFromFV &&
+            urnFromMD &&
+            token2Legged &&
+            guid3D &&
+            !haveSelectedView && <Forge3DViewer token={token} urn={urn} />}
+        </div>
       </div>
     </div>
   );

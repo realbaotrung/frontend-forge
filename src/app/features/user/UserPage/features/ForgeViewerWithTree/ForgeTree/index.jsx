@@ -3,9 +3,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Tree} from 'antd';
 import {selectBucketsFromOSS} from '../../../../../../slices/oss/selectors';
 import {api} from '../../../../../../../api/axiosClient';
-import {usePostModelDerivativeJobsMutation} from '../../../../../../slices/modelDerivative/modelDerivativeSlice';
+import {setFileName, setIsChosenFile, usePostModelDerivativeJobsMutation} from '../../../../../../slices/modelDerivative/modelDerivativeSlice';
 import {setTokenOAuth2Legged} from '../../../../../../slices/oAuth/oAuthSlice';
-import { resetAllFromForgeViewerSlice } from '../../../../../../slices/forgeViewer/forgeViewerSlice';
+import {resetAllFromForgeViewerSlice, setCurrentViewName, setDidChosenViewToShowBreadcrumb} from '../../../../../../slices/forgeViewer/forgeViewerSlice';
 
 function updateTreeData(list, key, children) {
   return list.map((node) => {
@@ -22,7 +22,6 @@ function updateTreeData(list, key, children) {
   });
 }
 
-// eslint-disable-next-line react/prop-types
 export default function ForgeTree() {
   const [buckets, setBuckets] = useState([]);
   const dataBucket = useSelector(selectBucketsFromOSS);
@@ -48,6 +47,13 @@ export default function ForgeTree() {
     try {
       dispatch(resetAllFromForgeViewerSlice());
       console.log('selected', selectedKeys, info);
+
+      const fileName = info?.node?.title;
+      dispatch(setFileName(fileName));
+      dispatch(setIsChosenFile(true));
+      dispatch(setCurrentViewName(''))
+      dispatch(setDidChosenViewToShowBreadcrumb(false));
+
       const isLeaf = info?.node?.isLeaf;
       if (isLeaf) {
         const data = {
@@ -94,11 +100,15 @@ export default function ForgeTree() {
         overflow: 'auto',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
-        // maxHeight: '170px',
-        // height: '170px',
         height: 'auto',
-        paddingLeft: '1.5rem'
+        paddingLeft: '1.5rem',
+        paddingBottom: '2rem'
       }}
     />
   );
 }
+
+/*
+eslint
+  react/prop-types: 0,
+*/

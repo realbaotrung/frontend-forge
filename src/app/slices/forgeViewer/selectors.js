@@ -5,6 +5,11 @@ import {
 
 const selectDomain = (state) => state.forgeViewer || initialState;
 
+export const selectCurrentViewNameFromFV = createSelector(
+  [selectDomain],
+  (forgeViewerState) => forgeViewerState.currentViewName,
+);
+
 export const selectView2DsFromFV = createSelector(
   [selectDomain],
   (forgeViewerState) => forgeViewerState.view2Ds,
@@ -28,6 +33,11 @@ export const selectGuid3dViewFromFV = createSelector(
 export const selectIsFirstTimeLoadViewerFromFV = createSelector(
   [selectDomain],
   (forgeViewerState) => forgeViewerState.isFirstTimeLoadViewer,
+);
+
+export const selectDidChosenViewToShowBreadcrumbFromFV = createSelector(
+  [selectDomain],
+  (forgeViewerState) => forgeViewerState.didChosenViewToShowBreadcrumb,
 );
 
 export const selectHaveSelectedViewFromFV = createSelector(
