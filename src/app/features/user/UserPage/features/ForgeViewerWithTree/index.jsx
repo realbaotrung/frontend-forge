@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Layout, Tabs, Typography, Empty, Menu, Spin, Badge} from 'antd';
 import {
@@ -32,7 +32,7 @@ import './style.css';
 import FormScheduleCategory from '../FormScheduleCategory';
 import FormUploadFiles from '../FormUploadFiles';
 import NameOfFileWithView from './NameOfFileAndView';
-import { setIsChosenFile } from '../../../../../slices/modelDerivative/modelDerivativeSlice';
+import {setIsChosenFile} from '../../../../../slices/modelDerivative/modelDerivativeSlice';
 
 const {Sider} = Layout;
 const {TabPane} = Tabs;
@@ -86,6 +86,14 @@ export default function ForgeViewerWithTree() {
       setToken(token2Legged);
     }
   }, [token2Legged]);
+
+  const totalViews = useMemo(() => {
+    if (view2Ds && view3Ds) {
+      const result = view2Ds.length + view3Ds.length;
+      return result;
+    }
+    return 0;
+  }, [view2Ds, view3Ds]);
 
   return (
     <div
@@ -166,22 +174,17 @@ export default function ForgeViewerWithTree() {
               <TabPane
                 tab={[
                   // TODO: handle notification view when choose new file
-                  <button type='button' onClick={() => dispatch(setIsChosenFile(false))}>
-                    {currentChosenFile ? (
-                      <Badge count='1'>
-                        <EyeOutlined
-                          key='EyeOutlined'
-                          style={{fontSize: '1.5em'}}
-                        />
-                      </Badge>
-                    ) : (
-                      <Badge count='0'>
-                        <EyeOutlined
-                          key='EyeOutlined'
-                          style={{fontSize: '1.5em'}}
-                        />
-                      </Badge>
-                    )}
+                  <button
+                    key='buttonView2DsAndView3Ds'
+                    type='button'
+                    onClick={() => dispatch(setIsChosenFile(false))}
+                  >
+                    <Badge count={currentChosenFile ? `${totalViews}` : '0'}>
+                      <EyeOutlined
+                        key='EyeOutlined'
+                        style={{fontSize: '1.5em'}}
+                      />
+                    </Badge>
                   </button>,
                 ]}
                 key='TabPaneView2DsAndView3Ds'
