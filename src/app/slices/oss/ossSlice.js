@@ -12,6 +12,10 @@ const getOssBucketsQuery = {
     console.log(data);
     return data;
   },
+  providesTags: (result = [], error, arg) => [
+    'Oss',
+    ...result.map(({ id }) => ({ type: 'Oss', id })),
+  ],
 };
 
 const getOssBucketByIdQuery = {
@@ -23,6 +27,7 @@ const getOssBucketByIdQuery = {
     console.log(response);
     return response;
   },
+  providesTags: (result, error, arg) => [{ type: 'Oss', id: arg }]
 };
 
 const addOssBucketMutation = {
@@ -35,6 +40,7 @@ const addOssBucketMutation = {
     console.log(response);
     return response;
   },
+  invalidatesTags: ['Oss'],
 };
 
 const addOssObjectMutation = {
@@ -52,6 +58,7 @@ const addOssObjectMutation = {
     console.log(response);
     return response;
   },
+  invalidatesTags: ['Oss'],
 };
 
 export const ossApi = apiRtk.injectEndpoints({

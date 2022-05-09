@@ -1,9 +1,7 @@
-import {useEffect, useState} from 'react';
 import {Breadcrumb} from 'antd';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {
   selectFileNameFromMD,
-  selectIsChosenFileFromMD,
 } from '../../../../../slices/modelDerivative/selectors';
 import {
   selectCurrentViewNameFromFV,

@@ -180,7 +180,9 @@ export default function FormScheduleCategory() {
 
   return (
     <>
+      {/*
       <ButtonShowCategoryForm title='Schedule' />
+      */}
       <Modal
         centered
         visible={isOpenFormScheduleCategory}

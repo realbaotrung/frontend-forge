@@ -1,11 +1,12 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Layout, Tabs, Typography, Menu, Badge} from 'antd';
+import {Layout, Tabs, Typography, Menu, Badge, Button, Spin} from 'antd';
 import {
   WindowsOutlined,
   CodeSandboxOutlined,
   EyeOutlined,
   FolderOpenOutlined,
+  ReloadOutlined,
 } from '@ant-design/icons';
 import ForgeTree from './features/ForgeTree';
 import Forge2DList from './features/Forge2DList';
@@ -18,7 +19,12 @@ import {
   selectView2DsFromFV,
   selectView3DsFromFV,
 } from '../../../../../slices/forgeViewer/selectors';
-import {useGetOssBucketsQuery} from '../../../../../slices/oss/ossSlice';
+import {
+  ossApi,
+  resetAllFromOssSlice,
+  useGetOssBucketsQuery,
+} from '../../../../../slices/oss/ossSlice';
+import {selectBucketsFromOSS} from '../../../../../slices/oss/selectors';
 
 const {Sider} = Layout;
 const {TabPane} = Tabs;
@@ -26,12 +32,16 @@ const {SubMenu} = Menu;
 const {Text} = Typography;
 
 export default function SiderForViewer() {
+  const [loading, setLoading] = useState(false);
   const {
     data: buckets = [],
     isSuccess: isSuccessGetBuckets,
     isError,
     error,
+    isLoading,
   } = useGetOssBucketsQuery();
+
+  const areBucketsExist = useSelector(selectBucketsFromOSS);
 
   const currentChosenFile = useSelector(selectIsChosenFileFromMD);
   const view2Ds = useSelector(selectView2DsFromFV);
@@ -47,6 +57,14 @@ export default function SiderForViewer() {
   }, [view2Ds, view3Ds]);
 
   useEffect(() => {
+    if (!areBucketsExist) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [areBucketsExist]);
+
+  useEffect(() => {
     if (isSuccessGetBuckets) {
       console.log('Success buckets data:', buckets);
     }
@@ -54,6 +72,11 @@ export default function SiderForViewer() {
       console.log(error);
     }
   }, [isSuccessGetBuckets]);
+
+  const handleLoading = async () => {
+    dispatch(resetAllFromOssSlice());
+    dispatch(ossApi.endpoints.getOssBuckets.initiate()).refetch();
+  };
 
   return (
     <Layout>
@@ -64,17 +87,12 @@ export default function SiderForViewer() {
         collapsedWidth='64'
         className='user-tabs-tab'
       >
-        {/* 
-          {isLoading ? (
-            <Spin className='center-position' />
-          ) : (
-          */}
         <>
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'start',
+              justifyContent: 'space-between',
               gap: '8px',
               padding: '8px',
               width: '100%',
@@ -83,6 +101,12 @@ export default function SiderForViewer() {
           >
             <FormUploadFiles />
             <FormScheduleCategory />
+            <Button
+              onClick={handleLoading}
+              type='ghost'
+              shape='round'
+              icon={<ReloadOutlined />}
+            />
           </div>
           <Tabs
             defaultActiveKey='TabPaneDocument'
@@ -104,23 +128,36 @@ export default function SiderForViewer() {
               ]}
               key='TabPaneDocument'
             >
-              <div
-                key='Document'
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: '100%',
-                  height: '48px',
-                  fontSize: '1.1em',
-                  fontWeight: '600',
-                  paddingLeft: '16px',
-                }}
-              >
-                <span>Documents {`(${buckets.length})`}</span>
-              </div>
-              <div>
-                <ForgeTree />
-              </div>
+              {isLoading || loading ? (
+                <Spin
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '60%',
+                    transform: 'translate(-50%, -40%)',
+                  }}
+                />
+              ) : (
+                <>
+                  <div
+                    key='Document'
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      width: '100%',
+                      height: '48px',
+                      fontSize: '1.1em',
+                      fontWeight: '600',
+                      paddingLeft: '16px',
+                    }}
+                  >
+                    <span>Documents {`(${buckets.length})`}</span>
+                  </div>
+                  <div>
+                    <ForgeTree />
+                  </div>
+                </>
+              )}
             </TabPane>
             <TabPane
               tab={[
@@ -167,7 +204,6 @@ export default function SiderForViewer() {
             </TabPane>
           </Tabs>
         </>
-        {/* )} */}
       </Sider>
     </Layout>
   );

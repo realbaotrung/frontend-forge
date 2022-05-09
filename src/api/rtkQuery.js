@@ -12,6 +12,7 @@ export const apiRtk = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: BASE_URL,
   }),
+  tagTypes: ['Oss'],
   endpoints: () => ({}),
 });
 

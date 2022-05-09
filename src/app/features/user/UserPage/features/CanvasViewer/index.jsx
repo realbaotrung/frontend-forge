@@ -16,7 +16,6 @@ import {
 import Forge2DViewer from './features/Forge2DViewer';
 import Forge3DViewer from './features/Forge3DViewer';
 import ForgeViewerFirstTime from './features/ForgeViewerFirstTime';
-import NameOfFileWithView from '../NameOfFileAndView';
 
 export default function CanvasViewer() {
   const [urn, setUrn] = useState('');

@@ -51,7 +51,7 @@ function ButtonShowModalUploadFiles({onOpen}) {
         },
       }}
     >
-      Upload files
+      Upload file to add Schedule
     </Button>
   );
 }
