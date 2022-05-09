@@ -1,7 +1,7 @@
-import FormUploadFiles from './features/FormUploadFiles';
-import FormScheduleCategory from './features/FormScheduleCategory';
-import ForgeViewerWithTree from './features/ForgeViewerWithTree';
-import './UserPage.css';
+import CanvasViewer from './features/CanvasViewer';
+import './userPage.css';
+import SiderForViewer from './features/SiderForViewer';
+import NameOfFileWithView from './features/NameOfFileAndView';
 
 const containerCss = {
   display: 'flex',
@@ -14,21 +14,26 @@ const containerCss = {
 export default function UserPage() {
   return (
     <div style={containerCss}>
-      {/*
       <div
         style={{
           display: 'flex',
-          gap: '8px',
-          padding: '8px',
+          flexFlow: 'row nowrap',
           width: '100%',
-          height: '48px',
+          height: '100%',
         }}
       >
-        <FormUploadFiles />
-        <FormScheduleCategory />
+        <SiderForViewer />
+        <div
+          style={{
+            backgroundColor: '#fafafa',
+            width: '100%',
+            position: 'relative',
+          }}
+        >
+          <NameOfFileWithView />
+          <CanvasViewer />
+        </div>
       </div>
-      */}
-      <ForgeViewerWithTree />
     </div>
   );
 }
