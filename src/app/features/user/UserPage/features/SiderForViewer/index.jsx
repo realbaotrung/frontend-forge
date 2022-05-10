@@ -25,6 +25,7 @@ import {
   useGetOssBucketsQuery,
 } from '../../../../../slices/oss/ossSlice';
 import {selectBucketsFromOSS} from '../../../../../slices/oss/selectors';
+import { resetAllFromForgeViewerSlice } from '../../../../../slices/forgeViewer/forgeViewerSlice';
 
 const {Sider} = Layout;
 const {TabPane} = Tabs;
@@ -75,6 +76,7 @@ export default function SiderForViewer() {
 
   const handleLoading = async () => {
     dispatch(resetAllFromOssSlice());
+    dispatch(resetAllFromForgeViewerSlice());
     dispatch(ossApi.endpoints.getOssBuckets.initiate()).refetch();
   };
 
@@ -177,6 +179,16 @@ export default function SiderForViewer() {
               ]}
               key='TabPaneView2DsAndView3Ds'
             >
+              {isLoading || loading ? (
+                <Spin
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '60%',
+                    transform: 'translate(-50%, -40%)',
+                  }}
+                />
+              ) : (
               <Menu mode='inline'>
                 <SubMenu
                   icon={<WindowsOutlined style={{fontSize: '1.5em'}} />}
@@ -201,6 +213,7 @@ export default function SiderForViewer() {
                   {view3Ds && <Forge3DList />}
                 </SubMenu>
               </Menu>
+              )}
             </TabPane>
           </Tabs>
         </>
