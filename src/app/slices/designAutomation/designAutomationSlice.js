@@ -158,40 +158,42 @@ const designAutomationSlice = createSlice({
       state.jsonTargetCategoryData = payload;
     },
     getJsonFinalCategoryDataToUpload: (state, {payload}) => {
-    // TODO: create structure JSON file for uploading to server
-    //   [
-    //     {
-    //       "Category": "Air Systems",
-    //       "ScheduleName": "",
-    //       "Parameters": [
-    //         "Fan",
-    //         "Chilled Water Loop",
-    //         "Cooling Coil"
-    //       ],
-    //       "IsAddToSheet": true,
-    //       "SheetName": ""
-    //     },
-    //     {
-    //       "Category": "aaaa",
-    //       "ScheduleName": "",
-    //       "Parameters": [
-    //         "Fan",
-    //         "Chilled Water Loop",
-    //         "Cooling Coil"
-    //       ],
-    //       "IsAddToSheet": true,
-    //       "SheetName": ""
-    //     }
-    //   ]
-      const {categoryKeyName, jsonTargetCategoryData, scheduleName, isSheet} = payload;
+      // TODO: create structure JSON file for uploading to server
+      //   [
+      //     {
+      //       "Category": "Air Systems",
+      //       "ScheduleName": "",
+      //       "Parameters": [
+      //         "Fan",
+      //         "Chilled Water Loop",
+      //         "Cooling Coil"
+      //       ],
+      //       "IsAddToSheet": true,
+      //       "SheetName": ""
+      //     },
+      //     {
+      //       "Category": "aaaa",
+      //       "ScheduleName": "",
+      //       "Parameters": [
+      //         "Fan",
+      //         "Chilled Water Loop",
+      //         "Cooling Coil"
+      //       ],
+      //       "IsAddToSheet": true,
+      //       "SheetName": ""
+      //     }
+      //   ]
+      const {categoryKeyName, jsonTargetCategoryData, scheduleName, isSheet} =
+        payload;
       const jsonFinal = [];
       const schedule = {
-        "Category": categoryKeyName,
-        "ScheduleName": scheduleName,
-        "Parameters": jsonTargetCategoryData,
-        "IsAddToSheet": isSheet,
-        "SheetName": ""
-      }
+        Category: categoryKeyName,
+        ScheduleName: scheduleName,
+        Parameters: jsonTargetCategoryData,
+        IsAddToSheet: isSheet,
+        SheetName: 'auto name',
+      };
+      console.log('schedule from DA: ', schedule);
       jsonFinal.push(schedule);
       state.jsonFinalCategoryDataToUpload = jsonFinal;
     },
@@ -218,6 +220,7 @@ const designAutomationSlice = createSlice({
       state.hasLoading = false;
       state.jsonScheduleData = null;
       state.categoryNames = null;
+      state.categoryData = null;
       state.categoryKeyName = '';
       state.categoryValuesByKeyName = null;
       state.jsonTargetCategoryData = null;
@@ -260,6 +263,8 @@ const designAutomationSlice = createSlice({
         designAutomationApi.endpoints.postJsonFinalCategoryDataToServer
           .matchRejected,
         (state) => {
+          state.scheduleName = '';
+          state.isSheet = false;
           state.categoryNames = null;
           state.categoryKeyName = '';
           state.categoryValuesByKeyName = null;
@@ -288,6 +293,6 @@ export const {
   resetFormUploadFilesState,
   resetFormScheduleCategory,
   setIsOpenFormScheduleCategory,
-  resetAllFromDesignAutomation
+  resetAllFromDesignAutomation,
 } = designAutomationSlice.actions;
 export const {reducer} = designAutomationSlice;

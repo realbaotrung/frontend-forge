@@ -100,7 +100,7 @@ export default function ForgeTree() {
         overflow: 'auto',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
-        height: 'auto',
+        height: '700px',
         paddingLeft: '1.5rem',
         paddingBottom: '2rem'
       }}

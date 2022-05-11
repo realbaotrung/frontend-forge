@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {Button as CButton} from '@chakra-ui/react';
 import {Typography, Space, Modal, message, Button, Alert} from 'antd';
 import TransferProperties from './features/TransferProperties';
-import CategorySelector from './features/CategorySelector';
+import CategoryNameHandler from './features/CategoryNameHandler';
 import {
   getCategoryNames,
   getCategoryValuesByKeyName,
@@ -14,6 +14,7 @@ import {
   setIsOpenFormScheduleCategory,
   usePostJsonFinalCategoryDataToServerMutation,
   getCategoryData,
+  resetAllFromDesignAutomation,
 } from '../../../../../../../slices/designAutomation/designAutomationSlice';
 import {
   selectIsSheetFromDA,
@@ -28,7 +29,11 @@ import {
   selectCategoryDataFromDA,
 } from '../../../../../../../slices/designAutomation/selectors';
 import './formScheduleCategory.css';
-import {categoryInfo} from '../../../../share/categoryInfo'
+import {categoryInfo} from '../../../../share/categoryInfo';
+import ScheduleNameHandler from './features/ScheduleNameHandler';
+import SheetNameHandler from './features/SheetNameHandler';
+import {ossApi, resetAllFromOssSlice} from '../../../../../../../slices/oss/ossSlice';
+import { resetAllFromForgeViewerSlice } from '../../../../../../../slices/forgeViewer/forgeViewerSlice';
 
 const {Text} = Typography;
 
@@ -85,17 +90,17 @@ export default function FormScheduleCategory() {
   const dispatch = useDispatch();
 
   // TODO: should delete when connect again to Server...
-  useEffect(() => {
-    if (!jsonScheduleData) {
-      dispatch(getJsonScheduleData(categoryInfo));
-    }
-  }, [jsonScheduleData])
+  // useEffect(() => {
+  //   if (!jsonScheduleData) {
+  //     dispatch(getJsonScheduleData(categoryInfo));
+  //   }
+  // }, [jsonScheduleData]);
 
   useEffect(() => {
     if (!categoryData && jsonScheduleData) {
-      dispatch(getCategoryData(jsonScheduleData["DataCategory"]));
+      dispatch(getCategoryData(jsonScheduleData['DataCategory']));
     }
-  }, [categoryData, jsonScheduleData])
+  }, [categoryData, jsonScheduleData]);
 
   useEffect(() => {
     if (!categoryNames && categoryData) {
@@ -117,6 +122,7 @@ export default function FormScheduleCategory() {
         scheduleName,
         isSheet,
       };
+      console.log('scheduleObject: ', scheduleObject);
       dispatch(getJsonFinalCategoryDataToUpload(scheduleObject));
     }
   }, [jsonTargetCategoryData, scheduleName, isSheet]);
@@ -132,6 +138,7 @@ export default function FormScheduleCategory() {
         };
         dispatch(setIsOpenFormScheduleCategory(false));
         console.log('from FormScheduleCategory', jsonString);
+        console.log('from postJsonFinalCategoryDataToServer', data);
         await postJsonFinalCategoryDataToServer(data)
           .unwrap()
           .then(() => {
@@ -171,6 +178,7 @@ export default function FormScheduleCategory() {
         duration: 5,
         className: 'my-message',
       });
+      dispatch(resetAllFromDesignAutomation());
     }
     if (isSuccess) {
       content = (
@@ -186,12 +194,19 @@ export default function FormScheduleCategory() {
         duration: 5,
         className: 'my-message',
       });
+
+      dispatch(resetAllFromOssSlice());
+      dispatch(resetAllFromForgeViewerSlice());
+      dispatch(resetAllFromDesignAutomation());
+      dispatch(ossApi.endpoints.getOssBuckets.initiate()).refetch();
     }
   }, [isError, isSuccess]);
 
   return (
     <>
+      {/*
       <ButtonShowCategoryForm title='Schedule' />
+      */}
       <Modal
         centered
         visible={isOpenFormScheduleCategory}
@@ -202,7 +217,7 @@ export default function FormScheduleCategory() {
         bodyStyle={{height: 'auto'}}
         title={[
           <Text key='schedule' style={{fontSize: '20px', fontWeight: '300'}}>
-            Schedule {scheduleName}
+            Schedule
           </Text>,
         ]}
         footer={[
@@ -220,7 +235,18 @@ export default function FormScheduleCategory() {
         ]}
       >
         <Space direction='vertical' size={[0, 16]} align='start'>
-          <CategorySelector />
+          <div
+            style={{
+              width: '254px',
+              display: 'flex',
+              flexFlow: 'column',
+              gap: '8px 0',
+            }}
+          >
+            <CategoryNameHandler />
+            <ScheduleNameHandler />
+            <SheetNameHandler />
+          </div>
           <TransferProperties />
         </Space>
       </Modal>

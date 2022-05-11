@@ -25,20 +25,17 @@ export default function RefetchToShowLoadingAndGetJsonData() {
     console.log('data refetch:', data?.result);
     console.log('data state:', data?.result?.status);
     const status = data?.result?.status;
-    if (status < 1 || count === 0) {
-      setPollInterval(0);
+    const stringJsonData = data?.result?.data;
+
+    if (status < 1) {
       if (status === -1) {
         // show error message
+        setPollInterval(0);
         console.error('Can get json data of design automation from server');
-      } else {
-        const stringJsonData = data?.result?.data;
-        if (!stringJsonData && count > 0) {
-          // TODO: check getJsonData logic
-          setCount(0);
-          setPollInterval(10000);
-        } else {
-          dispatch(getJsonDataFromServer(stringJsonData));
-        }
+      } 
+      if (status === 0 && stringJsonData) {
+        setPollInterval(0);
+        dispatch(getJsonDataFromServer(stringJsonData));
       }
     }
   }, [data]);
