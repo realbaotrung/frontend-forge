@@ -8,10 +8,12 @@ import CategorySelector from './features/CategorySelector';
 import {
   getCategoryNames,
   getCategoryValuesByKeyName,
+  getJsonScheduleData,
   getJsonFinalCategoryDataToUpload,
   resetFormScheduleCategory,
   setIsOpenFormScheduleCategory,
   usePostJsonFinalCategoryDataToServerMutation,
+  getCategoryData,
 } from '../../../../../../../slices/designAutomation/designAutomationSlice';
 import {
   selectIsSheetFromDA,
@@ -19,12 +21,14 @@ import {
   selectCategoryKeyNameFromDA,
   selectCategoryNamesFromDA,
   selectIdFromDA,
-  selectJsonCategoryDataFromDA,
+  selectJsonScheduleDataFromDA,
   selectJsonFinalCategoryDataToUploadFromDA,
   selectJsonTargetCategoryDataFromDA,
   selectIsOpenFormScheduleCategoryFromDA,
+  selectCategoryDataFromDA,
 } from '../../../../../../../slices/designAutomation/selectors';
 import './formScheduleCategory.css';
+import {categoryInfo} from '../../../../share/categoryInfo'
 
 const {Text} = Typography;
 
@@ -58,11 +62,12 @@ ButtonShowCategoryForm.propTypes = {
 };
 
 export default function FormScheduleCategory() {
+  const jsonScheduleData = useSelector(selectJsonScheduleDataFromDA);
+  const categoryData = useSelector(selectCategoryDataFromDA);
   const categoryNames = useSelector(selectCategoryNamesFromDA);
   const categoryKeyName = useSelector(selectCategoryKeyNameFromDA);
   const scheduleName = useSelector(selectScheduleNameFromDA);
   const isSheet = useSelector(selectIsSheetFromDA);
-  const jsonCategoryData = useSelector(selectJsonCategoryDataFromDA);
   const jsonTargetCategoryData = useSelector(
     selectJsonTargetCategoryDataFromDA,
   );
@@ -80,23 +85,29 @@ export default function FormScheduleCategory() {
   const dispatch = useDispatch();
 
   // TODO: should delete when connect again to Server...
-  // useEffect(() => {
-  //   if (!jsonCategoryData) {
-  //     dispatch(getJsonCategoryData(category));
-  //   }
-  // }, [jsonCategoryData])
+  useEffect(() => {
+    if (!jsonScheduleData) {
+      dispatch(getJsonScheduleData(categoryInfo));
+    }
+  }, [jsonScheduleData])
 
   useEffect(() => {
-    if (!categoryNames && jsonCategoryData) {
-      dispatch(getCategoryNames(Object.keys(jsonCategoryData)));
+    if (!categoryData && jsonScheduleData) {
+      dispatch(getCategoryData(jsonScheduleData["DataCategory"]));
     }
-  }, [categoryNames, jsonCategoryData]);
+  }, [categoryData, jsonScheduleData])
 
   useEffect(() => {
-    if (categoryKeyName && jsonCategoryData) {
-      dispatch(getCategoryValuesByKeyName(jsonCategoryData[categoryKeyName]));
+    if (!categoryNames && categoryData) {
+      dispatch(getCategoryNames(Object.keys(categoryData)));
     }
-  }, [categoryKeyName, jsonCategoryData]);
+  }, [categoryNames, categoryData]);
+
+  useEffect(() => {
+    if (categoryKeyName && categoryData) {
+      dispatch(getCategoryValuesByKeyName(categoryData[categoryKeyName]));
+    }
+  }, [categoryKeyName, categoryData]);
 
   useEffect(() => {
     if (jsonTargetCategoryData && scheduleName && isSheet) {
@@ -180,9 +191,7 @@ export default function FormScheduleCategory() {
 
   return (
     <>
-      {/*
       <ButtonShowCategoryForm title='Schedule' />
-      */}
       <Modal
         centered
         visible={isOpenFormScheduleCategory}
@@ -218,3 +227,8 @@ export default function FormScheduleCategory() {
     </>
   );
 }
+
+/*
+eslint
+  dot-notation: 0
+*/

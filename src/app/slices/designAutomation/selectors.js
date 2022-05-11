@@ -20,9 +20,14 @@ export const selectRevitFileNameFromDA = createSelector(
   (designAutomationState) => designAutomationState.revitFileName,
 );
 
-export const selectJsonCategoryDataFromDA = createSelector(
+export const selectJsonScheduleDataFromDA = createSelector(
   [selectDomain],
-  (designAutomationState) => designAutomationState.jsonCategoryData,
+  (designAutomationState) => designAutomationState.jsonScheduleData,
+);
+
+export const selectCategoryDataFromDA = createSelector(
+  [selectDomain],
+  (designAutomationState) => designAutomationState.categoryData,
 );
 
 export const selectIsErrorFromDA = createSelector(

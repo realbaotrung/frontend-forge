@@ -26,7 +26,7 @@ import RefetchToShowLoadingAndGetJsonData from './features/RefetchToShowLoadingA
 
 import {
   selectHasLoadingFromDA, selectIsErrorFromDA,
-  selectJsonCategoryDataFromDA,
+  selectJsonScheduleDataFromDA,
   selectRevitFileNameFromDA,
 } from '../../../../../../../slices/designAutomation/selectors';
 import {resetFormUploadFilesState, setIsOpenFormScheduleCategory} from '../../../../../../../slices/designAutomation/designAutomationSlice';
@@ -136,7 +136,7 @@ export default function FormUploadFiles() {
   // Check loading when file is taken and push to the server
   const hasLoadingFromDA = useSelector(selectHasLoadingFromDA);
   const revitFileName = useSelector(selectRevitFileNameFromDA);
-  const jsonCategoryDataFromDA = useSelector(selectJsonCategoryDataFromDA);
+  const jsonScheduleDataFromDA = useSelector(selectJsonScheduleDataFromDA);
   const isError = useSelector(selectIsErrorFromDA);
 
   useEffect(() => {
@@ -146,7 +146,7 @@ export default function FormUploadFiles() {
   });
 
   const handleOnClose = () => {
-    if (jsonCategoryDataFromDA) {
+    if (jsonScheduleDataFromDA) {
       dispatch(setIsOpenFormScheduleCategory(true));
     }
     dispatch(resetFormUploadFilesState());
@@ -180,10 +180,10 @@ export default function FormUploadFiles() {
               {isError && <FailToUploadFile />}
               {hasLoadingFromDA && !isError && <FileIsUploading />}
               {!haveChosenFiles && !hasLoadingFromDA && !isError && <NotificationSelectFile />}
-              {haveChosenFiles && !jsonCategoryDataFromDA && !isError && (
+              {haveChosenFiles && !jsonScheduleDataFromDA && !isError && (
                 <RefetchToShowLoadingAndGetJsonData />
               )}
-              {haveChosenFiles && jsonCategoryDataFromDA && !isError && <FileIsUploaded />}
+              {haveChosenFiles && jsonScheduleDataFromDA && !isError && <FileIsUploaded />}
             </Box>
           </ModalBody>
           <ModalFooter sx={modelFooterCSS}>

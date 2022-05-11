@@ -104,7 +104,8 @@ export const initialState = {
   id: '',
   revitFileName: '',
   hasLoading: false,
-  jsonCategoryData: null,
+  jsonScheduleData: null,
+  categoryData: null,
   categoryNames: null,
   categoryKeyName: '',
   categoryValuesByKeyName: null,
@@ -124,16 +125,19 @@ const designAutomationSlice = createSlice({
   reducers: {
     getJsonDataFromServer: (state, {payload}) => {
       const pattern = /\\/g;
-      state.jsonCategoryData = formatStringToJsonObjectWithRegex(
+      state.jsonScheduleData = formatStringToJsonObjectWithRegex(
         pattern,
         payload,
       );
     },
-    getJsonCategoryData: (state, {payload}) => {
-      state.jsonCategoryData = JSON.parse(payload);
+    getJsonScheduleData: (state, {payload}) => {
+      state.jsonScheduleData = JSON.parse(payload);
     },
     getRevitFileName: (state, {payload}) => {
       state.revitFileName = payload;
+    },
+    getCategoryData: (state, {payload}) => {
+      state.categoryData = payload;
     },
     getCategoryNames: (state, {payload}) => {
       state.categoryNames = payload;
@@ -212,7 +216,7 @@ const designAutomationSlice = createSlice({
       state.id = '';
       state.revitFileName = '';
       state.hasLoading = false;
-      state.jsonCategoryData = null;
+      state.jsonScheduleData = null;
       state.categoryNames = null;
       state.categoryKeyName = '';
       state.categoryValuesByKeyName = null;
@@ -248,7 +252,7 @@ const designAutomationSlice = createSlice({
           state.id = '';
           state.revitFileName = '';
           state.hasLoading = false;
-          state.jsonCategoryData = null;
+          state.jsonScheduleData = null;
           state.isError = true;
         },
       )
@@ -272,7 +276,8 @@ const designAutomationSlice = createSlice({
 export const {
   getJsonDataFromServer,
   getRevitFileName,
-  getJsonCategoryData,
+  getJsonScheduleData,
+  getCategoryData,
   getCategoryNames,
   getCategoryKeyName,
   getScheduleName,
