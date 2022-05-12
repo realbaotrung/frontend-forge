@@ -1,40 +1,64 @@
 // Custom AxiosBaseQuery
-import axios from "axios";
-import {getItemFromSS, storageItem} from "../../utils/storage.utils";
+import axios from 'axios';
+import {signOut} from '../../utils/helpers.utils';
+import {getItemFromSS, storageItem} from '../../utils/storage.utils';
 
 export const axiosBaseQuery =
   ({baseUrl} = {baseUrl: ''}) =>
-    async ({url, method, data, headers, params}) => {
-      // Set header with authorization for each request
-      axios.interceptors.request.use(
-        (config) => {
-          const accessToken = getItemFromSS(storageItem.auth)?.accessToken;
-          if (accessToken) {
-            // eslint-disable-next-line dot-notation
-            config.headers['Authorization'] = `Bearer ${accessToken}`;
-          }
-          return config;
-        },
-        (error) => {
-          Promise.reject(error);
-        },
-      );
+  async ({url, method, data, headers, params}) => {
+    // Set header with authorization for each request
+    const axiosApi = axios.create({baseURL: baseUrl});
 
-      try {
-        const result = await axios({
-          url: `${baseUrl}${url}`,
-          method,
-          data,
-          headers,
-          params,
-        });
-        return {data: result.data};
-      } catch (axiosError) {
-        return {
-          error: {
-            status: axiosError.response?.status,
-            data: axiosError.response?.data || axiosError.message,
-          },
-        };
+    axiosApi.interceptors.request.use(
+      (config) => {
+        const accessToken = getItemFromSS(storageItem.auth)?.accessToken;
+        if (accessToken) {
+          config.headers = {
+            ...config.headers,
+            Authorization: `Bearer ${accessToken}`,
+          };
+        }
+        return config;
+      },
+      (error) => {
+        Promise.reject(error);
+      },
+    );
+
+    axiosApi.interceptors.response.use(
+      (config) => {
+        if (config.data.code === 401) {
+          signOut();
+          return Promise.reject();
+        }
+        if (config && config.result) {
+          return config.result;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      },
+    );
+
+    try {
+      const result = await axiosApi({
+        url: `${url}`,
+        method,
+        data,
+        headers,
+        params,
+      });
+      return {data: result.data};
+    } catch (axiosError) {
+      if (axiosError?.response?.status === 401) {
+        signOut();
       }
-    };
+      return {
+        error: {
+          status: axiosError.response?.status,
+          data: axiosError.response?.data || axiosError.message,
+        },
+      };
+    }
+  };

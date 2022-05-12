@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {apiPrivate} from '../../../api/rtkQuery';
+import {apiRtk} from '../../../api/rtkQuery';
 import {apiPaths} from '../../../api/features/apiPaths';
 import {
   setItemToSS,
@@ -20,7 +20,7 @@ const signInMutation = {
     method: 'POST',
     // headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     // body: qs.stringify({username, password}),
-    body: {username, password},
+    data: {username, password},
   }),
   transformResponse: (response) => {
     if (response.result.accessToken) {
@@ -28,11 +28,12 @@ const signInMutation = {
     }
     return response;
   },
+  providesTags: ['Auth']
 };
 
 // --- Pass configuration of endpoints here ---
 
-const authApi = apiPrivate.injectEndpoints({
+const authApi = apiRtk.injectEndpoints({
   endpoints: (builder) => ({
     signIn: builder.mutation(signInMutation),
   }),
@@ -70,10 +71,6 @@ const authSlice = createSlice({
       state.user = null;
       state.accessToken = '';
       state.role = '';
-    },
-    signOut: () => {
-      window.location.reload();
-      removeItemFromSS(storageItem.auth);
     }
   },
   extraReducers: (builder) => {
@@ -98,6 +95,6 @@ const authSlice = createSlice({
 
 // --- Export reducer here ---
 
-export const {resetAllFromAuthSlice, signOut} = authSlice.actions;
+export const {resetAllFromAuthSlice} = authSlice.actions;
 
 export const {reducer} = authSlice;

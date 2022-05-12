@@ -6,7 +6,7 @@ import {reducer as ossReducer} from '../app/slices/oss/ossSlice';
 import {reducer as modelDerivativeReducer} from '../app/slices/modelDerivative/modelDerivativeSlice';
 import {reducer as oAuthReducer} from '../app/slices/oAuth/oAuthSlice';
 import {reducer as forgeViewerReducer} from '../app/slices/forgeViewer/forgeViewerSlice';
-import {apiRtk, apiPrivate} from '../api/rtkQuery';
+import {apiRtk} from '../api/rtkQuery';
 import bundleReducer from '../app/slices/bundle/bundleSlice';
 import bundleCategoryReducer from '../app/slices/bundleCategory/bundleCategorySlice';
 
@@ -26,12 +26,9 @@ const store = configureStore({
     forgeViewer: forgeViewerReducer,
     message: messageReducer,
     [apiRtk.reducerPath]: apiRtk.reducer,
-    [apiPrivate.reducerPath]: apiPrivate.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware()
-      .concat(apiRtk.middleware)
-      .concat(apiPrivate.middleware),
+    getDefaultMiddleware().concat(apiRtk.middleware),
 });
 
 export default store;

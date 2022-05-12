@@ -1,6 +1,5 @@
-import {useCallback, useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
+import {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 import {ChevronDownIcon, ChevronUpIcon} from '@chakra-ui/icons';
 import {
   Avatar,
@@ -18,11 +17,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import {selectUser} from '../../../../slices/auth/selectors';
-import {
-  removeItemFromSS,
-  storageItem,
-} from '../../../../../utils/storage.utils';
-import { signOut } from '../../../../slices/auth/authSlice';
+import { signOut } from '../../../../../utils/helpers.utils';
 
 const buttonPopoverTriggerCSS = {
   bg: 'transparent',
@@ -62,7 +57,6 @@ export default function Nav() {
   const {isOpen, onOpen, onClose} = useDisclosure();
 
   const user = useSelector(selectUser);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (user) {
@@ -71,9 +65,9 @@ export default function Nav() {
     }
   }, []);
 
-  const handleSignOut = useCallback(async () => {
-    dispatch(signOut());
-  }, []);
+  const handleSignout = () => {
+    signOut();
+  }
 
   return (
     <HStack spacing={2.5} h='2rem' borderColor='gray.400'>
@@ -112,8 +106,8 @@ export default function Nav() {
                 <Button
                   variant='primary'
                   size='sm'
-                  onClick={handleSignOut}
                   sx={{marginBlockStart: '16px'}}
+                  onClick={handleSignout}
                 >
                   Sign out
                 </Button>

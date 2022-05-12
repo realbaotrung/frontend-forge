@@ -1,4 +1,4 @@
-import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import {createApi} from '@reduxjs/toolkit/query/react';
 import {axiosBaseQuery} from "./features/customBaseQuery";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -12,14 +12,6 @@ export const apiRtk = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: BASE_URL,
   }),
-  tagTypes: ['Oss'],
-  endpoints: () => ({}),
-});
-
-export const apiPrivate = createApi({
-  reducerPath: 'apiPrivate',
-  baseQuery: fetchBaseQuery({
-    baseUrl: BASE_URL,
-  }),
+  tagTypes: ['Auth', 'Oss'],
   endpoints: () => ({}),
 });
