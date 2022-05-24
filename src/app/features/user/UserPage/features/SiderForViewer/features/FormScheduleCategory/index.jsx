@@ -32,8 +32,11 @@ import './formScheduleCategory.css';
 import {categoryInfo} from '../../../../share/categoryInfo';
 import ScheduleNameHandler from './features/ScheduleNameHandler';
 import SheetNameHandler from './features/SheetNameHandler';
-import {ossApi, resetAllFromOssSlice} from '../../../../../../../slices/oss/ossSlice';
-import { resetAllFromForgeViewerSlice } from '../../../../../../../slices/forgeViewer/forgeViewerSlice';
+import {
+  ossApi,
+  resetAllFromOssSlice,
+} from '../../../../../../../slices/oss/ossSlice';
+import {resetAllFromForgeViewerSlice} from '../../../../../../../slices/forgeViewer/forgeViewerSlice';
 
 const {Text} = Typography;
 

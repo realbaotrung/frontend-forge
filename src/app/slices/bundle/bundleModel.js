@@ -1,5 +1,13 @@
 export class BundleModel {
-  constructor(id, name, path, description, versionRevit, bundleCategory, bundleCategoryId) {
+  constructor(
+    id,
+    name,
+    path,
+    description,
+    versionRevit,
+    bundleCategory,
+    bundleCategoryId,
+  ) {
     this.id = id;
     this.name = name;
     this.path = path;

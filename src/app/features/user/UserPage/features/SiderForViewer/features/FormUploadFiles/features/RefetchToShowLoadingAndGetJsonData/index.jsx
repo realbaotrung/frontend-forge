@@ -1,9 +1,7 @@
 import {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Text, VStack, Spinner} from '@chakra-ui/react';
-import {
-  selectIdFromDA,
-} from '../../../../../../../../../slices/designAutomation/selectors';
+import {selectIdFromDA} from '../../../../../../../../../slices/designAutomation/selectors';
 import {
   getJsonDataFromServer,
   useGetDesignAutomationInfoByIdQuery,
@@ -32,7 +30,7 @@ export default function RefetchToShowLoadingAndGetJsonData() {
         // show error message
         setPollInterval(0);
         console.error('Can get json data of design automation from server');
-      } 
+      }
       if (status === 0 && stringJsonData) {
         setPollInterval(0);
         dispatch(getJsonDataFromServer(stringJsonData));
@@ -43,10 +41,8 @@ export default function RefetchToShowLoadingAndGetJsonData() {
   // {!hasLoadingFromDA && !jsonDataFromDA && <Spinner size='xl' />}
   return (
     <VStack w='full' h='18.125rem' justify='center' align='center'>
-      <Spinner pb='0.75rem'size='lg' />
-      <Text fontSize='1.25em'>
-        In processing ...
-      </Text>
+      <Spinner pb='0.75rem' size='lg' />
+      <Text fontSize='1.25em'>In processing ...</Text>
     </VStack>
   );
 }

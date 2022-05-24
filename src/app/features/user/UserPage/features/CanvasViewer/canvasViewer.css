@@ -17,15 +17,24 @@
 }
 .user-tabs-tab .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active,
 .user-tabs-tab .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab-active {
-  color: #0052CC;
+  color: #0052cc;
   background: #fff;
 }
 
-.user-tabs-tab .ant-tabs-left > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane, .ant-tabs-left > div > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane {
+.user-tabs-tab
+  .ant-tabs-left
+  > .ant-tabs-content-holder
+  > .ant-tabs-content
+  > .ant-tabs-tabpane,
+.ant-tabs-left
+  > div
+  > .ant-tabs-content-holder
+  > .ant-tabs-content
+  > .ant-tabs-tabpane {
   padding-left: 0;
 }
 .sider-hamberger {
-  background-color: #0052CC;
+  background-color: #0052cc;
   color: #fff;
   max-width: 63px;
 }

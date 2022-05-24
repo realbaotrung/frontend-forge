@@ -1,2 +1,2 @@
-export * from './ossSlice'
-export * from './selectors'
+export * from './ossSlice';
+export * from './selectors';

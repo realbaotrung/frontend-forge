@@ -1,19 +1,17 @@
 import {useEffect, useMemo, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Transfer, Space, Row, Col} from 'antd';
-import {
-  selectCategoryValuesByKeyNameFromDA,
-} from '../../../../../../../../../slices/designAutomation/selectors';
-import {
-  getJsonTargetCategoryData
-} from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
+import {selectCategoryValuesByKeyNameFromDA} from '../../../../../../../../../slices/designAutomation/selectors';
+import {getJsonTargetCategoryData} from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
 
 export default function TransferProperties() {
-  const [haveTargetData, setHaveTargetData] = useState(false)
+  const [haveTargetData, setHaveTargetData] = useState(false);
   const [targetKeys, setTargetKeys] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
 
-  const categoryValuesByKeyName = useSelector(selectCategoryValuesByKeyNameFromDA);
+  const categoryValuesByKeyName = useSelector(
+    selectCategoryValuesByKeyNameFromDA,
+  );
 
   const dispatch = useDispatch();
 
@@ -31,14 +29,14 @@ export default function TransferProperties() {
         });
       }
     }
-    return data
+    return data;
   }, [categoryValuesByKeyName]);
 
   useEffect(() => {
     if (haveTargetData) {
       dispatch(getJsonTargetCategoryData(targetKeys));
     }
-  }, [targetKeys, haveTargetData])
+  }, [targetKeys, haveTargetData]);
 
   const onChange = (nextTargetKeys) => {
     setTargetKeys(nextTargetKeys);
@@ -65,8 +63,10 @@ export default function TransferProperties() {
         targetKeys={targetKeys}
         selectedKeys={selectedKeys}
         onChange={(nextTargetKeys) => onChange(nextTargetKeys)}
-        onSelectChange={(sourceSelectedKeys, targetSelectedKeys) => onSelectChange(sourceSelectedKeys, targetSelectedKeys)}
-        render={item => item?.title}
+        onSelectChange={(sourceSelectedKeys, targetSelectedKeys) =>
+          onSelectChange(sourceSelectedKeys, targetSelectedKeys)
+        }
+        render={(item) => item?.title}
         showSelectAll={false}
       />
     </Space>

@@ -1,2 +1,2 @@
-export * from './modelDerivativeSlice'
-export * from './selectors'
+export * from './modelDerivativeSlice';
+export * from './selectors';

@@ -39,8 +39,8 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
   }, []);
 
   useEffect(() => {
-    if(isSuccess) {
-      resetEditing(true)
+    if (isSuccess) {
+      resetEditing(true);
     }
   }, [isSuccess]);
 
@@ -49,7 +49,7 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
     formData.append('Description', value.description);
     formData.append('VersionRevit', value.versionRevit);
     formData.append('BundleCategoryId', value.bundleCategoryId);
-    if(uploadFile) {
+    if (uploadFile) {
       formData.append('File', uploadFile);
     }
     if (editingBundle.id === undefined) {
@@ -60,7 +60,6 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
   };
   const onFinishFailed = (errorInfo) => {};
 
-  
   const props = {
     onRemove: (file) => {
       setUploadFile(null);
@@ -68,29 +67,32 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
     beforeUpload: (file) => {
       return false;
     },
-    defaultFileList: editingBundle.path !== undefined ? [
-      {
-        uid: '1',
-        name: editingBundle.path.split('\\').pop().split('/').pop(),
-        status: 'done',
-        url: 'http://www.baidu.com/xxx.png',
-      }
-    ] : [],
+    defaultFileList:
+      editingBundle.path !== undefined
+        ? [
+            {
+              uid: '1',
+              name: editingBundle.path.split('\\').pop().split('/').pop(),
+              status: 'done',
+              url: 'http://www.baidu.com/xxx.png',
+            },
+          ]
+        : [],
     showUploadList: {
       showDownloadIcon: false,
       showRemoveIcon: false,
-    }
+    },
   };
 
   return (
     <Modal
       title={editingBundle != null ? 'Edit' : 'Add'}
       visible={isEditing}
-      okText='Save' 
-      forceRender 
+      okText='Save'
+      forceRender
       onCancel={() => {
         resetEditing();
-      }} 
+      }}
       onOk={() => {
         form
           .validateFields()
@@ -104,22 +106,22 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
       }}
     >
       <Form
-        form={form} 
+        form={form}
         name='basic'
         labelCol={{span: 8}}
         wrapperCol={{span: 16}}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed} 
+        onFinishFailed={onFinishFailed}
         initialValues={{
-          description : editingBundle?.description,
-          bundleCategoryId :editingBundle?.bundleCategoryId,
-          versionRevit: editingBundle?.versionRevit
+          description: editingBundle?.description,
+          bundleCategoryId: editingBundle?.bundleCategoryId,
+          versionRevit: editingBundle?.versionRevit,
         }}
         autoComplete='off'
       >
         <Form.Item
           label='Description'
-          name='description' 
+          name='description'
           rules={[{required: true, message: 'Please input Description!'}]}
         >
           <Input />
@@ -138,7 +140,7 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
         </Form.Item>
 
         <Form.Item label='Version Revit' name='versionRevit'>
-          <Select >
+          <Select>
             {versionrevits?.result?.map((value) => {
               return (
                 <Select.Option key={value} value={value}>
@@ -150,7 +152,12 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
         </Form.Item>
 
         <Form.Item label='File upload' name='fileUpload'>
-          <Upload {...props} onChange={(e) => setUploadFile(e.file)} multiple={false}  maxCount={1}>
+          <Upload
+            {...props}
+            onChange={(e) => setUploadFile(e.file)}
+            multiple={false}
+            maxCount={1}
+          >
             <Button icon={<UploadOutlined />}>Click to Upload</Button>
           </Upload>
         </Form.Item>

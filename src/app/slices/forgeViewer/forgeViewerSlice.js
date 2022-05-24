@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
 
 // ============================================================================
 // Slice here...
@@ -50,7 +50,7 @@ const forgeViewerSlice = createSlice({
       state.view3Ds = null;
       state.guid2dView = '';
       state.guid3dView = '';
-    }
+    },
   },
 });
 

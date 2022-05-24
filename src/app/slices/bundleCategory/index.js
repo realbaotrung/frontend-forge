@@ -1,1 +1,1 @@
-export * from './bundleCategorySlice'
+export * from './bundleCategorySlice';

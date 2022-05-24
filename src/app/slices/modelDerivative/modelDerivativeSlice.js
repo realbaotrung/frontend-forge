@@ -77,7 +77,11 @@ const modelDerivativeSlice = createSlice({
 });
 
 // --- Export reducer here ---
-export const {setMetadata, setFileName, setIsChosenFile, resetAllFromModelDerivative} =
-  modelDerivativeSlice.actions;
+export const {
+  setMetadata,
+  setFileName,
+  setIsChosenFile,
+  resetAllFromModelDerivative,
+} = modelDerivativeSlice.actions;
 
 export const {reducer} = modelDerivativeSlice;

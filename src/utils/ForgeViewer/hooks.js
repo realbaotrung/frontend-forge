@@ -105,15 +105,14 @@ export function useForgeViewer({
   // =============================================================================================
 
   const handleDocumentLoad = (viewerDocument) => {
-
     // const onDocumentLoadSuccess1 = (viewerDc) => {
-      // viewerDc is Document
-      // api : https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/Document/
-      // const viewables = viewerDc.getRoot().search({type: 'geometry'});
-      // console.log('viewables', viewables);
-      // const view2Ds = viewables.find((v) => {
-        // v is BubbleNode
-        // api : https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/BubbleNode/
+    // viewerDc is Document
+    // api : https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/Document/
+    // const viewables = viewerDc.getRoot().search({type: 'geometry'});
+    // console.log('viewables', viewables);
+    // const view2Ds = viewables.find((v) => {
+    // v is BubbleNode
+    // api : https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/BubbleNode/
     //     console.log('viewSmall', v);
     //     return v.is2D()
     //   });

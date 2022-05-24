@@ -5,7 +5,6 @@ import {
   setItemToSS,
   getItemFromSS,
   storageItem,
-  removeItemFromSS,
 } from '../../../utils/storage.utils';
 
 // ============================================================================
@@ -19,7 +18,7 @@ const signInMutation = {
     url: apiPaths.API_SIGNIN,
     method: 'POST',
     // headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    // body: qs.stringify({username, password}),
+    // data: qs.stringify({username, password}),
     data: {username, password},
   }),
   transformResponse: (response) => {
@@ -28,7 +27,7 @@ const signInMutation = {
     }
     return response;
   },
-  providesTags: ['Auth']
+  providesTags: ['Auth'],
 };
 
 // --- Pass configuration of endpoints here ---
@@ -71,7 +70,7 @@ const authSlice = createSlice({
       state.user = null;
       state.accessToken = '';
       state.role = '';
-    }
+    },
   },
   extraReducers: (builder) => {
     builder

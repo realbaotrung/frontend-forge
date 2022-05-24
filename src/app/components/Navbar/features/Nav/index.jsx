@@ -17,7 +17,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import {selectUser} from '../../../../slices/auth/selectors';
-import { signOut } from '../../../../../utils/helpers.utils';
+import {signOut} from '../../../../../utils/helpers.utils';
 
 const buttonPopoverTriggerCSS = {
   bg: 'transparent',
@@ -67,7 +67,7 @@ export default function Nav() {
 
   const handleSignout = () => {
     signOut();
-  }
+  };
 
   return (
     <HStack spacing={2.5} h='2rem' borderColor='gray.400'>

@@ -45,7 +45,7 @@ export const removeItemFromSS = (itemName) => {
  * This Function use Local Storage as an event-emitter
  * again and sync Session Storage between tabs of the same
  * base URL on load.
- * 
+ *
  * //TODO: logout error when open two tabs of browser
  * one tab still login another tab logout
  * => should implement logout via server

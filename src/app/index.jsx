@@ -8,5 +8,5 @@
 import RouterOutlet from './features/route/RouterOutlet';
 
 export default function App() {
-  return  <RouterOutlet />
+  return <RouterOutlet />;
 }

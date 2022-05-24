@@ -4,7 +4,7 @@ import routes from './routeMap';
 import RequireAuth from './RequireAuth';
 
 import NavBarAdmin from '../../components/NavbarAdmin';
-import Navbar from '../../components/Navbar'
+import Navbar from '../../components/Navbar';
 
 export default function RouterOutlet() {
   const routeComponents = routes.map((routeItem) => {
@@ -22,15 +22,22 @@ export default function RouterOutlet() {
         key={routeItem.id}
         path={routeItem.path}
         element={
+          // TODO: review logic of ROLES
           <RequireAuth isAdmin={routeItem?.isAdmin}>
-            {routeItem.isAdmin && <NavBarAdmin>{routeItem.component}</NavBarAdmin>}
-            {!routeItem.isAdmin && <><Navbar />{routeItem.component}</>}
+            {routeItem.isAdmin && (
+              <NavBarAdmin>{routeItem.component}</NavBarAdmin>
+            )}
+            {!routeItem.isAdmin && (
+              <>
+                <Navbar />
+                {routeItem.component}
+              </>
+            )}
           </RequireAuth>
         }
       />
     );
   });
-  return (
-    <Routes>{routeComponents}</Routes>
-  );
+
+  return <Routes>{routeComponents}</Routes>;
 }

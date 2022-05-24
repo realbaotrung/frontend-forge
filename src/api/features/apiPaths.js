@@ -14,11 +14,12 @@ export const apiPaths = {
   API_DATA_MANAGEMENT: '/forge/datamanagement',
 
   // Design automation
-  API_DESIGNAUTOMATION_ACTIVITIES : '/forge/designautomation/activities',
-  API_DESIGNAUTOMATION_START : '/forge/designautomation/start',
-  API_DESIGNAUTOMATION_GET_INFO_PROJECT : '/forge/designautomation/get-info-project',
-  API_DESIGNAUTOMATION_ENGINES : '/forge/designautomation/engines',
-  API_DESIGNAUTOMATION_DESIGN_INFO : '/forge/design-info',
+  API_DESIGNAUTOMATION_ACTIVITIES: '/forge/designautomation/activities',
+  API_DESIGNAUTOMATION_START: '/forge/designautomation/start',
+  API_DESIGNAUTOMATION_GET_INFO_PROJECT:
+    '/forge/designautomation/get-info-project',
+  API_DESIGNAUTOMATION_ENGINES: '/forge/designautomation/engines',
+  API_DESIGNAUTOMATION_DESIGN_INFO: '/forge/design-info',
 
   // Model Derivative
   API_MODEL_DERIVATIVE_JOBS: '/forge/modelderivative/jobs',
@@ -34,4 +35,4 @@ export const apiPaths = {
   // OSS
   API_OSS_BUCKETS: '/forge/oss/buckets',
   API_OSS_OBJECTS: '/forge/oss/objects',
-}
+};

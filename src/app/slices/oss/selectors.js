@@ -1,7 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {
-  initialState,
-} from './ossSlice';
+import {initialState} from './ossSlice';
 
 const selectDomain = (state) => state.oss || initialState;
 

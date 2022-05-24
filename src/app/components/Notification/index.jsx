@@ -1,11 +1,10 @@
 /* eslint-disable object-shorthand */
-import React from 'react'
-import PropTypes from 'prop-types'
-import { notification } from 'antd';
-import { CheckCircleOutlined } from '@ant-design/icons';
+import React from 'react';
+import PropTypes from 'prop-types';
+import {notification} from 'antd';
+import {CheckCircleOutlined} from '@ant-design/icons';
 
 const Notification = (status, description) => {
-
   const statusLowwer = `noti-${status.toLowerCase()}`;
 
   notification.open({
@@ -19,6 +18,6 @@ const Notification = (status, description) => {
   });
 };
 
-Notification.propTypes = {}
+Notification.propTypes = {};
 
-export default Notification
+export default Notification;

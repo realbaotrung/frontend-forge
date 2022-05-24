@@ -1,68 +1,69 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {api} from "../../../api/axiosClient";
-import { SystemContants } from '../../../common/systemcontants';
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import {api} from '../../../api/axiosClient';
+import {SystemContants} from '../../../common/systemcontants';
 import Notification from '../../components/Notification';
 
-
 export const getBundleCategoryAll = createAsyncThunk(
-  "bundleCategory/getall",
-  async (data, { rejectWithValue }) => {
+  'bundleCategory/getall',
+  async (data, {rejectWithValue}) => {
     try {
       const response = await api.get('/bundleCategory');
       if (response.status >= 400) {
-        return rejectWithValue(response.data)
-      } 
-        return response.data;
+        return rejectWithValue(response.data);
+      }
+      return response.data;
     } catch (e) {
-      console.log("Error", e.response.data)
-      return rejectWithValue(e.response.data)
+      console.log('Error', e.response.data);
+      return rejectWithValue(e.response.data);
     }
-  }
+  },
 );
 
 export const getBundleCategory = createAsyncThunk(
-  "bundleCategory/get",
-  async ({index, size}, { rejectWithValue }) => {
+  'bundleCategory/get',
+  async ({index, size}, {rejectWithValue}) => {
     try {
-      const response = await api.get(`/bundleCategory?PageNumber=${index}&PageSize=${size}`);
+      const response = await api.get(
+        `/bundleCategory?PageNumber=${index}&PageSize=${size}`,
+      );
       if (response.status >= 400) {
-        return rejectWithValue(response.data)
-      } 
-        return response.data;
+        return rejectWithValue(response.data);
+      }
+      return response.data;
     } catch (e) {
-      console.log("Error", e.response.data)
-      return rejectWithValue(e.response.data)
+      console.log('Error', e.response.data);
+      return rejectWithValue(e.response.data);
     }
-  }
+  },
 );
 
 export const deleteBundleCategory = createAsyncThunk(
-  "bundleCategory/delete",
-  async (data, { rejectWithValue }) => {
+  'bundleCategory/delete',
+  async (data, {rejectWithValue}) => {
     try {
       const response = await api.delete(`/bundleCategory/${data.id}`);
-      return response.data
+      return response.data;
     } catch (e) {
       return e;
     }
-  }
+  },
 );
 
 export const postBundleCategory = createAsyncThunk(
-  "bundleCategory/post",
-  async (data, { rejectWithValue }) => {
+  'bundleCategory/post',
+  async (data, {rejectWithValue}) => {
     try {
       const config = {headers: {'Content-Type': 'applicaltion/json'}};
       const response = await api.create('/bundleCategory', data, config);
       if (response.status >= 400) {
-          return rejectWithValue(response.data)
-        } 
-        return response.data;  
+        return rejectWithValue(response.data);
+      }
+      return response.data;
     } catch (e) {
-      console.log("Error", e.response.data)
-      return rejectWithValue(e.response.data)
+      console.log('Error', e.response.data);
+      return rejectWithValue(e.response.data);
     }
-  }
+  },
 );
 
 export const putBundleCategory = createAsyncThunk(
@@ -72,27 +73,27 @@ export const putBundleCategory = createAsyncThunk(
       const config = {headers: {'Content-Type': 'applicaltion/json'}};
       const response = await api.patch(`/BundleCategory/${id}`, data, config);
       if (response.status >= 400) {
-        return rejectWithValue(response.data)
-      } 
+        return rejectWithValue(response.data);
+      }
       return response;
     } catch (e) {
-      console.log("Error", e.response.data)
-      return rejectWithValue(e.response.data)
+      console.log('Error', e.response.data);
+      return rejectWithValue(e.response.data);
     }
   },
 );
 
 // Config slice
 export const bundleCategorySlice = createSlice({
-  name: "bundleCategory",
-  initialState:{
+  name: 'bundleCategory',
+  initialState: {
     isLoading: false,
     isSuccess: false,
     errorMessage: '',
     bundleCategories: null,
     bundleCategoryAlls: null,
-    noti: SystemContants.NOTI_INFO
-  } ,
+    noti: SystemContants.NOTI_INFO,
+  },
   reducers: {},
   extraReducers: (builder) => {
     // Requset GET ALL ----------------------------------------------------------
@@ -170,8 +171,7 @@ export const bundleCategorySlice = createSlice({
       Notification(SystemContants.NOTI_ERROR, [...action.payload.errors][0]);
     });
 
-
-     // Requset PUT ----------------------------------------------------------
+    // Requset PUT ----------------------------------------------------------
     builder.addCase(putBundleCategory.pending, (state) => {
       state.isLoading = true;
       state.isSuccess = false;
@@ -188,15 +188,16 @@ export const bundleCategorySlice = createSlice({
     builder.addCase(putBundleCategory.rejected, (state, action) => {
       state.isLoading = false;
       state.isSuccess = false;
-      Notification(SystemContants.NOTI_ERROR, [...action.payload.errors][0])
+      Notification(SystemContants.NOTI_ERROR, [...action.payload.errors][0]);
     });
-
   },
 });
 
 // Select state currentUser from slice
-export const selectBundleCategory = (state) => state.bundleCategory.bundleCategories;
-export const selectBundleCategoryAll = (state) => state.bundleCategory.bundleCategoryAlls;
+export const selectBundleCategory = (state) =>
+  state.bundleCategory.bundleCategories;
+export const selectBundleCategoryAll = (state) =>
+  state.bundleCategory.bundleCategoryAlls;
 export const selectLoading = (state) => state.bundleCategory.isLoading;
 export const selectSuccess = (state) => state.bundleCategory.isSuccess;
 export const deleteDeleting = (state) => state.bundleCategory.isDeleting;

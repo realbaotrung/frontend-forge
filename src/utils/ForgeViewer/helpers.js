@@ -1,13 +1,4 @@
-import {api} from '../../api/axiosClient';
-
-// Get token from server
-const token2legged = '/forge/oauth/token-2-legged';
-const token3legged = '/forge/oauth/token-3-legged';
-
-const getToken = async (url) => {
-  const {data} = await api.get(url);
-  return data?.access_token;
-};
+import { DEFAULT_VERSION } from './default';
 
 /**
  * Add script and css library of autodesk forge version 7.X.X
@@ -15,7 +6,7 @@ const getToken = async (url) => {
  * @param {*} version of autodesk forge library
  * @returns
  */
-export const loadScripts = (version = '7.*') =>
+export const loadScripts = (version = DEFAULT_VERSION) =>
   new Promise((resolve, reject) => {
     let ready = false;
     const script = document.createElement('script');
@@ -43,4 +34,3 @@ export const loadScripts = (version = '7.*') =>
       reject(new Error('Forge script loading aborted.'));
     };
   });
-

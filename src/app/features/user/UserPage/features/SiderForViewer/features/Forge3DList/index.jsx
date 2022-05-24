@@ -5,15 +5,13 @@ import {
   selectView3DsFromFV,
   selectIsFirstTimeLoadViewerFromFV,
   selectGuid2dViewFromFV,
-} from '../../../../../../../slices/forgeViewer/selectors';
-import {
   setGuid3dView,
   setIsFirstTimeLoadViewer,
   setHaveSelectedView,
   setGuid2dView,
   setCurrentViewName,
   setDidChosenViewToShowBreadcrumb,
-} from '../../../../../../../slices/forgeViewer/forgeViewerSlice';
+} from '../../../../../../../slices/forgeViewer';
 
 export default function Forge3DList() {
   const [toggle, setToggle] = useState(false);
@@ -73,7 +71,7 @@ export default function Forge3DList() {
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
         maxHeight: '300px',
-        paddingBottom: '2rem'
+        paddingBottom: '2rem',
       }}
     />
   );

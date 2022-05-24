@@ -5,15 +5,13 @@ import {
   selectGuid3dViewFromFV,
   selectIsFirstTimeLoadViewerFromFV,
   selectView2DsFromFV,
-} from '../../../../../../../slices/forgeViewer/selectors';
-import {
   setGuid2dView,
   setIsFirstTimeLoadViewer,
   setHaveSelectedView,
   setGuid3dView,
   setCurrentViewName,
   setDidChosenViewToShowBreadcrumb,
-} from '../../../../../../../slices/forgeViewer/forgeViewerSlice';
+} from '../../../../../../../slices/forgeViewer';
 
 export default function Forge2DList() {
   const [toggle, setToggle] = useState(false);
@@ -47,7 +45,7 @@ export default function Forge2DList() {
     return result;
   }, [listView2D]);
 
-  const onSelect = (_, info) => {
+  const handleOnSelect = (_, info) => {
     if (isFirstTimeLoadViewer) {
       dispatch(setIsFirstTimeLoadViewer(false));
     }
@@ -66,14 +64,14 @@ export default function Forge2DList() {
 
   return (
     <Tree
-      onSelect={onSelect}
+      onSelect={handleOnSelect}
       treeData={data}
       style={{
         overflow: 'auto',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
         maxHeight: '300px',
-        paddingBottom: '2rem'
+        paddingBottom: '2rem',
       }}
     />
   );

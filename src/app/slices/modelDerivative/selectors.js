@@ -1,7 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {
-  initialState,
-} from './modelDerivativeSlice';
+import {initialState} from './modelDerivativeSlice';
 
 const selectDomain = (state) => state.modelDerivative || initialState;
 

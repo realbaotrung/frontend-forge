@@ -2,13 +2,13 @@ import {useCallback} from 'react';
 import {useSelector} from 'react-redux';
 import PropsTypes from 'prop-types';
 import ForgeViewer from '../../../../../../../../utils/ForgeViewer';
-import {selectGuid2dViewFromFV} from '../../../../../../../slices/forgeViewer/selectors';
+import {selectGuid2dViewFromFV} from '../../../../../../../slices/forgeViewer';
 
 export default function Forge2DViewer({token, urn}) {
-  const guidFromFV = useSelector(selectGuid2dViewFromFV);
+  const guid2dFromFV = useSelector(selectGuid2dViewFromFV);
 
   const onDocumentLoadSuccess = useCallback((document) => {
-    return document.getRoot().findByGuid(guidFromFV);
+    return document.getRoot().findByGuid(guid2dFromFV);
   }, []);
 
   const onDocumentLoadError = useCallback((errorCode, errorMsg) => {

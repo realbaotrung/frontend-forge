@@ -1,2 +1,2 @@
-export * from './oAuthSlice'
-export * from './selectors'
+export * from './oAuthSlice';
+export * from './selectors';

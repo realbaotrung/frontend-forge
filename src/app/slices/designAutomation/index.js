@@ -1,2 +1,2 @@
-export * from './designAutomationSlice'
-export * from './selectors'
+export * from './designAutomationSlice';
+export * from './selectors';

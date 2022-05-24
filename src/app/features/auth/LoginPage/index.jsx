@@ -12,7 +12,7 @@ export default function LoginPage() {
       spacing={8}
       bgColor='#F0F2F5'
     >
-      <Icon as={Hat} w='320px' h='auto'/>
+      <Icon as={Hat} w='320px' h='auto' />
       <Heading as='h1' fontSize='2xl' fontWeight='300'>
         Sign in to Autodesk Forge
       </Heading>

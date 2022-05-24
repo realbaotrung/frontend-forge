@@ -45,7 +45,7 @@ export default function ButtonUploadFilesFromLocal() {
     try {
       console.log('file', inputFile);
 
-      dispatch(getRevitFileName(inputFile.name))
+      dispatch(getRevitFileName(inputFile.name));
 
       const formData = new FormData();
       formData.append('ClientId', 'abc123123321');

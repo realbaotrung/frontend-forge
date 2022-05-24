@@ -13,19 +13,21 @@ import Forge2DList from './features/Forge2DList';
 import Forge3DList from './features/Forge3DList';
 import FormScheduleCategory from './features/FormScheduleCategory';
 import FormUploadFiles from './features/FormUploadFiles';
-import {setIsChosenFile} from '../../../../../slices/modelDerivative/modelDerivativeSlice';
-import {selectIsChosenFileFromMD} from '../../../../../slices/modelDerivative/selectors';
 import {
-  selectView2DsFromFV,
-  selectView3DsFromFV,
-} from '../../../../../slices/forgeViewer/selectors';
+  setIsChosenFile,
+  selectIsChosenFileFromMD,
+} from '../../../../../slices/modelDerivative';
 import {
   ossApi,
   resetAllFromOssSlice,
   useGetOssBucketsQuery,
-} from '../../../../../slices/oss/ossSlice';
-import {selectBucketsFromOSS} from '../../../../../slices/oss/selectors';
-import { resetAllFromForgeViewerSlice } from '../../../../../slices/forgeViewer/forgeViewerSlice';
+  selectBucketsFromOSS,
+} from '../../../../../slices/oss';
+import {
+  selectView2DsFromFV,
+  selectView3DsFromFV,
+  resetAllFromForgeViewerSlice,
+} from '../../../../../slices/forgeViewer';
 
 const {Sider} = Layout;
 const {TabPane} = Tabs;
@@ -189,30 +191,30 @@ export default function SiderForViewer() {
                   }}
                 />
               ) : (
-              <Menu mode='inline'>
-                <SubMenu
-                  icon={<WindowsOutlined style={{fontSize: '1.5em'}} />}
-                  key='Forge2DListSubMenu'
-                  title={[
-                    <Text key='Sheets' style={{fontWeight: '600'}}>
-                      Sheets {view2Ds ? `(${view2Ds.length})` : `(0)`}
-                    </Text>,
-                  ]}
-                >
-                  {view2Ds && <Forge2DList />}
-                </SubMenu>
-                <SubMenu
-                  icon={<CodeSandboxOutlined style={{fontSize: '1.5em'}} />}
-                  key='Forge3DListSubMenu'
-                  title={[
-                    <Text key='3dViews' style={{fontWeight: '600'}}>
-                      3D Views {view3Ds ? `(${view3Ds.length})` : `(0)`}
-                    </Text>,
-                  ]}
-                >
-                  {view3Ds && <Forge3DList />}
-                </SubMenu>
-              </Menu>
+                <Menu mode='inline'>
+                  <SubMenu
+                    icon={<WindowsOutlined style={{fontSize: '1.5em'}} />}
+                    key='Forge2DListSubMenu'
+                    title={[
+                      <Text key='Sheets' style={{fontWeight: '600'}}>
+                        Sheets {view2Ds ? `(${view2Ds.length})` : `(0)`}
+                      </Text>,
+                    ]}
+                  >
+                    {view2Ds && <Forge2DList />}
+                  </SubMenu>
+                  <SubMenu
+                    icon={<CodeSandboxOutlined style={{fontSize: '1.5em'}} />}
+                    key='Forge3DListSubMenu'
+                    title={[
+                      <Text key='3dViews' style={{fontWeight: '600'}}>
+                        3D Views {view3Ds ? `(${view3Ds.length})` : `(0)`}
+                      </Text>,
+                    ]}
+                  >
+                    {view3Ds && <Forge3DList />}
+                  </SubMenu>
+                </Menu>
               )}
             </TabPane>
           </Tabs>
