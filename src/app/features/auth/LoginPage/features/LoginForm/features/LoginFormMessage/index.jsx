@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {Alert, CloseButton} from '@chakra-ui/react';
 
-import {useMessageSlice} from '../../../../../../../slices/message';
+import {useMessageSlice} from '../../../../../../../slices/message/messageSlice';
 import {selectMessage} from '../../../../../../../slices/message/selectors';
 
 export default function LoginFormMessage() {

@@ -22,7 +22,7 @@ import {
 import {FaUserAlt, FaLock} from 'react-icons/fa';
 import {createStructuredSelector} from 'reselect';
 import {BsFillEyeFill, BsFillEyeSlashFill} from 'react-icons/bs';
-import {useMessageSlice} from '../../../../../slices/message';
+import {useMessageSlice} from '../../../../../slices/message/messageSlice';
 import LoginFormMessage from './features/LoginFormMessage';
 import routePaths from '../../../../route/routePaths';
 import {selectUser, selectRole} from '../../../../../slices/auth/selectors';

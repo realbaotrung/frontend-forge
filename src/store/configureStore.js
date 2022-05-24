@@ -1,11 +1,11 @@
 import {configureStore} from '@reduxjs/toolkit';
 import {reducer as messageReducer} from '../app/slices/message';
-import {reducer as authReducer} from '../app/slices/auth/authSlice';
-import {reducer as designAutomationReducer} from '../app/slices/designAutomation/designAutomationSlice';
-import {reducer as ossReducer} from '../app/slices/oss/ossSlice';
-import {reducer as modelDerivativeReducer} from '../app/slices/modelDerivative/modelDerivativeSlice';
+import {reducer as authReducer} from '../app/slices/auth';
+import {reducer as designAutomationReducer} from '../app/slices/designAutomation';
+import {reducer as ossReducer} from '../app/slices/oss';
+import {reducer as modelDerivativeReducer} from '../app/slices/modelDerivative';
 import {reducer as oAuthReducer} from '../app/slices/oAuth/oAuthSlice';
-import {reducer as forgeViewerReducer} from '../app/slices/forgeViewer/forgeViewerSlice';
+import {reducer as forgeViewerReducer} from '../app/slices/forgeViewer';
 import {apiRtk} from '../api/rtkQuery';
 import bundleReducer from '../app/slices/bundle/bundleSlice';
 import bundleCategoryReducer from '../app/slices/bundleCategory/bundleCategorySlice';
