@@ -1,3 +1,4 @@
+import {Button} from 'antd';
 import CanvasViewer from './features/CanvasViewer';
 import './userPage.css';
 import SiderForViewer from './features/SiderForViewer';

@@ -1,11 +1,11 @@
 import {useCallback, useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Typography, Select} from 'antd';
-import {selectCategoryNamesFromDA} from '../../../../../../../../../slices/designAutomation/selectors';
 import {
   setCategoryKeyName,
   setScheduleName,
-} from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
+  selectCategoryNamesFromDA
+}from '../../../../../../../../../../slices/designAutomation'
 
 const {Text} = Typography;
 const {Option} = Select;

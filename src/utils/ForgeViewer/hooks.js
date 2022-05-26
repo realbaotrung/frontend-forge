@@ -7,6 +7,7 @@ import {
   DEFAULT_VERSION,
   DEFAULT_VIEWABLE_OPTIONS,
   DEFAULT_ON_INIT,
+  DEFAULT_EXTENSIONS,
 } from './default';
 import {loadScripts} from './helpers';
 
@@ -14,18 +15,19 @@ import {loadScripts} from './helpers';
  * Custom hook to create forge viewer
  */
 export function useForgeViewer({
-  version = DEFAULT_VERSION,
+  version,
   token,
   urn,
   initializerOptions,
-  onDocumentLoadSuccess = DEFAULT_DOCUMENT_LOAD_SUCCESS,
-  onDocumentLoadError = DEFAULT_DOCUMENT_LOAD_ERROR,
-  headless = false,
+  onDocumentLoadSuccess,
+  onDocumentLoadError,
+  headless,
   viewerOptions,
-  viewableOptions = DEFAULT_VIEWABLE_OPTIONS,
-  onInit = DEFAULT_ON_INIT,
-  disableLoader = false,
+  viewableOptions,
+  onInit,
+  disableLoader,
   extensions,
+  theme,
 }) {
   const [scriptsLoaded, setScriptsLoaded] = useState(false);
   const viewerRef = useRef(null);
@@ -70,15 +72,31 @@ export function useForgeViewer({
         console.error('Failed to create a Viewer: WebGL not supported.');
         return;
       }
+
+      // ===================================
+      // TODO:Test extensions
+      // ===================================
+      // const exs = ['Autodesk.Fusion360.Animation', 'Autodesk.Hyperlink'];
+      // exs.forEach((e) => {
+      //   viewer.loadExtension(e);
+      // });
       if (extensions) {
         extensions.forEach((extension) => {
-          Autodesk.Viewing.theExtensionManager.registerExtension(
-            extension.extensionName,
-            extension,
-          );
-          viewer.loadExtension(extension.extensionName, viewerOptions);
+          const extensionName = extension.extensionName;
+          if (extensionName === DEFAULT_EXTENSIONS[extensionName]) {
+            viewer.loadExtension(extensionName, viewerOptions);
+          } else {
+            Autodesk.Viewing.theExtensionManager.registerExtension(
+              extension.extensionName,
+              extension,
+            );
+            viewer.loadExtension(extension.extensionName, viewerOptions);
+          }
         });
       }
+
+      // Set theme of viewer
+      viewer.setTheme(theme);
     });
   };
 

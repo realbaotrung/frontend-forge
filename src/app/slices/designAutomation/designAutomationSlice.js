@@ -58,7 +58,7 @@ const postDesignAutomationGetInfoProjectMutation = {
   },
 };
 
-const postJsonFinalCategoryDataToServerMutation = {
+const postJsonFinalDataToServerMutation = {
   query: (data) => ({
     url: apiPaths.API_DESIGNAUTOMATION_START,
     method: 'POST',
@@ -82,8 +82,8 @@ export const designAutomationApi = apiRtk.injectEndpoints({
     postDesignAutomationGetInfoProject: builder.mutation(
       postDesignAutomationGetInfoProjectMutation,
     ),
-    postJsonFinalCategoryDataToServer: builder.mutation(
-      postJsonFinalCategoryDataToServerMutation,
+    postJsonFinalDataToServer: builder.mutation(
+      postJsonFinalDataToServerMutation,
     ),
   }),
 });
@@ -93,7 +93,7 @@ export const {
   useGetDesignAutomationInfoByIdQuery,
   useGetDesignAutomationEngineQuery,
   usePostDesignAutomationGetInfoProjectMutation,
-  usePostJsonFinalCategoryDataToServerMutation,
+  usePostJsonFinalDataToServerMutation,
 } = designAutomationApi;
 
 // ============================================================================
@@ -104,17 +104,24 @@ export const initialState = {
   id: '',
   revitFileName: '',
   hasLoading: false,
-  jsonScheduleData: null,
+  jsonDataFromServer: null,
   categoryData: null,
   categoryNames: null,
   categoryKeyName: '',
   categoryValuesByKeyName: null,
-  jsonTargetCategoryData: null,
-  jsonFinalCategoryDataToUpload: null,
-  isOpenFormScheduleCategory: false,
   scheduleName: '',
   isSheet: false,
   isError: false,
+  jsonTargetCategoryData: null,
+  jsonFinalCategoryDataToUpload: null,
+
+  // For Schedule form
+  isOpenFormScheduleCategory: false,
+
+  // For Check door form
+  isOpenFormCheckDoors: false,
+  jsonFormCheckDoors: null,
+  jsonFinalCheckDoorsToUpload: null,
 };
 
 // --- Declaring slice here ---
@@ -123,41 +130,41 @@ const designAutomationSlice = createSlice({
   name: 'designAutomation',
   initialState,
   reducers: {
-    getJsonDataFromServer: (state, {payload}) => {
+    setJsonDataFromServer: (state, {payload}) => {
       const pattern = /\\/g;
-      state.jsonScheduleData = formatStringToJsonObjectWithRegex(
+      state.jsonDataFromServer = formatStringToJsonObjectWithRegex(
         pattern,
         payload,
       );
     },
-    getJsonScheduleData: (state, {payload}) => {
+    setJsonScheduleData: (state, {payload}) => {
       state.jsonScheduleData = JSON.parse(payload);
     },
-    getRevitFileName: (state, {payload}) => {
+    setRevitFileName: (state, {payload}) => {
       state.revitFileName = payload;
     },
-    getCategoryData: (state, {payload}) => {
+    setCategoryData: (state, {payload}) => {
       state.categoryData = payload;
     },
-    getCategoryNames: (state, {payload}) => {
+    setCategoryNames: (state, {payload}) => {
       state.categoryNames = payload;
     },
-    getCategoryKeyName: (state, {payload}) => {
+    setCategoryKeyName: (state, {payload}) => {
       state.categoryKeyName = payload;
     },
-    getScheduleName: (state, {payload}) => {
+    setScheduleName: (state, {payload}) => {
       state.scheduleName = payload;
     },
-    getCheckboxSheet: (state, {payload}) => {
+    setCheckboxSheet: (state, {payload}) => {
       state.isSheet = payload;
     },
-    getCategoryValuesByKeyName: (state, {payload}) => {
+    setCategoryValuesByKeyName: (state, {payload}) => {
       state.categoryValuesByKeyName = payload;
     },
-    getJsonTargetCategoryData: (state, {payload}) => {
+    setJsonTargetCategoryData: (state, {payload}) => {
       state.jsonTargetCategoryData = payload;
     },
-    getJsonFinalCategoryDataToUpload: (state, {payload}) => {
+    setJsonFinalCategoryDataToUpload: (state, {payload}) => {
       // TODO: create structure JSON file for uploading to server
       //   [
       //     {
@@ -200,6 +207,38 @@ const designAutomationSlice = createSlice({
     setIsOpenFormScheduleCategory: (state, {payload}) => {
       state.isOpenFormScheduleCategory = payload;
     },
+
+    // ====================
+    // Test for check doors
+    // ====================
+    setIsOpenFormCheckDoors: (state, {payload}) => {
+      state.isOpenFormCheckDoors = payload;
+    },
+    setJsonFormCheckDoors: (state, {payload}) => {
+      state.jsonFormCheckDoors = payload;
+    },
+    setJsonFinalCheckDoorsToUpload: (state, {payload}) => {
+      // {
+      //   "DataDoor": {
+      //     "MaxLength": 9.5,
+      //     "EpsilonCenter": 0.5
+      //   }
+      // }
+      const {maxLength, epsilonCenter} = payload;
+      const jsonFinal = {
+        DataDoor: {
+          MaxLength: maxLength,
+          EpsilonCenter: epsilonCenter
+        }
+      };
+      console.log('json file CheckDoors from DA: ', jsonFinal);
+
+      state.jsonFinalCheckDoorsToUpload = jsonFinal;
+    },
+
+
+    // ====================
+
     resetFormUploadFilesState: (state) => {
       state.revitFileName = '';
       state.hasLoading = false;
@@ -260,7 +299,7 @@ const designAutomationSlice = createSlice({
         },
       )
       .addMatcher(
-        designAutomationApi.endpoints.postJsonFinalCategoryDataToServer
+        designAutomationApi.endpoints.postJsonFinalDataToServer
           .matchRejected,
         (state) => {
           state.scheduleName = '';
@@ -279,20 +318,24 @@ const designAutomationSlice = createSlice({
 // --- Export reducer here ---
 
 export const {
-  getJsonDataFromServer,
-  getRevitFileName,
-  getJsonScheduleData,
-  getCategoryData,
-  getCategoryNames,
-  getCategoryKeyName,
-  getScheduleName,
-  getCheckboxSheet,
-  getCategoryValuesByKeyName,
-  getJsonTargetCategoryData,
-  getJsonFinalCategoryDataToUpload,
+  setJsonDataFromServer,
+  setRevitFileName,
+  setJsonScheduleData,
+  setCategoryData,
+  setCategoryNames,
+  setCategoryKeyName,
+  setScheduleName,
+  setCheckboxSheet,
+  setCategoryValuesByKeyName,
+  setJsonTargetCategoryData,
+  setJsonFinalCategoryDataToUpload,
+  setIsOpenFormScheduleCategory,
   resetFormUploadFilesState,
   resetFormScheduleCategory,
-  setIsOpenFormScheduleCategory,
   resetAllFromDesignAutomation,
+  // ===================
+  setIsOpenFormCheckDoors,
+  setJsonFormCheckDoors,
+  // ===================
 } = designAutomationSlice.actions;
 export const {reducer} = designAutomationSlice;

@@ -3,7 +3,7 @@ import {FormControl, FormLabel, Input, Icon, Text, Box} from '@chakra-ui/react';
 import {MdComputer} from 'react-icons/md';
 import {
   usePostDesignAutomationGetInfoProjectMutation,
-  getRevitFileName,
+  setRevitFileName,
 } from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
 
 // Accept fileType here...
@@ -45,7 +45,7 @@ export default function ButtonUploadFilesFromLocal() {
     try {
       console.log('file', inputFile);
 
-      dispatch(getRevitFileName(inputFile.name));
+      dispatch(setRevitFileName(inputFile.name));
 
       const formData = new FormData();
       formData.append('ClientId', 'abc123123321');

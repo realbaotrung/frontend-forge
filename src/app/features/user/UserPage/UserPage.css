@@ -1,8 +1,3 @@
-.forge-viewer {
-  width: calc(100vw - 320px);
-  height: calc(100vh - 96px);
-}
-
 .center-position {
   position: absolute;
   top: 50%;

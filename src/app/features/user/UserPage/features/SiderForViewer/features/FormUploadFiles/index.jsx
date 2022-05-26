@@ -27,7 +27,7 @@ import RefetchToShowLoadingAndGetJsonData from './features/RefetchToShowLoadingA
 import {
   selectHasLoadingFromDA,
   selectIsErrorFromDA,
-  selectJsonScheduleDataFromDA,
+  selectJsonDataFromServerFromDA,
   selectRevitFileNameFromDA,
 } from '../../../../../../../slices/designAutomation/selectors';
 import {
@@ -140,7 +140,7 @@ export default function FormUploadFiles() {
   // Check loading when file is taken and push to the server
   const hasLoadingFromDA = useSelector(selectHasLoadingFromDA);
   const revitFileName = useSelector(selectRevitFileNameFromDA);
-  const jsonScheduleDataFromDA = useSelector(selectJsonScheduleDataFromDA);
+  const jsonScheduleDataFromDA = useSelector(selectJsonDataFromServerFromDA);
   const isError = useSelector(selectIsErrorFromDA);
 
   useEffect(() => {

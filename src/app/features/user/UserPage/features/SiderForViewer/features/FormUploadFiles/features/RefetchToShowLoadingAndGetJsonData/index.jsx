@@ -3,13 +3,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Text, VStack, Spinner} from '@chakra-ui/react';
 import {selectIdFromDA} from '../../../../../../../../../slices/designAutomation/selectors';
 import {
-  getJsonDataFromServer,
+  setJsonDataFromServer,
   useGetDesignAutomationInfoByIdQuery,
 } from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
 
 export default function RefetchToShowLoadingAndGetJsonData() {
   const [pollInterval, setPollInterval] = useState(10000);
-  const [count, setCount] = useState(1);
 
   const idFromDA = useSelector(selectIdFromDA);
 
@@ -33,12 +32,11 @@ export default function RefetchToShowLoadingAndGetJsonData() {
       }
       if (status === 0 && stringJsonData) {
         setPollInterval(0);
-        dispatch(getJsonDataFromServer(stringJsonData));
+        dispatch(setJsonDataFromServer(stringJsonData));
       }
     }
   }, [data]);
 
-  // {!hasLoadingFromDA && !jsonDataFromDA && <Spinner size='xl' />}
   return (
     <VStack w='full' h='18.125rem' justify='center' align='center'>
       <Spinner pb='0.75rem' size='lg' />

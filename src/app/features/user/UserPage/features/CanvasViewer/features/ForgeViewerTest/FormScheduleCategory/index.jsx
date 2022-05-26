@@ -1,7 +1,6 @@
 import {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
-import {Button as CButton} from '@chakra-ui/react';
 import {Typography, Space, Modal, message, Button, Alert} from 'antd';
 import TransferProperties from './features/TransferProperties';
 import CategoryNameHandler from './features/CategoryNameHandler';
@@ -15,8 +14,6 @@ import {
   usePostJsonFinalDataToServerMutation,
   setCategoryData,
   resetAllFromDesignAutomation,
-} from '../../../../../../../slices/designAutomation/designAutomationSlice';
-import {
   selectIsSheetFromDA,
   selectScheduleNameFromDA,
   selectCategoryKeyNameFromDA,
@@ -27,50 +24,32 @@ import {
   selectJsonTargetCategoryDataFromDA,
   selectIsOpenFormScheduleCategoryFromDA,
   selectCategoryDataFromDA,
-} from '../../../../../../../slices/designAutomation/selectors';
+  setIsOpenFormCheckDoors,
+} from '../../../../../../../../slices/designAutomation';
 import './formScheduleCategory.css';
-import {categoryInfo} from '../../../../share/categoryInfo';
 import ScheduleNameHandler from './features/ScheduleNameHandler';
 import SheetNameHandler from './features/SheetNameHandler';
-import {
-  ossApi,
-  resetAllFromOssSlice,
-} from '../../../../../../../slices/oss/ossSlice';
-import {resetAllFromForgeViewerSlice} from '../../../../../../../slices/forgeViewer/forgeViewerSlice';
+
+import {ossApi, resetAllFromOssSlice} from '../../../../../../../../slices/oss';
+import {resetAllFromForgeViewerSlice} from '../../../../../../../../slices/forgeViewer';
 
 const {Text} = Typography;
 
-function ButtonShowCategoryForm({title}) {
+export function ButtonShowCheckDoorsForm({title}) {
   const dispatch = useDispatch();
   return (
-    <CButton
-      onClick={() => dispatch(setIsOpenFormScheduleCategory(true))}
-      variant='primary'
-      sx={{
-        bg: 'Blue.B400',
-        _hover: {
-          bg: 'Blue.B300',
-          color: 'NeutralLight.N0',
-        },
-        _active: {
-          bg: 'Blue.B400',
-        },
-        _focus: {
-          bg: 'Blue.B400',
-        },
-      }}
-    >
+    <Button onClick={() => dispatch(setIsOpenFormCheckDoors(true))}>
       {title}
-    </CButton>
+    </Button>
   );
 }
 
-ButtonShowCategoryForm.propTypes = {
+ButtonShowCheckDoorsForm.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-export default function FormScheduleCategory() {
-  const jsonScheduleData = useSelector(selectJsonDataFromServerFromDA);
+export default function FormCheckDoors() {
+  const jsonDataFromServer = useSelector(selectJsonDataFromServerFromDA);
   const categoryData = useSelector(selectCategoryDataFromDA);
   const categoryNames = useSelector(selectCategoryNamesFromDA);
   const categoryKeyName = useSelector(selectCategoryKeyNameFromDA);
@@ -100,10 +79,10 @@ export default function FormScheduleCategory() {
   // }, [jsonScheduleData]);
 
   useEffect(() => {
-    if (!categoryData && jsonScheduleData) {
-      dispatch(setCategoryData(jsonScheduleData['DataCategory']));
+    if (!categoryData && jsonDataFromServer) {
+      dispatch(setCategoryData(jsonDataFromServer['DataCategory']));
     }
-  }, [categoryData, jsonScheduleData]);
+  }, [categoryData, jsonDataFromServer]);
 
   useEffect(() => {
     if (!categoryNames && categoryData) {
@@ -206,10 +185,7 @@ export default function FormScheduleCategory() {
   }, [isError, isSuccess]);
 
   return (
-    <>
-      {/*
-      <ButtonShowCategoryForm title='Schedule' />
-      */}
+    <div>
       <Modal
         centered
         visible={isOpenFormScheduleCategory}
@@ -253,7 +229,7 @@ export default function FormScheduleCategory() {
           <TransferProperties />
         </Space>
       </Modal>
-    </>
+    </div>
   );
 }
 

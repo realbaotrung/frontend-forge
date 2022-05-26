@@ -1,14 +1,15 @@
 import {useCallback, useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
 import PropsTypes from 'prop-types';
 import ForgeViewer from '../../../../../../../../utils/ForgeViewer';
-import {selectGuid3dViewFromFV} from '../../../../../../../slices/forgeViewer';
+import {ExampleExtension} from './extension';
 
-export default function Forge3DViewer({token, urn, guid3D}) {
+const extensions = [ExampleExtension];
+
+export default function ForgeViewerTest({token, urn, guid}) {
   // const guid3dFromFV = useSelector(selectGuid3dViewFromFV);
 
   const onDocumentLoadSuccess = useCallback((document) => {
-    return document.getRoot().findByGuid(guid3D);
+    return document.getRoot().findByGuid(guid);
   }, []);
 
   const onDocumentLoadError = useCallback((errorCode, errorMsg) => {
@@ -23,17 +24,23 @@ export default function Forge3DViewer({token, urn, guid3D}) {
       disableLoader
       token={token}
       urn={urn}
-      className='forge-viewer adsk-viewing-viewer'
+      className='adsk-viewing-viewer'
+      style={{
+        // "width": "calc((100vw - 318px) / 2)",
+        width: 'calc((100vw - 318px))',
+        height: 'calc(100vh - 144px)',
+      }}
       onDocumentLoadSuccess={onDocumentLoadSuccess}
       onDocumentLoadError={onDocumentLoadError}
+      extensions={extensions}
     />
   );
 }
 
-Forge3DViewer.propTypes = {
+ForgeViewerTest.propTypes = {
   token: PropsTypes.string.isRequired,
   urn: PropsTypes.string.isRequired,
-  guid3D: PropsTypes.string.isRequired,
+  guid: PropsTypes.string.isRequired,
 };
 
 /*

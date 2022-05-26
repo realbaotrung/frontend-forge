@@ -1,8 +1,7 @@
 import {useEffect, useMemo, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Transfer, Space, Row, Col} from 'antd';
-import {selectCategoryValuesByKeyNameFromDA} from '../../../../../../../../../slices/designAutomation/selectors';
-import {setJsonTargetCategoryData} from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
+import {setJsonTargetCategoryData, selectCategoryValuesByKeyNameFromDA} from '../../../../../../../../../../slices/designAutomation';
 
 export default function TransferProperties() {
   const [haveTargetData, setHaveTargetData] = useState(false);
