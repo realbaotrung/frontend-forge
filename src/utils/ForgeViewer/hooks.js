@@ -1,12 +1,7 @@
 import {useState, useRef, useEffect} from 'react';
 import {
-  DEFAULT_DOCUMENT_LOAD_ERROR,
-  DEFAULT_DOCUMENT_LOAD_SUCCESS,
   DEFAULT_INITIALIZER_OPTIONS,
   DEFAULT_VIEWER_OPTIONS,
-  DEFAULT_VERSION,
-  DEFAULT_VIEWABLE_OPTIONS,
-  DEFAULT_ON_INIT,
   DEFAULT_EXTENSIONS,
 } from './default';
 import {loadScripts} from './helpers';
@@ -27,7 +22,6 @@ export function useForgeViewer({
   onInit,
   disableLoader,
   extensions,
-  theme,
 }) {
   const [scriptsLoaded, setScriptsLoaded] = useState(false);
   const viewerRef = useRef(null);
@@ -58,6 +52,7 @@ export function useForgeViewer({
           viewerOpts,
         );
       }
+
       viewer.addEventListener(Autodesk.Viewing.VIEWER_INITIALIZED, (e) => {
         if (disableLoader) {
           const spinnerContainer = viewer._loadingSpinner.domElement;
@@ -67,11 +62,6 @@ export function useForgeViewer({
         }
         onInit(e);
       });
-      const startedCode = viewer.start();
-      if (startedCode > 0) {
-        console.error('Failed to create a Viewer: WebGL not supported.');
-        return;
-      }
 
       // ===================================
       // TODO:Test extensions
@@ -94,9 +84,16 @@ export function useForgeViewer({
           }
         });
       }
-
+      
       // Set theme of viewer
-      viewer.setTheme(theme);
+
+      // Start viewer
+      const startedCode = viewer.start();
+      if (startedCode > 0) {
+        console.error('Failed to create a Viewer: WebGL not supported.');
+        return;
+      }
+
     });
   };
 
@@ -137,9 +134,9 @@ export function useForgeViewer({
     //   console.log('view2Ds', view2Ds);
     //   return view2Ds;
     // };
-
     // const viewable = onDocumentLoadSuccess1(viewerDocument);
     // const viewable = onDocumentLoadSuccess2(viewerDocument);
+
     const viewable = onDocumentLoadSuccess(viewerDocument);
     viewer.loadDocumentNode(viewerDocument, viewable, viewableOptions);
   };

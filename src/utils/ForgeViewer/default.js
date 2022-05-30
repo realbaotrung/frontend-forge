@@ -16,7 +16,7 @@ export const DEFAULT_DOCUMENT_LOAD_ERROR = (
   console.error(errorCode, errorMsg, messages);
 };
 
-export const DEFAULT_VIEWER_OPTIONS = {};
+export const DEFAULT_VIEWER_OPTIONS = {theme: 'light-theme'};
 
 export const DEFAULT_VIEWABLE_OPTIONS = {};
 

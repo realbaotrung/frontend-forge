@@ -24,7 +24,6 @@ export default function ForgeViewer({
   onInit,
   disableLoader,
   extensions,
-  theme
 }) {
   const {refs} = useForgeViewer({
     version,
@@ -39,7 +38,6 @@ export default function ForgeViewer({
     onInit,
     disableLoader,
     extensions,
-    theme
   });
 
   return (
@@ -66,7 +64,6 @@ ForgeViewer.propsType = {
   onInit: PropsTypes.func.isRequired,
   disableLoader: PropsTypes.bool.isRequired,
   extensions: PropsTypes.array.isRequired,
-  theme: PropsTypes.string.isRequired,
 };
 
 ForgeViewer.defaultProps = {
@@ -84,7 +81,6 @@ ForgeViewer.defaultProps = {
   onInit: DEFAULT_ON_INIT,
   disableLoader: false,
   extensions: [],
-  theme: 'light-theme'
 };
 /*
 eslint

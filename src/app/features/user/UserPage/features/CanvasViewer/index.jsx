@@ -20,7 +20,7 @@ import ForgeViewerTest from './features/ForgeViewerTest/ForgeViewerTest';
 import { ButtonShowCheckDoorsForm } from './features/ForgeViewerTest/FormScheduleCategory';
 
 const TOKEN =
-  'eyJhbGciOiJSUzI1NiIsImtpZCI6IlU3c0dGRldUTzlBekNhSzBqZURRM2dQZXBURVdWN2VhIn0.eyJzY29wZSI6WyJ2aWV3YWJsZXM6cmVhZCJdLCJjbGllbnRfaWQiOiJHQ0I1RFRwWHVDcU5LMmtOejQ4blJ2R3dudEFrQlRMMSIsImF1ZCI6Imh0dHBzOi8vYXV0b2Rlc2suY29tL2F1ZC9hand0ZXhwNjAiLCJqdGkiOiJvZ09OZHV4b0oyYXo1dVhZNklIM01YRE53cER1blA2MUhzZDM1RlJpWHBhT1J3WTRFTDRob0dNanpxMG5ZQW9DIiwiZXhwIjoxNjUzNDY3OTA1fQ.d-bOXdDKX0s9bjV81HWjNBY025nynfz19kjsAsrTj7Sl9pCpVFlLxfS5Yw8HqzHmVFH5qyxZWgx2apnopFutpdPYAw8GC-DMV9Y81A2XDYxCp7GKf5H4-M3RRfAWY20nNnT46KYRzm-igKGEqhdH8GlCHK09Nn5XoN1_OTixhhF1SvexDZrbqHr8gNpbIomrXX-GPr7tjH2CGKdaFsYPFIbdyqDDssZ2JYCikyALNV1Ek8KbLbFuzPfKrE4nFw-NgXlLKxbzqyrf1_RMvA14mz75srZ3HzYNcxgbZfuhrGraFuWY8VLSXQB0ErAxKr_VM1oqntGAkzRhaQev5QgRTw';
+  'eyJhbGciOiJSUzI1NiIsImtpZCI6IlU3c0dGRldUTzlBekNhSzBqZURRM2dQZXBURVdWN2VhIn0.eyJzY29wZSI6WyJ2aWV3YWJsZXM6cmVhZCJdLCJjbGllbnRfaWQiOiJHQ0I1RFRwWHVDcU5LMmtOejQ4blJ2R3dudEFrQlRMMSIsImF1ZCI6Imh0dHBzOi8vYXV0b2Rlc2suY29tL2F1ZC9hand0ZXhwNjAiLCJqdGkiOiJWSmUwSTVqbXVsRHI1aGNEeThEMGgzalpuejd1cTdPU2xza2tJMXNyUzlwaXlaN0xsR0VjNzBZRXcyNmlUM1NrIiwiZXhwIjoxNjUzODkyMDI0fQ.FbNbrWU6tqQB4kaVrbPvhImeSWK8JVIbnkbTU_UINTwAYhoImVXotK8sE6IZGD18hEB5XqQsuxKP0yyKbGMg79os82zDVBcAMQlCyc5CmIFDvjxMxr7F_lCUST1NkpIO9d3-4m4WivJOrmRmDZ2MizhIovU812RVPBNRL2mFIXNFl56OVCsltKSaa1l_vwTCB9Y9g_aa6PpXTR2nOwvowdAiCglc7IWKgf49r65HP7DxI1Cdbj4jvvMQKLpcfkE3cQYS5nheZJn9gVlbb9FhFqoPTl9gXVKUq-gFtJoqNasAGO0qof1_zWS2s34yRm9c68TYIDJZRUDlcebD4JfwCQ';
 const URN =
   'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6dXNlcjEtMjAyMjA1MjUwODA1MTMtdmFsaWRhdGlvbmRvb3IucnZ0LWRhL1ZhbGlkYXRpb25Eb29yLnJ2dA';
 const g2d = '951810cc-7a73-4765-9179-f5744ba5d821-0003407c';
@@ -72,7 +72,7 @@ export default function CanvasViewer() {
     <>
     <div className='extensions-ribbon'>
       <div>
-        <span>Show splited viewers</span>
+        <span>Splited viewers</span>
         <Switch defaultChecked onChange={handleShowHideView} />
       </div>
       <div>

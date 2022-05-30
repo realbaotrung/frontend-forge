@@ -1,4 +1,4 @@
-import {ForgeExtension} from '../../../../../../../../utils/ForgeViewer';
+import { ForgeExtension } from "..";
 
 export class ExampleExtension extends ForgeExtension {
   static extensionName = 'Autodesk.DocumentBrowser';
