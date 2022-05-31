@@ -5,8 +5,9 @@ import routePaths from './routePaths';
 import BundlePage from '../admin/AdminPage/BundlePage';
 import CategoriesPage
   from "../admin/AdminPage/CategoriesPage";
+import CheckStandardPage from '../admin/AdminPage/CheckStandardPage';
 
-const routes = [
+ const routes = [
   {
     id: 'default',
     path: routePaths.HOME_URL,
@@ -48,6 +49,13 @@ const routes = [
     isAuth: true,
     isAdmin: true,
     component: <CategoriesPage/>,
+  },
+  {
+    id: 'checkStandardPage',
+    path: '/admin/check-standard',
+    isAuth: true,
+    isAdmin: true,
+    component: <CheckStandardPage/>,
   },
   {
     id: 'missingPage',

@@ -1,0 +1,8 @@
+.group-custom-field {
+  position: relative;
+}
+.remove-custom-field {
+  position: absolute;
+  right: 0px;
+  top: 34px;
+}
