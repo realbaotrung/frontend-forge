@@ -10,7 +10,7 @@ export default function ForgeViewer({className, style, ...remainProps}) {
   );
 }
 
-export { Extension as ForgeExtension } from './extension';
+export {Extension as ForgeExtension} from './extension';
 
 /*
 eslint

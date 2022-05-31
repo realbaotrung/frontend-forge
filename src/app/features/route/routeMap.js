@@ -3,6 +3,7 @@ import {loadable as MissingPage} from '../notfound/MissingPage/Loadable';
 import {loadable as UserPage} from '../user/UserPage/Loadable';
 import routePaths from './routePaths';
 import BundlePage from '../admin/AdminPage/BundlePage';
+
 import CategoriesPage
   from "../admin/AdminPage/CategoriesPage";
 import CheckStandardPage from '../admin/AdminPage/CheckStandardPage';
@@ -13,42 +14,42 @@ import CheckStandardPage from '../admin/AdminPage/CheckStandardPage';
     path: routePaths.HOME_URL,
     isAuth: false,
     isAdmin: false,
-    component: <LoginPage/>,
+    component: <LoginPage />,
   },
   {
     id: 'loginPage',
     path: routePaths.LOGIN_URL,
     isAuth: false,
     isAdmin: false,
-    component: <LoginPage/>,
+    component: <LoginPage />,
   },
   {
     id: 'userPage',
     path: routePaths.USER_URL,
     isAuth: true,
     isAdmin: false,
-    component: <UserPage/>,
+    component: <UserPage />,
   },
   {
-    id: 'dashboardPageAdmin',
-    path: '/admin',
+    id: 'admin',
+    path: routePaths.ADMIN_URL,
     isAuth: true,
     isAdmin: true,
-    component: <BundlePage/>,
+    component: <BundlePage />,
   },
   {
     id: 'bundlePage',
-    path: '/admin/bundle',
+    path: routePaths.ADMIN_BUNDLE_URL,
     isAuth: true,
     isAdmin: true,
-    component: <BundlePage/>,
+    component: <BundlePage />,
   },
   {
     id: 'categoriesPage',
-    path: '/admin/categories',
+    path: routePaths.ADMIN_CATEGORIES_URL,
     isAuth: true,
     isAdmin: true,
-    component: <CategoriesPage/>,
+    component: <CategoriesPage />,
   },
   {
     id: 'checkStandardPage',
@@ -62,10 +63,9 @@ import CheckStandardPage from '../admin/AdminPage/CheckStandardPage';
     path: '*',
     isAuth: false,
     isAdmin: false,
-    component: <MissingPage/>,
+    component: <MissingPage />,
   },
 ];
-
 
 export default routes;
 

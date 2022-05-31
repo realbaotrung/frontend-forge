@@ -1,12 +1,10 @@
 import {Breadcrumb} from 'antd';
 import {useSelector} from 'react-redux';
-import {
-  selectFileNameFromMD,
-} from '../../../../../slices/modelDerivative/selectors';
+import {selectFileNameFromMD} from '../../../../../slices/modelDerivative';
 import {
   selectCurrentViewNameFromFV,
   selectDidChosenViewToShowBreadcrumbFromFV,
-} from '../../../../../slices/forgeViewer/selectors';
+} from '../../../../../slices/forgeViewer';
 
 const {Item} = Breadcrumb;
 

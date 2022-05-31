@@ -1,20 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Button, Table, Modal, Spin } from 'antd';
+import {Button, Table, Modal, Spin} from 'antd';
 import {EditOutlined, DeleteOutlined} from '@ant-design/icons';
 import BundleModal from './BundleModal';
-import { SystemContants } from '../../../../../common/systemcontants';
+import {SystemContants} from '../../../../../common/systemcontants';
 import {
   getBundle,
   selectBundle,
   deleteBundle,
   selectLoading,
-  selectSuccess
+  selectSuccess,
 } from '../../../../slices/bundle/bundleSlice';
 
-import {
-  BundleModel
-} from '../../../../slices/bundle/bundleModel';
+import {BundleModel} from '../../../../slices/bundle/bundleModel';
 
 export default function BundlePage() {
   const [isEditing, setIsEditing] = useState(false);
@@ -26,10 +24,14 @@ export default function BundlePage() {
   const isLoading = useSelector(selectLoading);
   const isSuccess = useSelector(selectSuccess);
 
-
   useEffect(() => {
-    dispatch(getBundle({index: SystemContants.PAGE_INDEX, size: SystemContants.PAGE_SIZE}));
-    console.log(bundle)
+    dispatch(
+      getBundle({
+        index: SystemContants.PAGE_INDEX,
+        size: SystemContants.PAGE_SIZE,
+      }),
+    );
+    console.log(bundle);
   }, [dispatch]);
 
   const onAddBundle = () => {
@@ -41,24 +43,23 @@ export default function BundlePage() {
   const resetEditing = (isReset = false) => {
     setIsEditing(false);
     setEditingBundle(new BundleModel());
-    if(isReset) {
+    if (isReset) {
       dispatch(getBundle({index: currentPage, size: SystemContants.PAGE_SIZE}));
     }
   };
 
   useEffect(() => {
-    if(isSuccess) {
-      if(isEditing && statusModal === 1) {
-        setCurrentPage(currentPage)
+    if (isSuccess) {
+      if (isEditing && statusModal === 1) {
+        setCurrentPage(currentPage);
       } else {
-        setCurrentPage(1)
+        setCurrentPage(1);
       }
       dispatch(getBundle({index: currentPage, size: SystemContants.PAGE_SIZE}));
     }
-  }, [isSuccess])
+  }, [isSuccess]);
 
-  useEffect(() => {
-  }, [editingBundle])
+  useEffect(() => {}, [editingBundle]);
 
   const onEditBundle = (record) => {
     setstatusModal(1);
@@ -78,10 +79,10 @@ export default function BundlePage() {
     });
   };
 
-  const paginationChange =(page, pageSize) =>{
+  const paginationChange = (page, pageSize) => {
     setCurrentPage(page);
     dispatch(getBundle({index: page, size: pageSize}));
-  }
+  };
 
   const columns = [
     {
@@ -126,14 +127,23 @@ export default function BundlePage() {
   return (
     <Spin spinning={isLoading}>
       <Button onClick={onAddBundle}>Add a new Bundle</Button>
-      <Table columns={columns} dataSource={bundle?.result.map((value) => {
-        return {...value, key:value.id}
-      })} pagination={{pageSize: SystemContants.PAGE_SIZE, total:bundle?.totalRecords, onChange: paginationChange, current:currentPage}}  ></Table>
+      <Table
+        columns={columns}
+        dataSource={bundle?.result.map((value) => {
+          return {...value, key: value.id};
+        })}
+        pagination={{
+          pageSize: SystemContants.PAGE_SIZE,
+          total: bundle?.totalRecords,
+          onChange: paginationChange,
+          current: currentPage,
+        }}
+      ></Table>
       <BundleModal
         resetEditing={resetEditing}
         isEditing={isEditing}
         editingBundle={editingBundle}
       />
-      </Spin>
+    </Spin>
   );
 }

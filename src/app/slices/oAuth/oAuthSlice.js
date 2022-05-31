@@ -28,5 +28,9 @@ const oAuthSlice = createSlice({
 
 // --- Export reducer here ---
 
-export const {setTokenOAuth2Legged, setTokenOAuth3Legged, resetAllFromOAuthSlice} = oAuthSlice.actions;
+export const {
+  setTokenOAuth2Legged,
+  setTokenOAuth3Legged,
+  resetAllFromOAuthSlice,
+} = oAuthSlice.actions;
 export const {reducer} = oAuthSlice;

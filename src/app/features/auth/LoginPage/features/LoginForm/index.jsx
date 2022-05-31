@@ -20,13 +20,15 @@ import {
 } from '@chakra-ui/react';
 
 import {FaUserAlt, FaLock} from 'react-icons/fa';
-import {createStructuredSelector} from 'reselect';
 import {BsFillEyeFill, BsFillEyeSlashFill} from 'react-icons/bs';
 import {useMessageSlice} from '../../../../../slices/message';
 import LoginFormMessage from './features/LoginFormMessage';
 import routePaths from '../../../../route/routePaths';
-import {selectUser, selectRole} from '../../../../../slices/auth/selectors';
-import { useSignInMutation } from '../../../../../slices/auth/authSlice';
+import {
+  useSignInMutation,
+  selectUser,
+  selectRole,
+} from '../../../../../slices/auth';
 
 // =====================================================================
 // LoginForm component
@@ -56,12 +58,13 @@ export default function LoginForm() {
   // Manage entire form with schema validation
   const {handleSubmit, register} = useForm();
 
-   // Execution when submitting login form
+  // Execution when submitting login form
   const onSubmit = async (formValue) => {
     try {
       await signIn(formValue)
         .unwrap()
         .then(() => {
+          // TODO: check logic of navigate by role [normal, admin]
           navigate(routePaths.USER_URL, {replace: true});
         });
     } catch (error) {
@@ -84,10 +87,8 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (user) {
-      if(role === 'admin')
-        navigate('/admin');
-      else
-        navigate(routePaths.USER_URL);
+      if (role === 'admin') navigate('/admin');
+      else navigate(routePaths.USER_URL);
     }
   });
 

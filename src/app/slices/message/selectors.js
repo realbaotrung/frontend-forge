@@ -1,5 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {initialState} from './index';
+import {initialState} from './messageSlice';
 
 const selectDomain = (state) => state.message || initialState;
 export const selectMessage = createSelector(

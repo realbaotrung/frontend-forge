@@ -1,7 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {
-  initialState,
-} from './oAuthSlice';
+import {initialState} from './oAuthSlice';
 
 const selectDomain = (state) => state.oAuth || initialState;
 

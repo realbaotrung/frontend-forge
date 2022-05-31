@@ -1,24 +1,24 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import {api} from '../../../api/axiosClient';
-import { SystemContants } from '../../../common/systemcontants';
+import {SystemContants} from '../../../common/systemcontants';
 import Notification from '../../components/Notification';
 
 export const getBundle = createAsyncThunk(
   'bundle/get',
   async ({index, size}, {rejectWithValue}) => {
     try {
-      const response = await api.get(`/bundle?PageNumber=${index}&PageSize=${size}`);
+      const response = await api.get(
+        `/bundle?PageNumber=${index}&PageSize=${size}`,
+      );
       if (response.status >= 400) {
-        return rejectWithValue(response.data)
-      } 
+        return rejectWithValue(response.data);
+      }
       return response.data;
     } catch (e) {
-      console.log("Error", e.response.data)
-      return rejectWithValue(e.response.data)
+      console.log('Error', e.response.data);
+      return rejectWithValue(e.response.data);
     }
-    
-  }
-  
+  },
 );
 
 export const getVersionRevit = createAsyncThunk(
@@ -36,13 +36,12 @@ export const postBundle = createAsyncThunk(
     try {
       const response = await api.create('/bundle', data, config);
       if (response.status >= 400) {
-        return rejectWithValue(response.data)
-      } 
+        return rejectWithValue(response.data);
+      }
       return response.data;
     } catch (e) {
-      return rejectWithValue(e.response.data)
+      return rejectWithValue(e.response.data);
     }
-
   },
 );
 
@@ -53,12 +52,12 @@ export const putBundle = createAsyncThunk(
       const config = {headers: {'Content-Type': 'multipart/form-data'}};
       const response = await api.patch(`/bundle/${id}`, data, config);
       if (response.status >= 400) {
-        return rejectWithValue(response.data)
-      } 
+        return rejectWithValue(response.data);
+      }
       return response.data;
     } catch (e) {
-      console.log("Error", e.response.data)
-      return rejectWithValue(e.response.data)
+      console.log('Error', e.response.data);
+      return rejectWithValue(e.response.data);
     }
   },
 );
@@ -85,7 +84,7 @@ export const bundleSlice = createSlice({
     bundles: null,
     bundle: {},
     versions: [],
-    noti: SystemContants.NOTI_INFO
+    noti: SystemContants.NOTI_INFO,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -107,8 +106,8 @@ export const bundleSlice = createSlice({
       state.noti = SystemContants.NOTI_ERROR;
     });
 
-     // Start POST  request
-     builder.addCase(postBundle.pending, (state) => {
+    // Start POST  request
+    builder.addCase(postBundle.pending, (state) => {
       state.isLoading = true;
       state.isSuccess = false;
     });
@@ -118,7 +117,6 @@ export const bundleSlice = createSlice({
       state.isSuccess = true;
       state.bundle = action.payload;
       Notification(SystemContants.NOTI_SUCCESS, 'Save successful');
-      
     });
     // Request POST error
     builder.addCase(postBundle.rejected, (state, action) => {
@@ -164,7 +162,7 @@ export const bundleSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = false;
       state.errorMessage = action.payload.message;
-      Notification(SystemContants.NOTI_ERROR, [...action.payload.errors][0])
+      Notification(SystemContants.NOTI_ERROR, [...action.payload.errors][0]);
     });
 
     // Request VersionRevit successful

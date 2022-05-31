@@ -70,7 +70,7 @@ export default function Nav() {
     setUserEmail(user.email);
   }, []);
 
-  const handleSignOut = useCallback(async() => {
+  const handleSignOut = useCallback(async () => {
     removeItemFromSS(storageItem.auth);
     if (!sessionStorage.length) {
       navigate(routePaths.HOME_URL);
@@ -103,7 +103,12 @@ export default function Nav() {
         <PopoverContent sx={popoverContentCSS}>
           <PopoverArrow />
           <PopoverBody p={0}>
-            <VStack spacing={10} justify='flex-start' align='flex-start' className='nav-user-info'>
+            <VStack
+              spacing={10}
+              justify='flex-start'
+              align='flex-start'
+              className='nav-user-info'
+            >
               <Box>
                 <Text fontSize='14px' fontWeight='700'>
                   {userFullName}
@@ -121,7 +126,6 @@ export default function Nav() {
           </PopoverBody>
         </PopoverContent>
       </Popover>
-</div>
-
+    </div>
   );
 }

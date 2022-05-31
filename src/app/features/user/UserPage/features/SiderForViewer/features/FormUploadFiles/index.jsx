@@ -25,11 +25,15 @@ import {ReactComponent as Document} from './assets/document.svg';
 import RefetchToShowLoadingAndGetJsonData from './features/RefetchToShowLoadingAndGetJsonData';
 
 import {
-  selectHasLoadingFromDA, selectIsErrorFromDA,
+  selectHasLoadingFromDA,
+  selectIsErrorFromDA,
   selectJsonScheduleDataFromDA,
   selectRevitFileNameFromDA,
 } from '../../../../../../../slices/designAutomation/selectors';
-import {resetFormUploadFilesState, setIsOpenFormScheduleCategory} from '../../../../../../../slices/designAutomation/designAutomationSlice';
+import {
+  resetFormUploadFilesState,
+  setIsOpenFormScheduleCategory,
+} from '../../../../../../../slices/designAutomation/designAutomationSlice';
 
 function ButtonShowModalUploadFiles({onOpen}) {
   return (
@@ -179,18 +183,22 @@ export default function FormUploadFiles() {
             <Box sx={compoundComponentsCSS}>
               {isError && <FailToUploadFile />}
               {hasLoadingFromDA && !isError && <FileIsUploading />}
-              {!haveChosenFiles && !hasLoadingFromDA && !isError && <NotificationSelectFile />}
+              {!haveChosenFiles && !hasLoadingFromDA && !isError && (
+                <NotificationSelectFile />
+              )}
               {haveChosenFiles && !jsonScheduleDataFromDA && !isError && (
                 <RefetchToShowLoadingAndGetJsonData />
               )}
-              {haveChosenFiles && jsonScheduleDataFromDA && !isError && <FileIsUploaded />}
+              {haveChosenFiles && jsonScheduleDataFromDA && !isError && (
+                <FileIsUploaded />
+              )}
             </Box>
           </ModalBody>
           <ModalFooter sx={modelFooterCSS}>
             <Button
               onClick={() => handleOnClose()}
               mr={3}
-              isDisabled={(!revitFileName && !isError)}
+              isDisabled={!revitFileName && !isError}
             >
               Done
             </Button>

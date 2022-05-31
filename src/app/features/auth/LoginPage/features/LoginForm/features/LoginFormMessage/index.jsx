@@ -1,14 +1,15 @@
-import {createStructuredSelector} from 'reselect';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {Alert, CloseButton} from '@chakra-ui/react';
 
-import {useMessageSlice} from '../../../../../../../slices/message';
-import {selectMessage} from '../../../../../../../slices/message/selectors';
+import {
+  useMessageSlice,
+  selectMessage,
+} from '../../../../../../../slices/message';
 
 export default function LoginFormMessage() {
   const {clearMessage} = useMessageSlice().actions;
-  // values store...
+
   const message = useSelector(selectMessage);
 
   const dispatch = useDispatch();

@@ -4,8 +4,7 @@ import {useNavigate} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {selectAccessToken, selectRole} from '../../slices/auth/selectors';
 import routePaths from './routePaths';
-import { signOut } from '../../../utils/helpers.utils';
-import { getItemFromSS, storageItem } from '../../../utils/storage.utils';
+import {getItemFromSS, storageItem} from '../../../utils/storage.utils';
 
 export default function RequireAuth({children, isAdmin}) {
   // const accessToken = useSelector(selectAccessToken);
@@ -13,11 +12,12 @@ export default function RequireAuth({children, isAdmin}) {
   const role = useSelector(selectRole);
   const navigate = useNavigate();
 
-  console.log('role', role)
-
   useEffect(() => {
-    if (!accessToken || isAdmin && role !== 'admin' || !isAdmin && role !== 'normal') {
-      // signOut()
+    if (
+      !accessToken ||
+      (isAdmin && role !== 'admin') ||
+      (!isAdmin && role !== 'normal')
+    ) {
       navigate(routePaths.LOGIN_URL);
     }
   }, [accessToken, role]);

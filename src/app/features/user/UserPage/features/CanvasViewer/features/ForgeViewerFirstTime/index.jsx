@@ -1,10 +1,7 @@
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 import PropsTypes from 'prop-types';
-import {
-  setView2Ds,
-  setView3Ds,
-} from '../../../../../../../slices/forgeViewer/forgeViewerSlice';
+import {setView2Ds, setView3Ds} from '../../../../../../../slices/forgeViewer';
 import ForgeViewer from '../../../../../../../../utils/ForgeViewer';
 
 export default function ForgeViewerFirstTime({token, urn}) {
@@ -16,7 +13,9 @@ export default function ForgeViewerFirstTime({token, urn}) {
 
     const view2dData = [];
     const view2Ds = viewables?.filter((v) => v.is2D());
-    view2Ds?.forEach((view) => { view2dData.push(view?.data) });
+    view2Ds?.forEach((view) => {
+      view2dData.push(view?.data);
+    });
 
     if (view2dData) {
       dispatch(setView2Ds(view2dData));
@@ -24,7 +23,9 @@ export default function ForgeViewerFirstTime({token, urn}) {
 
     const view3dData = [];
     const view3Ds = viewables?.filter((v) => v.is3D());
-    view3Ds.forEach((view) => { view3dData.push(view?.data) });
+    view3Ds.forEach((view) => {
+      view3dData.push(view?.data);
+    });
 
     if (view3dData) {
       dispatch(setView3Ds(view3dData));
@@ -35,7 +36,7 @@ export default function ForgeViewerFirstTime({token, urn}) {
 
   const onDocumentLoadError = useCallback((errorCode, errorMsg) => {
     console.error(
-      `Could not load document, Error code - ${errorCode}:`,
+      `Could not load document, Error code - ${errorCode}: `,
       errorMsg,
     );
   }, []);

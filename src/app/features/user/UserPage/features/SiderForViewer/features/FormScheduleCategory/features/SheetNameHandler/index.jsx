@@ -2,11 +2,11 @@ import {Checkbox} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {getCheckboxSheet} from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
-import { selectIsSheetFromDA } from '../../../../../../../../../slices/designAutomation/selectors';
+import {selectIsSheetFromDA} from '../../../../../../../../../slices/designAutomation/selectors';
 
 export default function SheetNameHandler() {
-  const [checked, setChecked] = useState(false)
-  const isCheckedSheet = useSelector(selectIsSheetFromDA)
+  const [checked, setChecked] = useState(false);
+  const isCheckedSheet = useSelector(selectIsSheetFromDA);
 
   const dispatch = useDispatch();
 
@@ -14,7 +14,7 @@ export default function SheetNameHandler() {
     if (!isCheckedSheet) {
       setChecked(false);
     }
-  }, [isCheckedSheet])
+  }, [isCheckedSheet]);
 
   const handleOnCheckbox = useCallback((event) => {
     const isChecked = event.currentTarget.checked;
@@ -23,7 +23,11 @@ export default function SheetNameHandler() {
   }, []);
 
   return (
-    <Checkbox style={{lineHeight: '32px'}} onClick={handleOnCheckbox} checked={checked}>
+    <Checkbox
+      style={{lineHeight: '32px'}}
+      onClick={handleOnCheckbox}
+      checked={checked}
+    >
       Create Sheet
     </Checkbox>
   );

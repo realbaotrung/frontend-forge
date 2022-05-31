@@ -1,7 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {
-  initialState,
-} from './forgeViewerSlice';
+import {initialState} from './forgeViewerSlice';
 
 const selectDomain = (state) => state.forgeViewer || initialState;
 

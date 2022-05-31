@@ -1,5 +1,5 @@
 import {HStack, Text, Icon} from '@chakra-ui/react';
-import {ReactComponent as HatLogo} from '../../assets/hat-logo.svg'
+import {ReactComponent as HatLogo} from '../../assets/hat-logo.svg';
 
 export default function Logo() {
   return (

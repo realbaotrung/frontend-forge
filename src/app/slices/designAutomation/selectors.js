@@ -1,7 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {
-  initialState,
-} from './designAutomationSlice';
+import {initialState} from './designAutomationSlice';
 
 const selectDomain = (state) => state.designAutomation || initialState;
 
@@ -64,7 +62,8 @@ export const selectJsonTargetCategoryDataFromDA = createSelector(
 
 export const selectJsonFinalCategoryDataToUploadFromDA = createSelector(
   [selectDomain],
-  (designAutomationState) => designAutomationState.jsonFinalCategoryDataToUpload,
+  (designAutomationState) =>
+    designAutomationState.jsonFinalCategoryDataToUpload,
 );
 
 export const selectIsOpenFormScheduleCategoryFromDA = createSelector(

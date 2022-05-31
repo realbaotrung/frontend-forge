@@ -2,13 +2,13 @@ import {useCallback, useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import PropsTypes from 'prop-types';
 import ForgeViewer from '../../../../../../../../utils/ForgeViewer';
-import {selectGuid3dViewFromFV} from '../../../../../../../slices/forgeViewer/selectors';
+import {selectGuid3dViewFromFV} from '../../../../../../../slices/forgeViewer';
 
 export default function Forge3DViewer({token, urn}) {
-  const guidFromFV = useSelector(selectGuid3dViewFromFV);
+  const guid3dFromFV = useSelector(selectGuid3dViewFromFV);
 
   const onDocumentLoadSuccess = useCallback((document) => {
-    return document.getRoot().findByGuid(guidFromFV);
+    return document.getRoot().findByGuid(guid3dFromFV);
   }, []);
 
   const onDocumentLoadError = useCallback((errorCode, errorMsg) => {

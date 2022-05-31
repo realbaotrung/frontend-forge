@@ -6,13 +6,13 @@ import {
   selectIsLoadingModelFromMD,
   selectUrnFromMD,
 } from '../../../../../slices/modelDerivative/selectors';
-import {selectTokenOAuth2LeggedFromOAUTH} from '../../../../../slices/oAuth/selectors';
+import {selectTokenOAuth2LeggedFromOAUTH} from '../../../../../slices/oAuth';
 import {
   selectIsFirstTimeLoadViewerFromFV,
   selectHaveSelectedViewFromFV,
   selectGuid2dViewFromFV,
   selectGuid3dViewFromFV,
-} from '../../../../../slices/forgeViewer/selectors';
+} from '../../../../../slices/forgeViewer';
 import Forge2DViewer from './features/Forge2DViewer';
 import Forge3DViewer from './features/Forge3DViewer';
 import ForgeViewerFirstTime from './features/ForgeViewerFirstTime';

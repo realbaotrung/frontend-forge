@@ -11,9 +11,8 @@ const {Text} = Typography;
 const {Option} = Select;
 
 export default function CategoryNameHandler() {
-
   const categoryNames = useSelector(selectCategoryNamesFromDA);
-  console.log(categoryNames)
+  console.log(categoryNames);
 
   const dispatch = useDispatch();
 
@@ -46,11 +45,11 @@ export default function CategoryNameHandler() {
   }, []);
 
   return (
-      <>
-        <Text>Categories</Text>
-        <Select {...selectProps} onSelect={handleOnSelect}>
-          {optionCategoryNames}
-        </Select>
-      </>
+    <>
+      <Text>Categories</Text>
+      <Select {...selectProps} onSelect={handleOnSelect}>
+        {optionCategoryNames}
+      </Select>
+    </>
   );
 }

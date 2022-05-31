@@ -14,7 +14,7 @@ const getOssBucketsQuery = {
   },
   providesTags: (result = [], error, arg) => [
     'Oss',
-    ...result.map(({ id }) => ({ type: 'Oss', id })),
+    ...result.map(({id}) => ({type: 'Oss', id})),
   ],
 };
 
@@ -27,7 +27,7 @@ const getOssBucketByIdQuery = {
     console.log(response);
     return response;
   },
-  providesTags: (result, error, arg) => [{ type: 'Oss', id: arg }]
+  providesTags: (result, error, arg) => [{type: 'Oss', id: arg}],
 };
 
 const addOssBucketMutation = {
@@ -124,5 +124,6 @@ const ossSlice = createSlice({
 
 // --- Export reducer here ---
 
-export const {setOssBucketKey, setOssObjectNameKey, resetAllFromOssSlice} = ossSlice.actions;
+export const {setOssBucketKey, setOssObjectNameKey, resetAllFromOssSlice} =
+  ossSlice.actions;
 export const {reducer} = ossSlice;
