@@ -13,11 +13,11 @@ export class Extension {
     this.extOptions = options || {};
   }
 
-  load() {
+  async load() {
     throw new Error(' Abstract method has no implementation');
   }
 
-  unload() {
+  async unload() {
     throw new Error(' Abstract method has no implementation');
   }
 

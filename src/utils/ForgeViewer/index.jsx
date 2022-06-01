@@ -1,15 +1,17 @@
+import { memo } from 'react';
 import PropsTypes from 'prop-types';
 import {useForgeViewer} from './hooks';
 import {
   DEFAULT_DOCUMENT_LOAD_ERROR,
   DEFAULT_DOCUMENT_LOAD_SUCCESS,
   DEFAULT_INITIALIZER_OPTIONS,
+  DEFAULT_INJECTED_FUNC_WITH_VIEWER,
   DEFAULT_ON_INIT,
   DEFAULT_VERSION,
   DEFAULT_VIEWABLE_OPTIONS,
 } from './default';
 
-export default function ForgeViewer({
+function ForgeViewer({
   version,
   className,
   style,
@@ -24,6 +26,7 @@ export default function ForgeViewer({
   onInit,
   disableLoader,
   extensions,
+  injectedFuncWithViewer,
 }) {
   const {refs} = useForgeViewer({
     version,
@@ -38,6 +41,7 @@ export default function ForgeViewer({
     onInit,
     disableLoader,
     extensions,
+    injectedFuncWithViewer,
   });
 
   return (
@@ -46,8 +50,6 @@ export default function ForgeViewer({
     </div>
   );
 }
-
-export {Extension as ForgeExtension} from './extension';
 
 ForgeViewer.propsType = {
   version: PropsTypes.string.isRequired,
@@ -64,6 +66,7 @@ ForgeViewer.propsType = {
   onInit: PropsTypes.func.isRequired,
   disableLoader: PropsTypes.bool.isRequired,
   extensions: PropsTypes.array.isRequired,
+  injectedFuncWithViewer: PropsTypes.func.isRequired,
 };
 
 ForgeViewer.defaultProps = {
@@ -81,7 +84,12 @@ ForgeViewer.defaultProps = {
   onInit: DEFAULT_ON_INIT,
   disableLoader: false,
   extensions: [],
+  injectedFuncWithViewer: DEFAULT_INJECTED_FUNC_WITH_VIEWER
 };
+
+
+export {Extension as ForgeExtension} from './extension';
+export default memo(ForgeViewer);
 /*
 eslint
   react/destructuring-assignment: 0,

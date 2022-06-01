@@ -22,6 +22,7 @@ export function useForgeViewer({
   onInit,
   disableLoader,
   extensions,
+  injectedFuncWithViewer,
 }) {
   const [scriptsLoaded, setScriptsLoaded] = useState(false);
   const viewerRef = useRef(null);
@@ -84,8 +85,6 @@ export function useForgeViewer({
           }
         });
       }
-      
-      // Set theme of viewer
 
       // Start viewer
       const startedCode = viewer.start();
@@ -93,7 +92,6 @@ export function useForgeViewer({
         console.error('Failed to create a Viewer: WebGL not supported.');
         return;
       }
-
     });
   };
 
@@ -119,34 +117,28 @@ export function useForgeViewer({
 
   // =============================================================================================
 
-  const handleDocumentLoad = (viewerDocument) => {
-    // const onDocumentLoadSuccess1 = (viewerDc) => {
-    // viewerDc is Document
-    // api : https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/Document/
-    // const viewables = viewerDc.getRoot().search({type: 'geometry'});
-    // console.log('viewables', viewables);
-    // const view2Ds = viewables.find((v) => {
-    // v is BubbleNode
-    // api : https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/BubbleNode/
-    //     console.log('viewSmall', v);
-    //     return v.is2D()
-    //   });
-    //   console.log('view2Ds', view2Ds);
-    //   return view2Ds;
-    // };
-    // const viewable = onDocumentLoadSuccess1(viewerDocument);
-    // const viewable = onDocumentLoadSuccess2(viewerDocument);
-
-    const viewable = onDocumentLoadSuccess(viewerDocument);
-    viewer.loadDocumentNode(viewerDocument, viewable, viewableOptions);
-  };
   // load model using Derivatives API
   const loadModel = () => {
-    Autodesk.Viewing.Document.load(
-      `urn:${urn}`,
-      handleDocumentLoad,
-      onDocumentLoadError,
-    );
+    return new Promise((resolve) => {
+      const handleDocumentLoadSuccess = (viewerDocument) => {
+        const viewable = onDocumentLoadSuccess(viewerDocument);
+        viewer
+          .loadDocumentNode(viewerDocument, viewable, viewableOptions)
+          .then(() => {
+            // ==============================================================
+            // Inject all code to the viewer here...
+            // ==============================================================
+            injectedFuncWithViewer(viewer);
+
+            resolve();
+          });
+      };
+      Autodesk.Viewing.Document.load(
+        `urn:${urn}`,
+        handleDocumentLoadSuccess,
+        onDocumentLoadError,
+      );
+    });
   };
   // triggered on forge scripts loaded
   useEffect(() => {

@@ -16,6 +16,10 @@ export const DEFAULT_DOCUMENT_LOAD_ERROR = (
   console.error(errorCode, errorMsg, messages);
 };
 
+export const DEFAULT_INJECTED_FUNC_WITH_VIEWER = (
+  viewer, // Autodesk.Viewing.GuiViewer3D || Autodesk.Viewing.Viewer3D
+) => {};
+
 export const DEFAULT_VIEWER_OPTIONS = {theme: 'light-theme'};
 
 export const DEFAULT_VIEWABLE_OPTIONS = {};
