@@ -4,6 +4,7 @@ import {loadable as UserPage} from '../user/UserPage/Loadable';
 import routePaths from './routePaths';
 import BundlePage from '../admin/AdminPage/BundlePage';
 import CategoriesPage from '../admin/AdminPage/CategoriesPage';
+import UserCheckStandardPage from '../user/UserCheckStandardPage/UserCheckStandardPage';
 
 const routes = [
   {
@@ -26,6 +27,13 @@ const routes = [
     isAuth: true,
     isAdmin: false,
     component: <UserPage />,
+  },
+  {
+    id: 'userCheckStandardPage',
+    path: routePaths.USER_CHECK_STANDARD_URL,
+    isAuth: true,
+    isAdmin: false,
+    component: <UserCheckStandardPage />,
   },
   {
     id: 'admin',
