@@ -1,52 +1,53 @@
 /* eslint-disable react/prop-types */
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Button, Form, Modal, Input, Switch, Divider} from 'antd';
+import {Button, Form, Modal, Input, Switch, Space} from 'antd';
 import {MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import {
-  getVersionRevit,
+  postCheckStandard,
+  putCheckStandard,
   selectSuccess,
-} from '../../../../slices/bundle/bundleSlice';
+} from '../../../../slices/checkStandard/checkStandardSlice';
 import './style.css';
-import {getBundleCategoryAll} from '../../../../slices/bundleCategory/bundleCategorySlice';
 
 export default function CheckStandardForm({
   resetEditing,
   isEditing,
-  editingBundle,
+  editingStandard,
+  isView,
 }) {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const isSuccess = useSelector(selectSuccess);
 
   useEffect(() => {
-    dispatch(getBundleCategoryAll());
-  }, []);
-
-  useEffect(() => {
     form.resetFields();
-    form.setFieldsValue(editingBundle);
-  }, [editingBundle]);
+    form.setFieldsValue(editingStandard);
+  }, [editingStandard]);
 
-  useEffect(() => {
-    dispatch(getVersionRevit());
-    dispatch(getBundleCategoryAll());
-  }, []);
+  const onFinish = (values) => {
+    if (values.status) {
+      values.status = 1;
+    } else {
+      values.status = 0;
+    }
+    if (editingStandard.id === undefined) {
+      dispatch(postCheckStandard(values));
+    } else {
+      dispatch(putCheckStandard({data: values, id: editingStandard.id}));
+    }
+  };
 
   useEffect(() => {
     if (isSuccess) {
       resetEditing(true);
     }
   }, [isSuccess]);
-
-  const onFinish = (values) => {
-    console.log(values);
-  };
   const onFinishFailed = (errorInfo) => {};
-
   return (
     <Modal
-      title={editingBundle != null ? 'Edit' : 'Add'}
+      style={{top: '40px'}}
+      title={editingStandard != null ? 'Edit' : 'Add'}
       visible={isEditing}
       okText='Save'
       forceRender
@@ -68,14 +69,19 @@ export default function CheckStandardForm({
       <Form
         form={form}
         name='basic'
-        labelCol={{span: 8}}
-        wrapperCol={{span: 15}}
+        labelCol={{span: 0}}
+        wrapperCol={{span: 19}}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         initialValues={{
-          name: '',
-          description: '',
-          status: true,
+          name: editingStandard?.name,
+          description: editingStandard?.description,
+          status: editingStandard?.status,
+          rules: JSON.parse(
+            editingStandard?.value === undefined
+              ? null
+              : editingStandard?.value,
+          ),
         }}
         autoComplete='off'
       >
@@ -84,7 +90,7 @@ export default function CheckStandardForm({
           name='name'
           rules={[{required: true, message: 'Please input name!'}]}
         >
-          <Input />
+          <Input style={{marginLeft: '33px'}} />
         </Form.Item>
 
         <Form.Item
@@ -94,62 +100,66 @@ export default function CheckStandardForm({
         >
           <Input />
         </Form.Item>
-
-        <Form.Item label='Status' name='status'>
-          <Switch defaultChecked />
+        <Form.Item style={{paddingLeft: '11px'}} label='Status' name='status'>
+          
+          <Switch name='status' style={{marginLeft: '35px'}} defaultChecked />
         </Form.Item>
+        <div className='custom-list-field'>
+          <Form.List name='rules'>
+            {(fields, {add, remove}) => (
+              <>
+                {fields.map(({key, name, ...restField}) => (
+                  <Space
+                    key={key}
+                    style={{display: 'flex', justifyContent: 'center'}}
+                    align='baseline'
+                  >
+                    <Form.Item
+                      {...restField}
+                      name={[name, 'RuleName']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Missing name',
+                        },
+                      ]}
+                    >
+                      <Input placeholder='Rule name' style={{width: '210px'}} />
+                    </Form.Item>
+                    <Form.Item
+                      {...restField}
+                      name={[name, 'RuleValue']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Missing value',
+                        },
+                      ]}
+                    >
+                      <Input
+                        placeholder='Rule value'
+                        style={{width: '210px'}}
+                      />
+                    </Form.Item>
 
-        <Form.List name='data'>
-          {(fields, {add, remove}) => (
-            <>
-              {fields.map(({key, name, ...restField}) => (
-                <div key={key} className='group-custom-field'>
-                  <Form.Item
-                    {...restField}
-                    label='Rule name '
-                    name={[name, 'ruleName']}
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Missing name',
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    {...restField}
-                    label='Rule value '
-                    name={[name, 'ruleValue']}
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Missing value',
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <div className='remove-custom-field'>
                     <MinusCircleOutlined onClick={() => remove(name)} />
-                  </div>
-                  <Divider />
-                </div>
-              ))}
-              <Form.Item
-                style={{justifyContent: 'center', textAlign: 'center'}}
-              >
-                <Button
-                  type='dashed'
-                  onClick={() => add()}
-                  icon={<PlusOutlined />}
+                  </Space>
+                ))}
+                <Form.Item
+                  style={{justifyContent: 'center', textAlign: 'center'}}
                 >
-                  Add rule
-                </Button>
-              </Form.Item>
-            </>
-          )}
-        </Form.List>
+                  <Button
+                    type='dashed'
+                    onClick={() => add()}
+                    icon={<PlusOutlined />}
+                  >
+                    Add rule
+                  </Button>
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
+        </div>
       </Form>
     </Modal>
   );

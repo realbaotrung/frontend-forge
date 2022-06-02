@@ -1,8 +1,6 @@
-.group-custom-field {
-  position: relative;
+.custom-list-field {
+  height: 100px;
+  overflow: auto;
+ 
 }
-.remove-custom-field {
-  position: absolute;
-  right: 0px;
-  top: 34px;
-}
+
