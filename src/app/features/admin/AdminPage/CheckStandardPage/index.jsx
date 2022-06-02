@@ -21,7 +21,7 @@ export default function CheckStandardPage() {
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [statusModal, setstatusModal] = useState(0);
-  const [isView, setIsViewModal] = useState(true);
+  const [isView, setIsViewModal] = useState(false);
   const checkStandardes = useSelector(selectCheckStandard);
   const dispatch = useDispatch();
   const isLoading = useSelector(selectLoading);
@@ -130,8 +130,13 @@ export default function CheckStandardPage() {
     {
       key: 'status',
       title: 'Status',
-      render: () => {
-        return <Switch defaultChecked />;
+      dataIndex: 'status',
+      render: (value) => {
+        let check = true;
+        if (value === 1) {
+          check = false;
+        }
+        return <Switch defaultChecked={check} />;
       },
     },
     {
@@ -169,11 +174,7 @@ export default function CheckStandardPage() {
       <Table
         columns={columns}
         dataSource={checkStandardes?.result?.map((value) => {
-          let name = 'Base';
-          if (value.type !== 1) {
-            name = 'Function';
-          }
-          return {...value, typeName: name, key: value.id};
+          return {...value, key: value.id};
         })}
         pagination={{
           pageSize: SystemContants.PAGE_SIZE,

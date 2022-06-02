@@ -1,5 +1,5 @@
 import CanvasViewer from './features/CanvasViewer';
-import './userPage.css';
+import './UserPage.css';
 import SiderForViewer from './features/SiderForViewer';
 import NameOfFileWithView from './features/NameOfFileAndView';
 
