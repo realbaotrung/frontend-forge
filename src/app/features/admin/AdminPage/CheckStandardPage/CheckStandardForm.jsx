@@ -143,40 +143,44 @@ export default function CheckStandardForm({
       </Form.List>
     </div>
   </Form>;
-  // if (isView){
-  //   return (
-  //     <Modal
-  //       style={{top: '40px'}}
-  //       title= 'view'>
-  //       {htmlForm}
-  //     </Modal>
-  //   );
-  // }
-  // else {
-    return (
-      <Modal
-        style={{top: '40px'}}
-        title={editingStandard != null ? 'Edit' : 'Add'}
-        visible={isEditing}
-        okText='Save'
-        forceRender
-        onCancel={() => {
-          resetEditing();
-        }}
-        onOk={() => {
-          form
-            .validateFields()
-            .then((values) => {
-              form.resetFields();
-              onFinish(values);
-            })
-            .catch((info) => {
-              console.log('Validate Failed:', info);
-            });
-        }}
-      >
-      {htmlForm}
-      </Modal>
-    );
-  // }
+    let htmlModal =  <Modal
+    style={{top: '40px'}}
+    title={editingStandard != null ? 'Edit' : 'Add'}
+    visible={isEditing}
+    okText='Save'
+    forceRender
+    onCancel={() => {
+      resetEditing();
+    }}
+    onOk={() => {
+      form
+        .validateFields()
+        .then((values) => {
+          form.resetFields();
+          onFinish(values);
+        })
+        .catch((info) => {
+          console.log('Validate Failed:', info);
+        });
+    }}
+  >
+    {htmlForm}
+  </Modal>
+  if (isView) {
+    htmlModal = <Modal
+    style={{top: '40px'}}
+    title='View'
+    visible={isEditing}
+    forceRender
+    onCancel={() => {
+      resetEditing();
+    }}
+    footer={null}
+  >
+    {htmlForm}
+  </Modal>
+  }
+  return (
+    htmlModal
+  );
 }

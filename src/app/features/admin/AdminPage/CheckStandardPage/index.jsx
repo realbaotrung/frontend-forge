@@ -76,6 +76,7 @@ export default function CheckStandardPage() {
     setstatusModal(1);
     setIsEditing(true);
     setEditingStandard({...record});
+    setIsViewModal(false);
   };
   const onViewStandard = (record) => {
     setstatusModal(1);
@@ -132,9 +133,9 @@ export default function CheckStandardPage() {
       title: 'Status',
       dataIndex: 'status',
       render: (value) => {
-        let check = true;
+        let check = false;
         if (value === 1) {
-          check = false;
+          check = true;
         }
         return <Switch defaultChecked={check} />;
       },
