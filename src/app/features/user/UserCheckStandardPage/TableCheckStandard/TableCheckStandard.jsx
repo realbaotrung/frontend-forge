@@ -1,127 +1,78 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable no-plusplus */
 import React from 'react';
-import { Table, Badge, Menu, Dropdown, Space } from 'antd';
+import {Table} from 'antd';
+import TotalErrorDoors from './ViewTotalErrors/TotalErrorDoors';
+
+const styles = {
+  paddingInline: '8px',
+  width: '100%',
+  height: '250px',
+  overflow: 'auto',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+};
 
 export default function TableCheckStandard() {
-  const expandedRowRender = () => {
-    const columns = [
-      {
-        title: 'Date',
-        dataIndex: 'date',
-        key: 'date',
-      },
-      {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-      },
-      {
-        title: 'Status',
-        key: 'state',
-        render: () => (
-          <span>
-            <Badge status="success" />
-            Finished
-          </span>
-        ),
-      },
-      {
-        title: 'Upgrade Status',
-        dataIndex: 'upgradeNum',
-        key: 'upgradeNum',
-      },
-      {
-        title: 'Action',
-        dataIndex: 'operation',
-        key: 'operation',
-        render: () => (
-          <Space size="middle">
-            <a>Pause</a>
-            <a>Stop</a>
-          </Space>
-        ),
-      },
-    ];
-    const data = [];
-
-    for (let i = 0; i < 3; ++i) {
-      data.push({
-        key: i,
-        date: '2014-12-24 23:12:00',
-        name: 'This is production name',
-        upgradeNum: 'Upgraded: 56',
-      });
-    }
-
-    return <Table columns={columns} dataSource={data} pagination={false} />;
-  };
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'Name of Standards',
+      dataIndex: 'name-of-standards',
+      key: 'name-of-standards',
     },
     {
-      title: 'Platform',
-      dataIndex: 'platform',
-      key: 'platform',
+      title: 'Total Valid (%)',
+      dataIndex: 'total-valid-(%)',
+      key: 'total-valid-(%)',
     },
     {
-      title: 'Version',
-      dataIndex: 'version',
-      key: 'version',
+      title: 'Total Errors (%)',
+      dataIndex: 'total-errors-(%)',
+      key: 'total-errors-(%)',
     },
     {
-      title: 'Upgraded',
-      dataIndex: 'upgradeNum',
-      key: 'upgradeNum',
-    },
-    {
-      title: 'Creator',
-      dataIndex: 'creator',
-      key: 'creator',
-    },
-    {
-      title: 'Date',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-    },
-    {
-      title: 'Action',
-      key: 'operation',
-      render: () => <a>Publish</a>,
+      title: 'View Total Errors',
+      dataIndex: 'view-total-errors',
+      key: 'view-total-errors',
     },
   ];
+
   const data = [];
 
-  for (let i = 0; i < 3; ++i) {
-    data.push({
-      key: i,
-      name: 'Screen',
-      platform: 'iOS',
-      version: '10.3.4.5654',
-      upgradeNum: 500,
-      creator: 'Jack',
-      createdAt: '2014-12-24 23:12:00',
-    });
-  }
+  const checkStandardData = [
+    {
+      key: 'Check Doors',
+      'name-of-standards': 'Check Doors',
+      'total-valid-(%)': '62.50',
+      'total-errors-(%)': '37.50',
+      'view-total-errors': <TotalErrorDoors />,
+    },
+  ];
+
+  const rowSelection = {
+    type: 'radio',
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(
+        `selectedRowKeys: ${selectedRowKeys}`,
+        'selectedRows: ',
+        selectedRows,
+      );
+    },
+  };
+
+  checkStandardData.forEach((standard) => data.push(standard));
 
   return (
     <Table
-      style={{
-        width: '100%',
-        height: 'calc(100vh - 48px)',
-        overflow: 'auto',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-      }}
+      rowSelection={rowSelection}
+      style={styles}
       columns={columns}
       dataSource={data}
-      expandable={{
-        expandedRowRender,
-      }}
     />
   );
 }
+
+/*
+eslint
+  jsx-a11y/anchor-is-valid: 0,
+  no-plusplus: 0 
+*/

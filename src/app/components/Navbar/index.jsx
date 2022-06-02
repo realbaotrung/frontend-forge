@@ -31,6 +31,7 @@ export default function NavBar() {
         borderBlockEndColor: 'gray.300',
       }}
     >
+      {/* Logo and Select for Link */}
       <HStack gap={4}>
         <Logo />
         <Select labelInValue style={{width: '300px'}} onChange={handleOpenLink}>
@@ -42,7 +43,10 @@ export default function NavBar() {
           </Option>
         </Select>
       </HStack>
+
+      {/* Show user's information and 'logout' button */}
       <Nav />
+
     </HStack>
   );
 }

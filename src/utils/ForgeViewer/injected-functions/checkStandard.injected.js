@@ -1,4 +1,4 @@
-export function initCheckStandardViewer (myViewer) {
+export function initCheckStandardViewer (myViewer, ...remainArgs) {
 
   const databaseId = [];
 
@@ -16,6 +16,8 @@ export function initCheckStandardViewer (myViewer) {
     "f93ec7a7-810c-4afd-be9f-8120a305dbdd-00057196",
     "f93ec7a7-810c-4afd-be9f-8120a305dbdd-00057195"
   ];
+
+  const [externalIds1] = remainArgs 
 
   const onSelectionEvent = () => {
 
