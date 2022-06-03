@@ -1,12 +1,15 @@
-import { Button } from "antd"
-import { useCallback } from "react"
+import { Button } from "antd";
+import { useDispatch } from "react-redux";
+import { showAllDbIdErrorDoors } from "../../../../../slices/forgeStandard/checkDoors";
 
 export default function TotalErrorDoors() {
-  const showAllErrorOnViewer = useCallback(() => {
-    console.log('hello from here...')
-  }, [])
+
+  const dispatch = useDispatch();
+  const handleOnclick = () => {
+    dispatch(showAllDbIdErrorDoors(true))
+  }
 
   return (
-    <Button onClick={showAllErrorOnViewer}>Show all errors</Button>
-  )
+    <Button onClick={handleOnclick}>Show all errors</Button>
+  );
 }

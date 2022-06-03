@@ -1,8 +1,8 @@
-import {useMemo} from 'react';
-import {useSelector} from 'react-redux';
+import {useEffect, useMemo} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {Table} from 'antd';
 import ViewErrorDoor from './ViewErrorDoors/ViewErrorDoor';
-import {selectJsonCheckDoorDataFromFsCheckDoors} from '../../../../slices/forgeStandard/checkDoors';
+import {selectJsonCheckDoorDataFromFsCheckDoors, setFlattedExternalIdErrorDoors} from '../../../../slices/forgeStandard/checkDoors';
 
 const styles = {
   paddingInline: '8px',
@@ -26,10 +26,22 @@ const calculateValidAndErrorByPercent = (totalDoors, errorDoors) => {
   };
 };
 
-function CheckDoorsTable() {
+export default function CheckDoorsTable() {
+  // =================================
+  // Get json data from select data...
+  // =================================
   const jsonCheckDoorsFromFsCheckDoors = useSelector(
     selectJsonCheckDoorDataFromFsCheckDoors,
   );
+
+  const dispatch = useDispatch();
+
+  // =================================
+  // Set Flatted Error doors here...
+  // =================================
+  useEffect(() => {
+    dispatch(setFlattedExternalIdErrorDoors(jsonCheckDoorsFromFsCheckDoors))
+  }, [jsonCheckDoorsFromFsCheckDoors])
 
   const checkDoorData = useMemo(() => {
     const data = [];
@@ -45,7 +57,7 @@ function CheckDoorsTable() {
           'valid-(%)': validPercent,
           'error-(%)': errorPercent,
           'error-doors': levelData.WarningNumber,
-          'view-error-details': <ViewErrorDoor />,
+          'view-error-details': <ViewErrorDoor warningData={levelData.WarningData}/>,
         });
       });
     }
@@ -89,8 +101,6 @@ function CheckDoorsTable() {
     />
   );
 }
-
-export {CheckDoorsTable};
 
 /*
 eslint

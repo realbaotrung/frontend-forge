@@ -28,7 +28,12 @@ import {createSlice} from '@reduxjs/toolkit';
 
 export const initialState = {
   jsonCheckDoorData: null,
-  flattedErrorDoors: null,
+  flattedExternalIdErrorDoors: null,
+  flattedDbIdErrorDoors: null,
+  warningDataAtLevel: null,
+  isShowDbIdErrorDoors: false,
+  isShowAllDbIdErrorDoors: false,
+  flattedData: null,
   errorDoors: null,
   errorDoor: '',
 };
@@ -46,15 +51,29 @@ const fsCheckDoorsSlice = createSlice({
     setErrorDoor: (state, {payload}) => {
       state.errorDoor = payload;
     },
-    setFlattedErrorDoors: (state) => {
-      if (state.jsonCheckDoorData) {
+    setWarningDataAtLevel: (state, {payload}) => {
+      state.warningDataAtLevel = payload;
+    },
+    setFlattedData: (state, {payload}) => {
+      state.flattedData = payload;
+    },
+    setFlattedExternalIdErrorDoors: (state, {payload}) => {
         const warningDoorData = [];
-        const data = state.jsonCheckDoorData;
+        const data = payload;
 
         data.forEach(level => warningDoorData.push(level.WarningData))
 
-        state.flattedErrorDoors = warningDoorData.flat();
-      }
+        // Flatten array with depth = 2
+        state.flattedExternalIdErrorDoors = warningDoorData.flat(2);
+    },
+    setFlattedDbIdErrorDoors: (state, {payload}) => {
+      state.flattedDbIdErrorDoors = payload;
+    },
+    showAllDbIdErrorDoors: (state, {payload}) => {
+      state.isShowAllDbIdErrorDoors = payload;
+    },
+    setIsShowDbIdErrorDoors: (state, {payload}) => {
+      state.isShowDbIdErrorDoors = payload;
     },
     resetAllFromFsCheckDoorsSlice: (state) => {
       state.jsonCheckDoorData = '';
@@ -86,7 +105,12 @@ const fsCheckDoorsSlice = createSlice({
 // --- Export reducer here ---
 export const {
   setJsonCheckDoorData,
-  setFlattedErrorDoors,
+  setFlattedExternalIdErrorDoors,
+  setFlattedDbIdErrorDoors,
+  setFlattedData,
+  setWarningDataAtLevel,
+  showAllDbIdErrorDoors,
+  setIsShowDbIdErrorDoors,
   setErrorDoors,
   setErrorDoor,
   resetAllFromModelDerivative,

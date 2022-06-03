@@ -18,9 +18,34 @@ export const selectErrorDoorFromFsCheckDoors = createSelector(
   (fsCheckDoorsState) => fsCheckDoorsState.errorDoor,
 );
 
-export const selectFlattedErrorDoorsFromFsCheckDoors = createSelector(
+export const selectFlattedExternalIdErrorDoorsFromFsCheckDoors = createSelector(
   [selectDomain],
-  (fsCheckDoorsState) => fsCheckDoorsState.flattedErrorDoors,
+  (fsCheckDoorsState) => fsCheckDoorsState.flattedExternalIdErrorDoors,
+);
+
+export const selectFlattedDbIdErrorDoorsFromFsCheckDoors = createSelector(
+  [selectDomain],
+  (fsCheckDoorsState) => fsCheckDoorsState.flattedDbIdErrorDoors,
+);
+
+export const selectFlattedDataFromFsCheckDoors = createSelector(
+  [selectDomain],
+  (fsCheckDoorsState) => fsCheckDoorsState.flattedData,
+);
+
+export const selectIsShowAllDbIdErrorDoorsFromFsCheckDoors = createSelector(
+  [selectDomain],
+  (fsCheckDoorsState) => fsCheckDoorsState.isShowAllDbIdErrorDoors,
+);
+
+export const selectIsShowDbIdErrorDoorsFromFsCheckDoors = createSelector(
+  [selectDomain],
+  (fsCheckDoorsState) => fsCheckDoorsState.isShowDbIdErrorDoors,
+);
+
+export const selectWarningDataAtLevelFromFsCheckDoors = createSelector(
+  [selectDomain],
+  (fsCheckDoorsState) => fsCheckDoorsState.warningDataAtLevel,
 );
 
 /*
