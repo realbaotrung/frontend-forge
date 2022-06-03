@@ -70,6 +70,7 @@ export const putCheckStandard = createAsyncThunk(
   'checkstandard/update',
   async ({data, id}, {rejectWithValue}) => {
     try {
+      console.log('from putCheckStandard: ', data)
       const config = {headers: {'Content-Type': 'applicaltion/json'}};
       const response = await api.patch(`/CheckStandard/${id}`, data, config);
       if (response.status >= 400) {
@@ -176,7 +177,6 @@ export const checkStandardSlice = createSlice({
       state.isLoading = true;
       state.isSuccess = false;
     });
-
     // Request successful
     builder.addCase(putCheckStandard.fulfilled, (state, action) => {
       state.isLoading = false;

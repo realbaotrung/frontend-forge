@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Button, Table, Modal, Spin, Switch} from 'antd';
 import axios from 'axios';
@@ -10,6 +10,7 @@ import {
   selectCheckStandard,
   selectLoading,
   selectSuccess,
+  putCheckStandard,
 } from '../../../../slices/checkStandard/checkStandardSlice';
 import {CheckStandardModel} from '../../../../slices/checkStandard/checkStandardModel';
 import CheckStandardForm from './CheckStandardForm';
@@ -70,7 +71,7 @@ export default function CheckStandardPage() {
     }
   }, [isSuccess]);
 
-  useEffect(() => {}, [editingStandard]);
+  // useEffect(() => {}, [editingStandard]);
 
   const onEditStandard = (record) => {
     setstatusModal(1);
@@ -85,25 +86,19 @@ export default function CheckStandardPage() {
     setIsViewModal(true);
   };
 
-  const handleTestApi = async () => {
-    try {
-      // const index = 1;
-      // const size = 10;
-      // const reponse = await api.get(
-      //   `/CheckStandard?PageNumber=${index}&PageSize=${size}`,
-      // );
+  const onChangeCheck = (checked, value) => {
+    // =========================
+    // xu ly value truoc khi gui
+    // =========================
 
-      const myapi = axios.create({
-        baseURL: 'https://jsonplaceholder.typicode.com',
-      });
-      const reponse = await myapi.get(`/comments?postId=1&id=1`);
-      console.log(reponse);
+    const dataPutToServer = {
+      name: value.name,
+      rules: value.rules,
+      description: value.description,
+      status: Number(checked),
+    };
 
-      // const result = reponse.data.result;
-      // console.log(result);
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(putCheckStandard({data: dataPutToServer, id: value.id}));
   };
   const onDeleteStandard = (record) => {
     Modal.confirm({
@@ -132,12 +127,13 @@ export default function CheckStandardPage() {
       key: 'status',
       title: 'Status',
       dataIndex: 'status',
-      render: (value) => {
-        let check = false;
-        if (value === 1) {
-          check = true;
-        }
-        return <Switch defaultChecked={check} />;
+      render: (_, value) => {
+        return (
+          <Switch
+            checked={!!value.status}
+            onChange={(checked) => onChangeCheck(checked, value)}
+          />
+        );
       },
     },
     {
@@ -168,14 +164,19 @@ export default function CheckStandardPage() {
       },
     },
   ];
+
   return (
     <Spin spinning={isLoading}>
       <Button onClick={onAddStandard}>Add a new Standard</Button>
-      <Button onClick={handleTestApi}>test api</Button>
       <Table
         columns={columns}
         dataSource={checkStandardes?.result?.map((value) => {
-          return {...value, key: value.id};
+          let statusToBoolean = false;
+          if (value.status === 1) {
+            statusToBoolean = true;
+          }
+
+          return {...value, key: value.id, rules: JSON.parse(value.value)};
         })}
         pagination={{
           pageSize: SystemContants.PAGE_SIZE,
