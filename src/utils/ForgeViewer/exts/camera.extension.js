@@ -4,7 +4,7 @@ import { ForgeExtension } from "..";
 
 /* eslint-disable no-underscore-dangle */
 export class TurnTableExtension extends ForgeExtension {
-  static extensionName = 'TurnTableExtension';
+  static get extensionName() { return 'TurnTableExtension' };
 
   constructor(viewer, options) {
       super(viewer, options);

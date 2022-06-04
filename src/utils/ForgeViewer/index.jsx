@@ -7,6 +7,8 @@ import {
   DEFAULT_INITIALIZER_OPTIONS,
   DEFAULT_INJECTED_FUNC_WITH_VIEWER,
   DEFAULT_ON_INIT,
+  DEFAULT_ON_MODEL_LOADED,
+  DEFAULT_ON_VIEWER_INITIALIZED,
   DEFAULT_VERSION,
   DEFAULT_VIEWABLE_OPTIONS,
 } from './default';
@@ -26,7 +28,9 @@ function ForgeViewer({
   onInit,
   disableLoader,
   extensions,
-  injectedFuncWithViewer,
+  onModelLoaded,
+  onViewerInitialized,
+  skipHiddenFragments,
 }) {
   const {refs} = useForgeViewer({
     version,
@@ -41,15 +45,22 @@ function ForgeViewer({
     onInit,
     disableLoader,
     extensions,
-    injectedFuncWithViewer,
+    onModelLoaded,
+    onViewerInitialized,
+    skipHiddenFragments,
   });
 
   return (
-    <div>
-      <div ref={refs.viewer} className={className} style={style}></div>
-    </div>
+    <div
+      id='forgeViewer'
+      ref={refs.viewer}
+      className={className}
+      style={style}
+    ></div>
   );
 }
+
+ForgeViewer.displayName = 'ForgeViewer'
 
 ForgeViewer.propsType = {
   version: PropsTypes.string.isRequired,
@@ -66,7 +77,9 @@ ForgeViewer.propsType = {
   onInit: PropsTypes.func.isRequired,
   disableLoader: PropsTypes.bool.isRequired,
   extensions: PropsTypes.array.isRequired,
-  injectedFuncWithViewer: PropsTypes.func.isRequired,
+  onModelLoaded: PropsTypes.func.isRequired,
+  onViewerInitialized: PropsTypes.func.isRequired,
+  skipHiddenFragments: PropsTypes.bool.isRequired,
 };
 
 ForgeViewer.defaultProps = {
@@ -84,9 +97,10 @@ ForgeViewer.defaultProps = {
   onInit: DEFAULT_ON_INIT,
   disableLoader: false,
   extensions: [],
-  injectedFuncWithViewer: DEFAULT_INJECTED_FUNC_WITH_VIEWER
+  onModelLoaded: DEFAULT_ON_MODEL_LOADED,
+  onViewerInitialized: DEFAULT_ON_VIEWER_INITIALIZED,
+  skipHiddenFragments: false,
 };
-
 
 export {Extension as ForgeExtension} from './extension';
 export default memo(ForgeViewer);

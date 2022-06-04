@@ -23,7 +23,9 @@ const extIds = [
 ];
 
 export class ShowSelectionExtension extends ForgeExtension {
-  static extensionName = 'ShowSelectionExtension';
+  static get extensionName() {
+    return 'ShowSelectionExtension';
+  }
 
   constructor(viewer, options) {
     super(viewer, options);
@@ -44,7 +46,7 @@ export class ShowSelectionExtension extends ForgeExtension {
       // TODO: save State redux to show here...
       // =======================
       // this.externalId.forEach((id) => console.log(data[id]));
-      console.log(data)
+      console.log(data);
     };
 
     const onErrorCallback = (data) => {
@@ -76,9 +78,9 @@ export class ShowSelectionExtension extends ForgeExtension {
     //   this.viewer.select(id);
     //   this.viewer.fitToView([id]);
     // }
-    selectedIds.forEach(id => {
+    selectedIds.forEach((id) => {
       this.viewer.getProperties(id, scb, ecb);
-    })
+    });
     // this.viewer.select(3082)
     // this.viewer.fitToView([3082]);
 
@@ -126,9 +128,7 @@ export class ShowSelectionExtension extends ForgeExtension {
     return true;
   }
 
-  activate() {
-
-  }
+  activate() {}
 
   deactivate() {}
 }

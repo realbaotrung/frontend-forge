@@ -22,34 +22,80 @@ export function useForgeViewer({
   onInit,
   disableLoader,
   extensions,
-  injectedFuncWithViewer,
+  onModelLoaded,
+  onViewerInitialized,
+  skipHiddenFragments,
 }) {
-  const [scriptsLoaded, setScriptsLoaded] = useState(false);
   const viewerRef = useRef(null);
+  const viewerDomRef = useRef(null);
 
-  // see: https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/#initializer-options-callback
-  const initializerOpts = {
-    ...DEFAULT_INITIALIZER_OPTIONS,
-    ...initializerOptions,
+  function onModelLoadedInside(event) {
+    const viewer = viewerRef.current;
+
+    const av = Autodesk.Viewing;
+    viewer.removeEventListener(av.GEOMETRY_LOADED_EVENT, onModelLoadedInside);
+
+    if (onModelLoaded) {
+      onModelLoaded(viewer, event);
+    }
+  }
+
+  const [scriptsLoaded, setScriptsLoaded] = useState(false);
+
+  /**
+   * Loads the specified model into the viewer.
+   *
+   * @param {Object} viewer Initialized LMV object
+   * @param {string} documentId Document URN of the model to be loaded
+   */
+  const loadModel = (currViewer, documentId) => {
+    const DocumentLoadSuccessInside = (viewerDocument) => {
+      const viewable = onDocumentLoadSuccess(viewerDocument);
+
+      const viewableOpts = {...viewableOptions, skipHiddenFragments};
+
+      currViewer.loadDocumentNode(viewerDocument, viewable, viewableOpts)
+      // modify the preference settings, since ghosting is causing heavy z-fighting with the room geometry
+      // it would be good we turn it off
+      // currViewer.prefs.set('ghosting', false);
+    };
+    Autodesk.Viewing.Document.load(
+      `urn:${documentId}`,
+      DocumentLoadSuccessInside,
+      onDocumentLoadError,
+    );
   };
-  // add token here...
-  initializerOpts.getAccessToken = (done) => done(token, 3600);
 
-  // see: https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/Viewer3D/#new-viewer3d-container-config
-  const viewerOpts = {...DEFAULT_VIEWER_OPTIONS, ...viewerOptions};
-
-  // viewer object
-  // api : https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/GuiViewer3D/
-  let viewer; // Autodesk.Viewing.Viewer3D;
-
+  // =============================================================================================
   // Initialize the viewer
-  const initialize = () => {
+  const initializeViewer = async () => {
+    // see: https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/#initializer-options-callback
+    const initializerOpts = {
+      ...DEFAULT_INITIALIZER_OPTIONS,
+      ...initializerOptions,
+    };
+
+    // add token here...
+    initializerOpts.getAccessToken = (onTokenReady) => {
+      const accessToken = token;
+      const timeInSeconds = 3600; // Use value provided by Forge Authentication (OAuth) API
+      onTokenReady(accessToken, timeInSeconds);
+    };
+
+    // see: https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/Viewer3D/#new-viewer3d-container-config
+    const viewerOpts = {...DEFAULT_VIEWER_OPTIONS, ...viewerOptions};
+
+    let viewer;
+
     Autodesk.Viewing.Initializer(initializerOpts, () => {
       if (headless) {
-        viewer = new Autodesk.Viewing.Viewer3D(viewerRef.current, viewerOpts);
+        viewer = new Autodesk.Viewing.Viewer3D(
+          viewerDomRef.current,
+          viewerOpts,
+        );
       } else {
         viewer = new Autodesk.Viewing.GuiViewer3D(
-          viewerRef.current,
+          viewerDomRef.current,
           viewerOpts,
         );
       }
@@ -64,13 +110,6 @@ export function useForgeViewer({
         onInit(e);
       });
 
-      // ===================================
-      // TODO:Test extensions
-      // ===================================
-      // const exs = ['Autodesk.Fusion360.Animation', 'Autodesk.Hyperlink'];
-      // exs.forEach((e) => {
-      //   viewer.loadExtension(e);
-      // });
       if (extensions) {
         extensions.forEach((extension) => {
           const extensionName = extension.extensionName;
@@ -86,11 +125,32 @@ export function useForgeViewer({
         });
       }
 
+      // ===========================
+      // reference to viewer here...
+      // ===========================
+      viewerRef.current = viewer;
+
       // Start viewer
-      const startedCode = viewer.start();
+      const startedCode = viewer.start(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        initializerOpts,
+      );
       if (startedCode > 0) {
         console.error('Failed to create a Viewer: WebGL not supported.');
         return;
+      }
+
+      const av = Autodesk.Viewing;
+      viewer.addEventListener(av.GEOMETRY_LOADED_EVENT, onModelLoadedInside, {
+        once: true,
+      });
+      loadModel(viewer, urn);
+
+      if (onViewerInitialized) {
+        onViewerInitialized(viewer);
       }
     });
   };
@@ -115,53 +175,32 @@ export function useForgeViewer({
   //   });
   // })}
 
-  // =============================================================================================
-
-  // load model using Derivatives API
-  const loadModel = () => {
-    return new Promise((resolve) => {
-      const handleDocumentLoadSuccess = (viewerDocument) => {
-        const viewable = onDocumentLoadSuccess(viewerDocument);
-        viewer
-          .loadDocumentNode(viewerDocument, viewable, viewableOptions)
-          .then(() => {
-            // ==============================================================
-            // Inject all code to the viewer here...
-            // ==============================================================
-            injectedFuncWithViewer(viewer);
-
-            resolve();
-          });
-      };
-      Autodesk.Viewing.Document.load(
-        `urn:${urn}`,
-        handleDocumentLoadSuccess,
-        onDocumentLoadError,
-      );
-    });
-  };
   // triggered on forge scripts loaded
-  useEffect(() => {
-    if (!window.Autodesk) {
-      loadScripts(version)
-        .then(() => {
-          setScriptsLoaded(true);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } else {
+  useEffect(async() => {
+    try {
+      if (!window.Autodesk) {
+        const res = await loadScripts(version);
+        if (res) setScriptsLoaded(true);
+      }
       setScriptsLoaded(true);
+    } catch (error) {
+      console.log(error)
     }
+
     if (scriptsLoaded) {
-      initialize();
-      loadModel();
+      await initializeViewer();
     }
+
+    return () => {
+      if (viewerRef.current) {
+        viewerRef.current.finish();
+      }
+    };
   }, [scriptsLoaded]);
 
   return {
     refs: {
-      viewer: viewerRef,
+      viewer: viewerDomRef,
     },
   };
 }

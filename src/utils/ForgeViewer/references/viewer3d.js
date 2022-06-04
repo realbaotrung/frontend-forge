@@ -26,7 +26,7 @@ import { ViewingUtilities } from "../tools/ViewingUtilities";
 import { DefaultHandler } from "../tools/DefaultHandler";
 import { GestureHandler } from "../tools/GestureHandler";
 import i18n from "i18next";
-import * as et from "./EventTypes";
+import * as et from "../EventTypes";
 import { FileLoaderManager } from "./FileLoaderManager";
 import { clearPropertyWorkerCache } from "../file-loaders/main/PropDbLoader";
 import { ViewerState } from "./ViewerState";

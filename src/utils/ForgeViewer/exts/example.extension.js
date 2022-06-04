@@ -1,7 +1,7 @@
 import { ForgeExtension } from "..";
 
 export class ExampleExtension extends ForgeExtension {
-  static extensionName = 'Autodesk.DocumentBrowser';
+  static get extensionName() { return 'Autodesk.DocumentBrowser'};
 
   load() {
     // change selection color to red

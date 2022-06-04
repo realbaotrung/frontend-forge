@@ -31,9 +31,6 @@ export const initialState = {
   flattedExternalIdErrorDoors: null,
   flattedDbIdErrorDoors: null,
   warningDataAtLevel: null,
-  isShowDbIdErrorDoors: false,
-  isShowAllDbIdErrorDoors: false,
-  flattedData: null,
   errorDoors: null,
   errorDoor: '',
 };
@@ -54,9 +51,6 @@ const fsCheckDoorsSlice = createSlice({
     setWarningDataAtLevel: (state, {payload}) => {
       state.warningDataAtLevel = payload;
     },
-    setFlattedData: (state, {payload}) => {
-      state.flattedData = payload;
-    },
     setFlattedExternalIdErrorDoors: (state, {payload}) => {
         const warningDoorData = [];
         const data = payload;
@@ -71,9 +65,6 @@ const fsCheckDoorsSlice = createSlice({
     },
     showAllDbIdErrorDoors: (state, {payload}) => {
       state.isShowAllDbIdErrorDoors = payload;
-    },
-    setIsShowDbIdErrorDoors: (state, {payload}) => {
-      state.isShowDbIdErrorDoors = payload;
     },
     resetAllFromFsCheckDoorsSlice: (state) => {
       state.jsonCheckDoorData = '';
@@ -107,10 +98,8 @@ export const {
   setJsonCheckDoorData,
   setFlattedExternalIdErrorDoors,
   setFlattedDbIdErrorDoors,
-  setFlattedData,
   setWarningDataAtLevel,
   showAllDbIdErrorDoors,
-  setIsShowDbIdErrorDoors,
   setErrorDoors,
   setErrorDoor,
   resetAllFromModelDerivative,

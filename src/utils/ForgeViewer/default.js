@@ -1,8 +1,8 @@
 export const DEFAULT_VERSION = '7.*';
 
 export const DEFAULT_INITIALIZER_OPTIONS = {
-  env: 'AutodeskProduction',
-  api: 'derivativeV2',
+  env: 'AutodeskProduction', // | "AutodeskStaging" | "MD20ProdUS" | "MD20ProdEU"
+  api: 'derivativeV2', // "derivativeV2_EU" | "modelDerivativeV2" | "fluent" | "D3S" | "D3S_EU"
 };
 export const DEFAULT_DOCUMENT_LOAD_SUCCESS = (
   viewerDocument, // Autodesk.Viewing.Document
@@ -16,13 +16,18 @@ export const DEFAULT_DOCUMENT_LOAD_ERROR = (
   console.error(errorCode, errorMsg, messages);
 };
 
-export const DEFAULT_INJECTED_FUNC_WITH_VIEWER = (
+export const DEFAULT_ON_MODEL_LOADED = (
   viewer, // Autodesk.Viewing.GuiViewer3D || Autodesk.Viewing.Viewer3D
+  event   // eventBus
 ) => {};
+
+export const DEFAULT_ON_VIEWER_INITIALIZED  = (viewer) => {}
 
 export const DEFAULT_VIEWER_OPTIONS = {theme: 'light-theme'};
 
-export const DEFAULT_VIEWABLE_OPTIONS = {};
+export const DEFAULT_VIEWABLE_OPTIONS = {
+  keepCurrentModels: true,
+};
 
 export const DEFAULT_ON_INIT = () => {};
 

@@ -3,26 +3,21 @@ import {useDispatch, useSelector} from 'react-redux';
 import PropsTypes from 'prop-types';
 import ForgeViewer from '../../../../../utils/ForgeViewer';
 import {
-  selectFlattedDataFromFsCheckDoors,
   selectFlattedDbIdErrorDoorsFromFsCheckDoors,
   selectFlattedExternalIdErrorDoorsFromFsCheckDoors,
   selectIsShowAllDbIdErrorDoorsFromFsCheckDoors,
-  selectIsShowDbIdErrorDoorsFromFsCheckDoors,
   selectWarningDataAtLevelFromFsCheckDoors,
-  setFlattedData,
   setFlattedDbIdErrorDoors,
-  setIsShowDbIdErrorDoors,
   showAllDbIdErrorDoors,
 } from '../../../../slices/forgeStandard/checkDoors';
+import {ExampleExtension} from '../../../../../utils/ForgeViewer/exts/example.extension';
 
 const style = {
   width: 'calc((100vw - 600px))',
   height: 'calc(100vh - 48px)',
 };
 
-const dataIds = [
-  3064, 3063, 3096, 3095, 3106, 3105, 3140, 3139, 3158, 3157, 3168, 3167,
-];
+const extensions = [ExampleExtension];
 
 export default function ForgeViewerTest({token, urn, guid}) {
   // ===================================
@@ -37,10 +32,6 @@ export default function ForgeViewerTest({token, urn, guid}) {
     selectIsShowAllDbIdErrorDoorsFromFsCheckDoors,
   );
 
-  const isShowDbIdErrorDoorsFromFsCheckDoors = useSelector(
-    selectIsShowDbIdErrorDoorsFromFsCheckDoors,
-  );
-
   const flattedDbIdErrorDoors = useSelector(
     selectFlattedDbIdErrorDoorsFromFsCheckDoors,
   );
@@ -49,76 +40,9 @@ export default function ForgeViewerTest({token, urn, guid}) {
     selectWarningDataAtLevelFromFsCheckDoors,
   );
 
-  const flattedDataFromFS = useSelector(selectFlattedDataFromFsCheckDoors);
-
   // ===================================
   const dispatch = useDispatch();
-  // ===================================
-
-  // =========================
-  // UseEffect viewer....
-  // =========================
-  useEffect(() => {
-    const currViewer = viewRef.current;
-
-    if (currViewer !== null) {
-      console.log('viewer from useEffect: ', currViewer);
-
-      // ==================================
-      // On Button Show All Errors click...
-      // ==================================
-      if (isShowAllDbIdErrorDoorsFromFsCheckDoors && flattedDbIdErrorDoors) {
-        currViewer.isolate(flattedDbIdErrorDoors);
-        currViewer.select(flattedDbIdErrorDoors);
-        currViewer.fitToView(flattedDbIdErrorDoors);
-        dispatch(showAllDbIdErrorDoors(false));
-      }
-
-      if (warningDataAtLevel) {
-        const flattedData = [];
-        const onConvertExtIdToDbId = () => {
-          const onSuccessCallback = (mappingObject) => {
-            warningDataAtLevel
-              .flat()
-              .forEach((externalId) =>
-                flattedData.push(mappingObject[externalId]),
-              );
-          };
-          const onErrorCallback = (data) => {
-            console.log('Cannot convert externalId to DbId: ', data);
-          };
-          currViewer.model.getExternalIdMapping(
-            onSuccessCallback,
-            onErrorCallback,
-          );
-        };
-
-        onConvertExtIdToDbId();
-        console.log(flattedData)
-        dispatch(setFlattedData(flattedData));
-      }
-    }
-  }, [
-    warningDataAtLevel,
-    isShowAllDbIdErrorDoorsFromFsCheckDoors,
-    flattedDbIdErrorDoors,
-    setFlattedData
-  ]);
-
-  useEffect(() => {
-    // TODO: need fixed show error doors here
-    const currViewer2 = viewRef.current;
-
-    if (currViewer2 !== null) {
-      if (isShowDbIdErrorDoorsFromFsCheckDoors && flattedDataFromFS) {
-        currViewer2.isolate(flattedDataFromFS);
-        currViewer2.select(flattedDataFromFS);
-        dispatch(setIsShowDbIdErrorDoors(false));
-      }
-
-      // TODO: handle all view error
-    }
-  }, [isShowDbIdErrorDoorsFromFsCheckDoors, flattedDataFromFS]);
+  // =================================
 
   const onDocumentLoadSuccess = useCallback((document) => {
     const bubbleNode = document?.getRoot();
@@ -132,40 +56,69 @@ export default function ForgeViewerTest({token, urn, guid}) {
     );
   }, []);
 
-  const initCheckStandardViewer = (view) => {
-    // =============================
-    // Set Referent viewer here....
-    // =============================
-    viewRef.current = view;
-
+  const onModelLoaded = (viewer, event) => {
     const databaseId = [];
 
     const onConvertExtIdToDbId = () => {
       const onSuccessCallback = (mappingObject) => {
         // ==============================================================
         // The magic starts here...
-        // All external Id will be mapped and converted to 'dbid'
+        // All external Id will be mapped and converted to 'DbId'
         // ==============================================================
         flattedExternalIdErrorDoors.forEach((externalId) =>
           databaseId.push(mappingObject[externalId]),
         );
-        console.log('from ForgeViewerTest: ', databaseId);
         // ==============================================================
         // Dispatch to set all databaseId that have converted to Store
         // ==============================================================
         dispatch(setFlattedDbIdErrorDoors(databaseId));
       };
       const onErrorCallback = (data) => {
-        console.log('Cannot convert externalId to DbId: ', data);
+        console.error('Cannot convert externalId to DbId: ', data);
       };
-      view.model.getExternalIdMapping(onSuccessCallback, onErrorCallback);
+      viewer.model.getExternalIdMapping(onSuccessCallback, onErrorCallback);
     };
 
-    view.addEventListener(
-      Autodesk.Viewing.GEOMETRY_LOADED_EVENT,
-      onConvertExtIdToDbId,
-    );
+    onConvertExtIdToDbId();
   };
+  const onViewerInitialized = (viewer) => {
+    if (viewRef.current) {
+      throw new Error('viewer has been recreated');
+    }
+    viewRef.current = viewer;
+  };
+
+  useEffect(() => {
+    const viewer = viewRef.current;
+    if (warningDataAtLevel) {
+      const flattedExternalIdData = [...warningDataAtLevel.flat()]
+      let flattedDbIdData = []
+      const onSuccessCallback = (mappingObject) => {
+        flattedDbIdData = flattedExternalIdData.map((externalId) => {return mappingObject[externalId]});
+        // ================================================================
+        // On Button Show clicked, show error doors at specified level...
+        // ================================================================
+        viewer.select(flattedDbIdData);
+      };
+      const onErrorCallback = (data) => {
+        console.error('Cannot convert externalId to DbId: ', data);
+      };
+      viewer.model.getExternalIdMapping(onSuccessCallback, onErrorCallback);
+    }
+  }, [warningDataAtLevel]);
+
+  useEffect(() => {
+    const viewer = viewRef.current;
+    // ==================================
+    // On Button Show All Errors click...
+    // ==================================
+    if (isShowAllDbIdErrorDoorsFromFsCheckDoors && flattedDbIdErrorDoors) {
+      viewer.isolate(flattedDbIdErrorDoors);
+      viewer.select(flattedDbIdErrorDoors);
+      viewer.fitToView(flattedDbIdErrorDoors);
+      dispatch(showAllDbIdErrorDoors(false));
+    }
+  }, [isShowAllDbIdErrorDoorsFromFsCheckDoors, flattedDbIdErrorDoors]);
 
   return (
     <ForgeViewer
@@ -176,8 +129,9 @@ export default function ForgeViewerTest({token, urn, guid}) {
       style={style}
       onDocumentLoadSuccess={onDocumentLoadSuccess}
       onDocumentLoadError={onDocumentLoadError}
-      injectedFuncWithViewer={initCheckStandardViewer}
-      // extensions={extensions}
+      extensions={extensions}
+      onModelLoaded={onModelLoaded}
+      onViewerInitialized={onViewerInitialized}
     />
   );
 }

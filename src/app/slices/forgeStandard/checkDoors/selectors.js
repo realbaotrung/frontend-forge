@@ -28,19 +28,9 @@ export const selectFlattedDbIdErrorDoorsFromFsCheckDoors = createSelector(
   (fsCheckDoorsState) => fsCheckDoorsState.flattedDbIdErrorDoors,
 );
 
-export const selectFlattedDataFromFsCheckDoors = createSelector(
-  [selectDomain],
-  (fsCheckDoorsState) => fsCheckDoorsState.flattedData,
-);
-
 export const selectIsShowAllDbIdErrorDoorsFromFsCheckDoors = createSelector(
   [selectDomain],
   (fsCheckDoorsState) => fsCheckDoorsState.isShowAllDbIdErrorDoors,
-);
-
-export const selectIsShowDbIdErrorDoorsFromFsCheckDoors = createSelector(
-  [selectDomain],
-  (fsCheckDoorsState) => fsCheckDoorsState.isShowDbIdErrorDoors,
 );
 
 export const selectWarningDataAtLevelFromFsCheckDoors = createSelector(
