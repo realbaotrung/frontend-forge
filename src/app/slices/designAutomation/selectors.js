@@ -65,8 +65,3 @@ export const selectJsonFinalCategoryDataToUploadFromDA = createSelector(
   (designAutomationState) =>
     designAutomationState.jsonFinalCategoryDataToUpload,
 );
-
-export const selectIsOpenFormScheduleCategoryFromDA = createSelector(
-  [selectDomain],
-  (designAutomationState) => designAutomationState.isOpenFormScheduleCategory,
-);

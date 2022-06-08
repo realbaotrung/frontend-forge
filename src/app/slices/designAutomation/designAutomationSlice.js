@@ -58,9 +58,21 @@ const postDesignAutomationGetInfoProjectMutation = {
   },
 };
 
-const postJsonFinalDataToServerMutation = {
+const postJsonScheduleFormDataToServerMutation = {
   query: (data) => ({
-    url: apiPaths.API_DESIGNAUTOMATION_START,
+    url: apiPaths.API_DESIGNAUTOMATION_SCHEDULE_START,
+    method: 'POST',
+    data,
+  }),
+  transformResponse: (response) => {
+    console.log(response);
+    return response;
+  },
+};
+
+const postJsonCheckDoorsFormDataToServerMutation = {
+  query: (data) => ({
+    url: apiPaths.API_DESIGNAUTOMATION_CHECK_START,
     method: 'POST',
     data,
   }),
@@ -82,8 +94,11 @@ export const designAutomationApi = apiRtk.injectEndpoints({
     postDesignAutomationGetInfoProject: builder.mutation(
       postDesignAutomationGetInfoProjectMutation,
     ),
-    postJsonFinalDataToServer: builder.mutation(
-      postJsonFinalDataToServerMutation,
+    postJsonScheduleFormDataToServer: builder.mutation(
+      postJsonScheduleFormDataToServerMutation,
+    ),
+    postJsonCheckDoorsFormDataToServer: builder.mutation(
+      postJsonCheckDoorsFormDataToServerMutation,
     ),
   }),
 });
@@ -93,7 +108,8 @@ export const {
   useGetDesignAutomationInfoByIdQuery,
   useGetDesignAutomationEngineQuery,
   usePostDesignAutomationGetInfoProjectMutation,
-  usePostJsonFinalDataToServerMutation,
+  usePostJsonScheduleFormDataToServerMutation,
+  usePostJsonCheckDoorsFormDataToServerMutation,
 } = designAutomationApi;
 
 // ============================================================================
@@ -114,14 +130,6 @@ export const initialState = {
   isError: false,
   jsonTargetCategoryData: null,
   jsonFinalCategoryDataToUpload: null,
-
-  // For Schedule form
-  isOpenFormScheduleCategory: false,
-
-  // For Check door form
-  isOpenFormCheckDoors: false,
-  jsonFormCheckDoors: null,
-  jsonFinalCheckDoorsToUpload: null,
 };
 
 // --- Declaring slice here ---
@@ -138,7 +146,7 @@ const designAutomationSlice = createSlice({
       );
     },
     setJsonScheduleData: (state, {payload}) => {
-      state.jsonScheduleData = JSON.parse(payload);
+      state.jsonDataFromServer = JSON.parse(payload);
     },
     setRevitFileName: (state, {payload}) => {
       state.revitFileName = payload;
@@ -165,31 +173,6 @@ const designAutomationSlice = createSlice({
       state.jsonTargetCategoryData = payload;
     },
     setJsonFinalCategoryDataToUpload: (state, {payload}) => {
-      // TODO: create structure JSON file for uploading to server
-      //   [
-      //     {
-      //       "Category": "Air Systems",
-      //       "ScheduleName": "",
-      //       "Parameters": [
-      //         "Fan",
-      //         "Chilled Water Loop",
-      //         "Cooling Coil"
-      //       ],
-      //       "IsAddToSheet": true,
-      //       "SheetName": ""
-      //     },
-      //     {
-      //       "Category": "aaaa",
-      //       "ScheduleName": "",
-      //       "Parameters": [
-      //         "Fan",
-      //         "Chilled Water Loop",
-      //         "Cooling Coil"
-      //       ],
-      //       "IsAddToSheet": true,
-      //       "SheetName": ""
-      //     }
-      //   ]
       const {categoryKeyName, jsonTargetCategoryData, scheduleName, isSheet} =
         payload;
       const jsonFinal = [];
@@ -204,38 +187,6 @@ const designAutomationSlice = createSlice({
       jsonFinal.push(schedule);
       state.jsonFinalCategoryDataToUpload = jsonFinal;
     },
-    setIsOpenFormScheduleCategory: (state, {payload}) => {
-      state.isOpenFormScheduleCategory = payload;
-    },
-
-    // ====================
-    // Test for check doors
-    // ====================
-    setIsOpenFormCheckDoors: (state, {payload}) => {
-      state.isOpenFormCheckDoors = payload;
-    },
-    setJsonFormCheckDoors: (state, {payload}) => {
-      state.jsonFormCheckDoors = payload;
-    },
-    setJsonFinalCheckDoorsToUpload: (state, {payload}) => {
-      // {
-      //   "DataDoor": {
-      //     "MaxLength": 9.5,
-      //     "EpsilonCenter": 0.5
-      //   }
-      // }
-      const {maxLength, epsilonCenter} = payload;
-      const jsonFinal = {
-        DataDoor: {
-          MaxLength: maxLength,
-          EpsilonCenter: epsilonCenter
-        }
-      };
-      console.log('json file CheckDoors from DA: ', jsonFinal);
-
-      state.jsonFinalCheckDoorsToUpload = jsonFinal;
-    },
-
 
     // ====================
 
@@ -264,7 +215,6 @@ const designAutomationSlice = createSlice({
       state.categoryValuesByKeyName = null;
       state.jsonTargetCategoryData = null;
       state.jsonFinalCategoryDataToUpload = null;
-      state.isOpenFormScheduleCategory = false;
       state.scheduleName = '';
       state.isSheet = false;
       state.isError = false;
@@ -299,7 +249,7 @@ const designAutomationSlice = createSlice({
         },
       )
       .addMatcher(
-        designAutomationApi.endpoints.postJsonFinalDataToServer
+        designAutomationApi.endpoints.postJsonScheduleFormDataToServer
           .matchRejected,
         (state) => {
           state.scheduleName = '';
@@ -329,13 +279,8 @@ export const {
   setCategoryValuesByKeyName,
   setJsonTargetCategoryData,
   setJsonFinalCategoryDataToUpload,
-  setIsOpenFormScheduleCategory,
   resetFormUploadFilesState,
   resetFormScheduleCategory,
   resetAllFromDesignAutomation,
-  // ===================
-  setIsOpenFormCheckDoors,
-  setJsonFormCheckDoors,
-  // ===================
 } = designAutomationSlice.actions;
 export const {reducer} = designAutomationSlice;

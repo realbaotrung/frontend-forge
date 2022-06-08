@@ -1,18 +1,17 @@
 import {useCallback, useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Typography, Select} from 'antd';
-import {selectCategoryNamesFromDA} from '../../../../../../../../../slices/designAutomation/selectors';
+import {selectCategoryNamesFromDA} from '../../../../../../../../../../../slices/designAutomation/selectors';
 import {
   setCategoryKeyName,
   setScheduleName,
-} from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
+} from '../../../../../../../../../../../slices/designAutomation/designAutomationSlice';
 
 const {Text} = Typography;
 const {Option} = Select;
 
 export default function CategoryNameHandler() {
   const categoryNames = useSelector(selectCategoryNamesFromDA);
-  console.log(categoryNames);
 
   const dispatch = useDispatch();
 

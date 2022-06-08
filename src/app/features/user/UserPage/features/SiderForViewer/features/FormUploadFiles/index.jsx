@@ -35,7 +35,7 @@ import {
   setIsOpenFormScheduleCategory,
 } from '../../../../../../../slices/designAutomation/designAutomationSlice';
 
-function ButtonShowModalUploadFiles({onOpen}) {
+function ButtonShowModalUploadFiles({title, onOpen}) {
   return (
     <Button
       onClick={onOpen}
@@ -55,12 +55,13 @@ function ButtonShowModalUploadFiles({onOpen}) {
         },
       }}
     >
-      Upload file to add Schedule
+      {title}
     </Button>
   );
 }
 
 ButtonShowModalUploadFiles.propTypes = {
+  title: PropTypes.string.isRequired,
   onOpen: PropTypes.func.isRequired,
 };
 
@@ -150,9 +151,9 @@ export default function FormUploadFiles() {
   });
 
   const handleOnClose = () => {
-    if (jsonScheduleDataFromDA) {
-      dispatch(setIsOpenFormScheduleCategory(true));
-    }
+    // if (jsonScheduleDataFromDA) {
+    //   dispatch(setIsOpenFormScheduleCategory(true));
+    // }
     dispatch(resetFormUploadFilesState());
     setHaveChosenFiles(false);
     onClose();
@@ -160,7 +161,7 @@ export default function FormUploadFiles() {
 
   return (
     <>
-      <ButtonShowModalUploadFiles onOpen={onOpen} />
+      <ButtonShowModalUploadFiles onOpen={onOpen} title='Upload file'/>
       <Modal
         isOpen={isOpen}
         onClose={onClose}

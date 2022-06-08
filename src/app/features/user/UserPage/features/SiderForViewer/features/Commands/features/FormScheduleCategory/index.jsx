@@ -1,4 +1,4 @@
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Button as CButton} from '@chakra-ui/react';
@@ -11,11 +11,10 @@ import {
   setJsonScheduleData,
   setJsonFinalCategoryDataToUpload,
   resetFormScheduleCategory,
-  setIsOpenFormScheduleCategory,
-  usePostJsonFinalDataToServerMutation,
+  usePostJsonScheduleFormDataToServerMutation,
   setCategoryData,
   resetAllFromDesignAutomation,
-} from '../../../../../../../slices/designAutomation/designAutomationSlice';
+} from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
 import {
   selectIsSheetFromDA,
   selectScheduleNameFromDA,
@@ -25,51 +24,39 @@ import {
   selectJsonDataFromServerFromDA,
   selectJsonFinalCategoryDataToUploadFromDA,
   selectJsonTargetCategoryDataFromDA,
-  selectIsOpenFormScheduleCategoryFromDA,
   selectCategoryDataFromDA,
-} from '../../../../../../../slices/designAutomation/selectors';
+} from '../../../../../../../../../slices/designAutomation/selectors';
 import './formScheduleCategory.css';
-import {categoryInfo} from '../../../../share/categoryInfo';
+import {categoryInfo} from '../../../../../../share/categoryInfo';
 import ScheduleNameHandler from './features/ScheduleNameHandler';
 import SheetNameHandler from './features/SheetNameHandler';
 import {
   ossApi,
   resetAllFromOssSlice,
-} from '../../../../../../../slices/oss/ossSlice';
-import {resetAllFromForgeViewerSlice} from '../../../../../../../slices/forgeViewer/forgeViewerSlice';
+} from '../../../../../../../../../slices/oss/ossSlice';
+import {resetAllFromForgeViewerSlice} from '../../../../../../../../../slices/forgeViewer/forgeViewerSlice';
 
 const {Text} = Typography;
 
-function ButtonShowCategoryForm({title}) {
-  const dispatch = useDispatch();
+function ButtonShowCategoryForm({title, onOpen}) {
   return (
-    <CButton
-      onClick={() => dispatch(setIsOpenFormScheduleCategory(true))}
-      variant='primary'
-      sx={{
-        bg: 'Blue.B400',
-        _hover: {
-          bg: 'Blue.B300',
-          color: 'NeutralLight.N0',
-        },
-        _active: {
-          bg: 'Blue.B400',
-        },
-        _focus: {
-          bg: 'Blue.B400',
-        },
-      }}
+    <Button
+      onClick={onOpen}
+      type='ghost'
     >
       {title}
-    </CButton>
+    </Button>
   );
 }
 
 ButtonShowCategoryForm.propTypes = {
   title: PropTypes.string.isRequired,
+  onOpen: PropTypes.func.isRequired,
 };
 
 export default function FormScheduleCategory() {
+  const [isOpen, setIsOpen] = useState(false)
+
   const jsonScheduleData = useSelector(selectJsonDataFromServerFromDA);
   const categoryData = useSelector(selectCategoryDataFromDA);
   const categoryNames = useSelector(selectCategoryNamesFromDA);
@@ -82,13 +69,10 @@ export default function FormScheduleCategory() {
   const jsonFinalCategoryDataToUpload = useSelector(
     selectJsonFinalCategoryDataToUploadFromDA,
   );
-  const isOpenFormScheduleCategory = useSelector(
-    selectIsOpenFormScheduleCategoryFromDA,
-  );
 
   const designInfoId = useSelector(selectIdFromDA);
-  const [postJsonFinalCategoryDataToServer, {isError, isSuccess}] =
-    usePostJsonFinalDataToServerMutation();
+  const [postJsonScheduleFormDataToServer, {isError, isSuccess}] =
+    usePostJsonScheduleFormDataToServerMutation();
 
   const dispatch = useDispatch();
 
@@ -139,10 +123,10 @@ export default function FormScheduleCategory() {
           clientId: 'randomClientId',
           data: jsonString,
         };
-        dispatch(setIsOpenFormScheduleCategory(false));
+        setIsOpen(false);
         console.log('from FormScheduleCategory', jsonString);
         console.log('from postJsonFinalCategoryDataToServer', data);
-        await postJsonFinalCategoryDataToServer(data)
+        await postJsonScheduleFormDataToServer(data)
           .unwrap()
           .then(() => {
             dispatch(resetFormScheduleCategory());
@@ -153,17 +137,21 @@ export default function FormScheduleCategory() {
     }
   }, [jsonFinalCategoryDataToUpload]);
 
-  const handleOnCancel = () => {
+  const handleOnCancel = useCallback(() => {
     dispatch(resetFormScheduleCategory());
-    dispatch(setIsOpenFormScheduleCategory(false));
-  };
+    setIsOpen(false);
+  }, []);
 
-  const isVisibleButton = () => {
+  const handleOnOpen = useCallback(() => {
+    setIsOpen(true);
+  }, [isOpen])
+
+  const isVisibleButton = useCallback(() => {
     if (categoryKeyName && jsonTargetCategoryData) {
       return false;
     }
     return true;
-  };
+  }, [categoryKeyName, jsonTargetCategoryData]);
 
   useEffect(() => {
     let content;
@@ -207,30 +195,30 @@ export default function FormScheduleCategory() {
 
   return (
     <>
-      {/*
-      <ButtonShowCategoryForm title='Schedule' />
-      */}
+      <ButtonShowCategoryForm title='Add schedule' onOpen={handleOnOpen}/>
+
       <Modal
         centered
-        visible={isOpenFormScheduleCategory}
-        onCancel={() => handleOnCancel()}
-        onOk={() => handleOnSend()}
+        visible={isOpen}
+        onCancel={handleOnCancel}
+        onOk={handleOnSend}
         okText='Send'
         width='600px'
         bodyStyle={{height: 'auto'}}
+        maskClosable={false}
         title={[
           <Text key='schedule' style={{fontSize: '20px', fontWeight: '300'}}>
             Schedule
           </Text>,
         ]}
         footer={[
-          <Button key='buttonCancel' onClick={() => handleOnCancel()}>
+          <Button key='buttonCancel' onClick={handleOnCancel}>
             Cancel
           </Button>,
           <Button
             key='buttonSend'
             type='primary'
-            onClick={() => handleOnSend()}
+            onClick={handleOnSend}
             disabled={isVisibleButton()}
           >
             Send

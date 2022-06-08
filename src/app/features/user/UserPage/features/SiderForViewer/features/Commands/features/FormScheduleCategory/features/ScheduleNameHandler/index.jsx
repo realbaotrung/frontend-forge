@@ -1,8 +1,8 @@
 import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Typography, Input} from 'antd';
-import {selectScheduleNameFromDA} from '../../../../../../../../../slices/designAutomation/selectors';
-import {setScheduleName} from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
+import {selectScheduleNameFromDA} from '../../../../../../../../../../../slices/designAutomation/selectors';
+import {setScheduleName} from '../../../../../../../../../../../slices/designAutomation/designAutomationSlice';
 
 const {Text} = Typography;
 

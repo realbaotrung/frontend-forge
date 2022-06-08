@@ -34,3 +34,52 @@ export function signOut() {
   removeItemFromSS(storageItem.auth);
   window.location.href = '/';
 }
+
+export const calculateValidAndErrorByPercent = (totalValues, errorValues) => {
+  const errorPercent = (errorValues / totalValues) * 100;
+  const errorPercentWithFixed2Decimal = parseFloat(errorPercent).toFixed(2);
+  const validPercentWithFixed2Decimal = parseFloat(100 - errorPercent).toFixed(
+    2,
+  );
+
+  return {
+    validPercent: validPercentWithFixed2Decimal,
+    errorPercent: errorPercentWithFixed2Decimal,
+  };
+};
+
+export const calculateTotalValidAndErrorByPercent = (
+  totalValidAllLevels,
+  totalErrorAllLevels,
+) => {
+  let totalValid = 0;
+  let totalError = 0;
+  let totalValidByPercent = 0;
+  let totalErrorByPercent = 0;
+
+  if (totalValidAllLevels && totalErrorAllLevels) {
+    const initialValue = 0;
+    totalValid = totalValidAllLevels.reduce(
+      (prev, curr) => prev + curr,
+      initialValue,
+    );
+    totalError = totalErrorAllLevels.reduce(
+      (prev, curr) => prev + curr,
+      initialValue,
+    );
+  }
+
+  if (totalValid && totalError) {
+    const {validPercent, errorPercent} = calculateValidAndErrorByPercent(
+      totalValid,
+      totalError,
+    );
+    totalValidByPercent = validPercent;
+    totalErrorByPercent = errorPercent;
+  }
+
+  return {
+    totalValidByPercent,
+    totalErrorByPercent,
+  };
+};

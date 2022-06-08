@@ -36,10 +36,10 @@ export default function NavBar() {
         <Logo />
         <Select labelInValue style={{width: '300px'}} onChange={handleOpenLink}>
           <Option key='userPage' value='userPage'>
-            <b>Link to user page</b>
+            Link to user page
           </Option>
           <Option key='userCheckStandardPage' value='userCheckStandardPage'>
-            <b>Link to user check standard page</b>
+            Link to user check standard page
           </Option>
         </Select>
       </HStack>

@@ -1,7 +1,7 @@
 import CanvasViewer from './features/CanvasViewer';
-import './userPage.css';
 import SiderForViewer from './features/SiderForViewer';
 import NameOfFileWithView from './features/NameOfFileAndView';
+import './userPage.css';
 
 const containerCss = {
   display: 'flex',
@@ -11,6 +11,7 @@ const containerCss = {
   width: '100vw',
   height: 'calc(100vh - 48px)',
 };
+
 export default function UserPage() {
   return (
     <div style={containerCss}>

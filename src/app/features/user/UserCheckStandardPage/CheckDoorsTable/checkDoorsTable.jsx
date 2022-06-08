@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Table} from 'antd';
 import ViewErrorDoor from './ViewErrorDoors/ViewErrorDoor';
 import {selectJsonCheckDoorDataFromFsCheckDoors, setFlattedExternalIdErrorDoors} from '../../../../slices/forgeStandard/checkDoors';
+import { calculateValidAndErrorByPercent } from '../../../../../utils/helpers.utils';
 
 const styles = {
   paddingInline: '8px',
@@ -13,18 +14,6 @@ const styles = {
   whiteSpace: 'nowrap',
 };
 
-const calculateValidAndErrorByPercent = (totalDoors, errorDoors) => {
-  const errorPercent = (errorDoors / totalDoors) * 100;
-  const errorPercentWithFixed2Decimal = parseFloat(errorPercent).toFixed(2);
-  const validPercentWithFixed2Decimal = parseFloat(100 - errorPercent).toFixed(
-    2,
-  );
-
-  return {
-    validPercent: validPercentWithFixed2Decimal,
-    errorPercent: errorPercentWithFixed2Decimal,
-  };
-};
 
 export default function CheckDoorsTable() {
   // =================================

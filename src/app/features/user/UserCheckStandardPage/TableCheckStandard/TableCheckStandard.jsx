@@ -1,6 +1,15 @@
-import React from 'react';
+import React, {useEffect, useMemo} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {Table} from 'antd';
 import TotalErrorDoors from './ViewTotalErrors/TotalErrorDoors';
+import {
+  selectJsonCheckDoorDataFromFsCheckDoors,
+  setFlattedExternalIdErrorDoors,
+} from '../../../../slices/forgeStandard/checkDoors';
+import {
+  calculateValidAndErrorByPercent,
+  calculateTotalValidAndErrorByPercent,
+} from '../../../../../utils/helpers.utils';
 
 const styles = {
   paddingInline: '8px',
@@ -12,6 +21,48 @@ const styles = {
 };
 
 export default function TableCheckStandard() {
+  const jsonCheckDoorsFromFsCheckDoors = useSelector(
+    selectJsonCheckDoorDataFromFsCheckDoors,
+  );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setFlattedExternalIdErrorDoors(jsonCheckDoorsFromFsCheckDoors));
+  }, [jsonCheckDoorsFromFsCheckDoors]);
+
+  const checkDoorData = useMemo(() => {
+    const data = [];
+
+    const totalDoorsAllLevels = [];
+    const totalWarningNumberAllLevels = [];
+
+    if (jsonCheckDoorsFromFsCheckDoors) {
+      jsonCheckDoorsFromFsCheckDoors?.forEach((levelData) => {
+        totalDoorsAllLevels.push(levelData.TotalDoor);
+        totalWarningNumberAllLevels.push(levelData.WarningNumber);
+      });
+    }
+
+    const {totalValidByPercent, totalErrorByPercent} =
+      calculateTotalValidAndErrorByPercent(
+        totalDoorsAllLevels,
+        totalWarningNumberAllLevels,
+      );
+
+    const checkDoors = {
+      key: 'Check Doors',
+      'name-of-standards': 'Check Doors',
+      'total-valid-(%)': totalValidByPercent,
+      'total-errors-(%)': totalErrorByPercent,
+      'view-total-errors': <TotalErrorDoors />,
+    };
+
+    const checkStandardData = [checkDoors];
+    checkStandardData.forEach((standard) => data.push(standard));
+
+    return data;
+  }, [jsonCheckDoorsFromFsCheckDoors]);
 
   const columns = [
     {
@@ -36,18 +87,6 @@ export default function TableCheckStandard() {
     },
   ];
 
-  const data = [];
-
-  const checkStandardData = [
-    {
-      key: 'Check Doors',
-      'name-of-standards': 'Check Doors',
-      'total-valid-(%)': '62.50',
-      'total-errors-(%)': '37.50',
-      'view-total-errors': <TotalErrorDoors />,
-    },
-  ];
-
   const rowSelection = {
     type: 'radio',
     onChange: (selectedRowKeys, selectedRows) => {
@@ -59,14 +98,12 @@ export default function TableCheckStandard() {
     },
   };
 
-  checkStandardData.forEach((standard) => data.push(standard));
-
   return (
     <Table
       rowSelection={rowSelection}
       style={styles}
       columns={columns}
-      dataSource={data}
+      dataSource={checkDoorData}
     />
   );
 }

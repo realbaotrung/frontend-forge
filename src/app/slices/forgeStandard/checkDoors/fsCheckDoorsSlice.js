@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import { apiPaths } from '../../../../api/features/apiPaths';
 // import {apiRtk} from '../../../../api/rtkQuery';
 // import {apiPaths} from '../../../../api/features/apiPaths';
 
@@ -33,6 +34,7 @@ export const initialState = {
   warningDataAtLevel: null,
   errorDoors: null,
   errorDoor: '',
+  
 };
 
 const fsCheckDoorsSlice = createSlice({

@@ -1,8 +1,8 @@
 import {Checkbox} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {setCheckboxSheet} from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
-import {selectIsSheetFromDA} from '../../../../../../../../../slices/designAutomation/selectors';
+import {setCheckboxSheet} from '../../../../../../../../../../../slices/designAutomation/designAutomationSlice';
+import {selectIsSheetFromDA} from '../../../../../../../../../../../slices/designAutomation/selectors';
 
 export default function SheetNameHandler() {
   const [checked, setChecked] = useState(false);
