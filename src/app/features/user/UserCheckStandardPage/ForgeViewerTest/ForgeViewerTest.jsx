@@ -110,7 +110,7 @@ export default function ForgeViewerTest({token, urn, guid}) {
   useEffect(() => {
     const viewer = viewRef.current;
     // ==================================
-    // On Button Show All Errors click...
+    // On Button Show All Errors clicked...
     // ==================================
     if (isShowAllDbIdErrorDoorsFromFsCheckDoors && flattedDbIdErrorDoors) {
       viewer.isolate(flattedDbIdErrorDoors);

@@ -1,48 +1,33 @@
 import {createSlice} from '@reduxjs/toolkit';
-import { apiPaths } from '../../../../api/features/apiPaths';
-// import {apiRtk} from '../../../../api/rtkQuery';
-// import {apiPaths} from '../../../../api/features/apiPaths';
-
-// const postModelDerivativeJobsMutation = {
-//   query: (data) => ({
-//     url: apiPaths.API_MODEL_DERIVATIVE_JOBS,
-//     method: 'POST',
-//     data,
-//   }),
-//   transformResponse: (response) => {
-//     console.log(response);
-//     return response;
-//   },
-// };
-
-// export const modelDerivativeApi = apiRtk.injectEndpoints({
-//   endpoints: (builder) => ({
-//     postModelDerivativeJobs: builder.mutation(postModelDerivativeJobsMutation),
-//   }),
-// });
-
-// export const {usePostModelDerivativeJobsMutation} = modelDerivativeApi;
+import {formatStringToJsonObjectWithRegex} from '../../../../utils/helpers.utils';
 
 // ============================================================================
 // Slice here...
 // ============================================================================
 
 export const initialState = {
-  jsonCheckDoorData: null,
+  isLoadingJsonCheckDoorsDataFromServer: true,
+  jsonCheckDoorsData: null,
   flattedExternalIdErrorDoors: null,
   flattedDbIdErrorDoors: null,
   warningDataAtLevel: null,
   errorDoors: null,
   errorDoor: '',
-  
 };
 
 const fsCheckDoorsSlice = createSlice({
   name: 'fsCheckDoorsSlice',
   initialState,
   reducers: {
-    setJsonCheckDoorData: (state, {payload}) => {
-      state.jsonCheckDoorData = payload;
+    setIsLoadingJsonCheckDoorsDataFromServer: (state, {payload}) => {
+      state.isLoadingJsonCheckDoorsDataFromServer = payload;
+    },
+    setJsonCheckDoorsData: (state, {payload}) => {
+      const pattern = /\\/g;
+      state.jsonCheckDoorsData = formatStringToJsonObjectWithRegex(
+        pattern,
+        payload,
+      );
     },
     setErrorDoors: (state, {payload}) => {
       state.errorDoors = payload;
@@ -54,13 +39,13 @@ const fsCheckDoorsSlice = createSlice({
       state.warningDataAtLevel = payload;
     },
     setFlattedExternalIdErrorDoors: (state, {payload}) => {
-        const warningDoorData = [];
-        const data = payload;
+      const warningDoorData = [];
+      const data = payload;
 
-        data.forEach(level => warningDoorData.push(level.WarningData))
+      data.forEach((level) => warningDoorData.push(level.WarningData));
 
-        // Flatten array with depth = 2
-        state.flattedExternalIdErrorDoors = warningDoorData.flat(2);
+      // Flatten array with depth = 2
+      state.flattedExternalIdErrorDoors = warningDoorData.flat(2);
     },
     setFlattedDbIdErrorDoors: (state, {payload}) => {
       state.flattedDbIdErrorDoors = payload;
@@ -69,35 +54,17 @@ const fsCheckDoorsSlice = createSlice({
       state.isShowAllDbIdErrorDoors = payload;
     },
     resetAllFromFsCheckDoorsSlice: (state) => {
-      state.jsonCheckDoorData = '';
+      state.jsonCheckDoorsData = '';
       state.errorDoors = null;
       state.errorDoor = '';
     },
   },
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addMatcher(
-  //       modelDerivativeApi.endpoints.postModelDerivativeJobs.matchPending,
-  //       (state) => {
-  //         state.urn = '';
-  //         state.acceptedJobs = null;
-  //         state.isLoadingModel = true;
-  //       },
-  //     )
-  //     .addMatcher(
-  //       modelDerivativeApi.endpoints.postModelDerivativeJobs.matchFulfilled,
-  //       (state, {payload}) => {
-  //         state.urn = payload.urn;
-  //         state.acceptedJobs = payload.acceptedJobs;
-  //         state.isLoadingModel = false;
-  //       },
-  //     );
-  // },
 });
 
 // --- Export reducer here ---
 export const {
-  setJsonCheckDoorData,
+  setIsLoadingJsonCheckDoorsDataFromServer,
+  setJsonCheckDoorsData,
   setFlattedExternalIdErrorDoors,
   setFlattedDbIdErrorDoors,
   setWarningDataAtLevel,

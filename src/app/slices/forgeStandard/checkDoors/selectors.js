@@ -3,9 +3,14 @@ import {initialState} from './fsCheckDoorsSlice';
 
 const selectDomain = (state) => state.fsCheckDoors || initialState;
 
-export const selectJsonCheckDoorDataFromFsCheckDoors = createSelector(
+export const selectIsLoadingJsonCheckDoorsDataFromFsCheckDoors = createSelector(
   [selectDomain],
-  (fsCheckDoorsState) => fsCheckDoorsState.jsonCheckDoorData,
+  (fsCheckDoorsState) => fsCheckDoorsState.isLoadingJsonCheckDoorsDataFromServer,
+);
+
+export const selectJsonCheckDoorsDataFromFsCheckDoors = createSelector(
+  [selectDomain],
+  (fsCheckDoorsState) => fsCheckDoorsState.jsonCheckDoorsData,
 );
 
 export const selectErrorDoorsFromFsCheckDoors = createSelector(

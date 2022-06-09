@@ -28,7 +28,7 @@ const g3d = '78a2d1da-461b-235a-192f-223b10401d32';
 export default function CanvasViewer() {
   const [urn, setUrn] = useState('');
   const [token, setToken] = useState('');
-  const [showSplitViewer, setShowSplitViewer] = useState(false);
+  const [showSplitViewer, setShowSplitViewer] = useState(true);
 
   const urnFromMD = useSelector(selectUrnFromMD);
   const isLoadingModel = useSelector(selectIsLoadingModelFromMD);
@@ -69,21 +69,21 @@ export default function CanvasViewer() {
 
   return (
     <>
-    <div className='extensions-ribbon'>
+    {/* <div className='extensions-ribbon'>
       <div>
         <span>Splited viewers</span>
         <Switch defaultChecked onChange={handleShowHideView} />
       </div>
-    </div>
-      {!showSplitViewer && (
+    </div> */}
+      {/* {!showSplitViewer && (
         <>
         <ForgeViewerTest token={TOKEN} urn={URN} guid={g3d} />
         <div className='grid-forge-viewer-container'>
-          {/* <ForgeViewerTest token={TOKEN} urn={URN} guid={g2d} /> */}
-          {/* <ForgeViewerTest token={TOKEN} urn={URN} guid={g3d} /> */}
+          <ForgeViewerTest token={TOKEN} urn={URN} guid={g2d} />
+          <ForgeViewerTest token={TOKEN} urn={URN} guid={g3d} />
         </div>
         </>
-      )}
+      )} */}
       <div>
         {/* {!urnFromMD && !token2Legged && <Empty className='center-position' />} */}
         {!isLoadingModel &&

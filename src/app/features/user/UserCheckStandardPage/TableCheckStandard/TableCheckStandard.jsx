@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import PropsType from 'prop-types'
 import {Table} from 'antd';
 import TotalErrorDoors from './ViewTotalErrors/TotalErrorDoors';
 import {
@@ -20,25 +21,22 @@ const styles = {
   whiteSpace: 'nowrap',
 };
 
-export default function TableCheckStandard() {
-  const jsonCheckDoorsFromFsCheckDoors = useSelector(
-    selectJsonCheckDoorDataFromFsCheckDoors,
-  );
+export default function TableCheckStandard({checkDoorsData}) {
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setFlattedExternalIdErrorDoors(jsonCheckDoorsFromFsCheckDoors));
-  }, [jsonCheckDoorsFromFsCheckDoors]);
+    dispatch(setFlattedExternalIdErrorDoors(checkDoorsData));
+  }, [checkDoorsData]);
 
-  const checkDoorData = useMemo(() => {
+  const dataSource = useMemo(() => {
     const data = [];
 
     const totalDoorsAllLevels = [];
     const totalWarningNumberAllLevels = [];
 
-    if (jsonCheckDoorsFromFsCheckDoors) {
-      jsonCheckDoorsFromFsCheckDoors?.forEach((levelData) => {
+    if (checkDoorsData) {
+      checkDoorsData?.forEach((levelData) => {
         totalDoorsAllLevels.push(levelData.TotalDoor);
         totalWarningNumberAllLevels.push(levelData.WarningNumber);
       });
@@ -62,7 +60,7 @@ export default function TableCheckStandard() {
     checkStandardData.forEach((standard) => data.push(standard));
 
     return data;
-  }, [jsonCheckDoorsFromFsCheckDoors]);
+  }, [checkDoorsData]);
 
   const columns = [
     {
@@ -103,13 +101,17 @@ export default function TableCheckStandard() {
       rowSelection={rowSelection}
       style={styles}
       columns={columns}
-      dataSource={checkDoorData}
+      dataSource={dataSource}
     />
   );
 }
 
+TableCheckStandard.propTypes = {
+  checkDoorsData: PropsType.array.isRequired,
+}
 /*
 eslint
   jsx-a11y/anchor-is-valid: 0,
-  no-plusplus: 0 
+  no-plusplus: 0,
+  react/forbid-prop-types: 0
 */

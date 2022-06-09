@@ -32,7 +32,6 @@ import {
 } from '../../../../../../../slices/designAutomation/selectors';
 import {
   resetFormUploadFilesState,
-  setIsOpenFormScheduleCategory,
 } from '../../../../../../../slices/designAutomation/designAutomationSlice';
 
 function ButtonShowModalUploadFiles({title, onOpen}) {

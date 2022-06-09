@@ -1,7 +1,17 @@
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
-import {Typography, Modal, message, Button, Alert, Form, Input} from 'antd';
+import {
+  Typography,
+  Modal,
+  message,
+  Button,
+  Alert,
+  Form,
+  Input,
+  Space,
+  Steps,
+} from 'antd';
 
 import {
   resetAllFromDesignAutomation,
@@ -9,11 +19,13 @@ import {
 } from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
 import {selectIdFromDA} from '../../../../../../../../../slices/designAutomation/selectors';
 
+import RefreshToGetJsonData from './RefreshToGetJsonData';
+import {selectIsLoadingJsonCheckDoorsDataFromFsCheckDoors} from '../../../../../../../../../slices/forgeStandard/checkDoors';
+import {resetAllFromForgeViewerSlice} from '../../../../../../../../../slices/forgeViewer';
 import {
-  ossApi,
   resetAllFromOssSlice,
-} from '../../../../../../../../../slices/oss/ossSlice';
-import {resetAllFromForgeViewerSlice} from '../../../../../../../../../slices/forgeViewer/forgeViewerSlice';
+  ossApi,
+} from '../../../../../../../../../slices/oss';
 
 const {Text} = Typography;
 
@@ -35,16 +47,32 @@ const formItemLayout = {
   wrapperCol: {span: 15},
 };
 
+const handleOnSendToGetCheckStandardData = async (formObject, callback) => {
+  try {
+    const formValues = await formObject?.validateFields();
+    callback(formValues);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export default function FormCheckDoors() {
+  const [designIdCheckDoors, setDesignIdCheckDoors] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoadingJsonCheckDoorsData, setIsLoadingJsonCheckDoorsData] =
+    useState(false);
+  const [step, setStep] = useState(0);
+
   // const [formDataToUpload, setFormDataToUpload] = useState(null);
 
   const [form] = Form.useForm();
-
   // ==========================================================================
   // Needed to post to server...
   // ==========================================================================
   const designInfoId = useSelector(selectIdFromDA);
+  const isLoadingJsonCheckDoorsDataFromFsCheckDoors = useSelector(
+    selectIsLoadingJsonCheckDoorsDataFromFsCheckDoors,
+  );
 
   const [postJsonCheckDoorsFormDataToServer, {isError, isSuccess}] =
     usePostJsonCheckDoorsFormDataToServerMutation();
@@ -55,7 +83,7 @@ export default function FormCheckDoors() {
   /**
    * After successfully sent data to server, Make a pull request
    * 15 seconds / request to get json data from server.
-   * ===========================================
+   * ============================================================
    * Using getDesignAutomationInfoByIdQuery with (designId)
    */
   const handleOnSend = useCallback(
@@ -72,16 +100,35 @@ export default function FormCheckDoors() {
           clientId: 'randomClientId',
           data: jsonString,
         };
-        setIsOpen(false);
+        // =======================================================
+        // close form
+        // =======================================================
+        // setIsOpen(false);
         console.log('from FormCheckDoors', jsonString);
         console.log('from postJsonCheckDoorsFormDataToServer', data);
-        await postJsonCheckDoorsFormDataToServer(data).unwrap();
+        const response = await postJsonCheckDoorsFormDataToServer(
+          data,
+        ).unwrap();
+
+        // =======================================================
+        // Set design id check door for Refresh components
+        // =======================================================
+        setDesignIdCheckDoors(response?.result.id);
+        setIsLoadingJsonCheckDoorsData(true);
+        setStep(1);
       } catch (error) {
         console.log(error);
       }
     },
     [designInfoId],
   );
+
+  const handleOnDone = useCallback(() => {
+    dispatch(resetAllFromOssSlice());
+    dispatch(resetAllFromForgeViewerSlice());
+    dispatch(ossApi.endpoints.getOssBuckets.initiate()).refetch();
+    setIsOpen(false);
+  }, []);
 
   const handleOnCancel = useCallback(() => {
     setIsOpen(false);
@@ -98,7 +145,7 @@ export default function FormCheckDoors() {
   //   return true;
   // }, [jsonTargetCategoryData]);
 
-  useEffect(() => {
+  useEffect(async () => {
     let content;
     if (isError) {
       content = (
@@ -131,12 +178,18 @@ export default function FormCheckDoors() {
         className: 'my-message',
       });
 
-      dispatch(resetAllFromOssSlice());
-      dispatch(resetAllFromForgeViewerSlice());
-      dispatch(resetAllFromDesignAutomation());
-      dispatch(ossApi.endpoints.getOssBuckets.initiate()).refetch();
+      // dispatch(resetAllFromOssSlice());
+      // dispatch(resetAllFromForgeViewerSlice());
+      // dispatch(ossApi.endpoints.getOssBuckets.initiate()).refetch();
+      // dispatch(resetAllFromDesignAutomation());
     }
   }, [isError, isSuccess]);
+
+  useEffect(() => {
+    if (!isLoadingJsonCheckDoorsDataFromFsCheckDoors) {
+      setStep(2);
+    }
+  }, [isLoadingJsonCheckDoorsDataFromFsCheckDoors]);
 
   return (
     <>
@@ -146,17 +199,15 @@ export default function FormCheckDoors() {
         centered
         visible={isOpen}
         onCancel={handleOnCancel}
-        onOk={async () => {
-          try {
-            const value = await form.validateFields();
-            handleOnSend(value);
-          } catch (error) {
-            console.log(error);
+        onOk={() => {
+          if (step !== 2) {
+            return handleOnSendToGetCheckStandardData(form, handleOnSend);
           }
+          return handleOnDone();
         }}
-        okText='Send'
-        width='400px'
-        bodyStyle={{height: 'auto'}}
+        okText={step !== 2 ? <span>Send</span> : <span>Done</span>}
+        width='600px'
+        bodyStyle={{height: 'auto', width: '100%'}}
         maskClosable={false}
         title={[
           <Text key='check-doors' style={{fontSize: '20px', fontWeight: '300'}}>
@@ -164,31 +215,57 @@ export default function FormCheckDoors() {
           </Text>,
         ]}
       >
-        <Form
-          form={form}
-          {...formItemLayout}
-          onFinish={handleOnSend}
-          initialValues={{
-            MaxLength: '5.0',
-            EpsilonCenter: '0.5',
-          }}
-          autoComplete='off'
+        <Space
+          direction='vertical'
+          size={[0, 16]}
+          align='center'
+          style={{width: '100%'}}
         >
-          <Form.Item
-            label='Max length'
-            name='MaxLength'
-            rules={[{required: true, message: 'Please input Max length!'}]}
+          <Form
+            form={form}
+            {...formItemLayout}
+            onFinish={handleOnSend}
+            initialValues={{
+              MaxLength: '5.0',
+              EpsilonCenter: '0.5',
+            }}
+            autoComplete='off'
+            style={{width: '400px'}}
           >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label='Epsilon center'
-            name='EpsilonCenter'
-            rules={[{required: true, message: 'Please input Epsilon center!'}]}
-          >
-            <Input />
-          </Form.Item>
-        </Form>
+            <Form.Item
+              label='Max length'
+              name='MaxLength'
+              rules={[{required: true, message: 'Please input Max length!'}]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label='Epsilon center'
+              name='EpsilonCenter'
+              rules={[
+                {required: true, message: 'Please input Epsilon center!'},
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          </Form>
+          <Steps size='small' current={step} style={{width: '450px'}}>
+            <Steps.Step title='Enter Inputs' />
+            <Steps.Step
+              title='In Progress'
+              icon={
+                isLoadingJsonCheckDoorsDataFromFsCheckDoors &&
+                isLoadingJsonCheckDoorsData ? (
+                  <RefreshToGetJsonData
+                    designInfoId={designIdCheckDoors}
+                    interval={15000}
+                  />
+                ) : null
+              }
+            />
+            <Steps.Step title='Finish' />
+          </Steps>
+        </Space>
       </Modal>
     </>
   );

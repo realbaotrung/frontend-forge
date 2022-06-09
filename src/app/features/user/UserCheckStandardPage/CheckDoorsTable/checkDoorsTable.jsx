@@ -1,5 +1,6 @@
 import {useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import PropsType from 'prop-types'
 import {Table} from 'antd';
 import ViewErrorDoor from './ViewErrorDoors/ViewErrorDoor';
 import {selectJsonCheckDoorDataFromFsCheckDoors, setFlattedExternalIdErrorDoors} from '../../../../slices/forgeStandard/checkDoors';
@@ -15,13 +16,7 @@ const styles = {
 };
 
 
-export default function CheckDoorsTable() {
-  // =================================
-  // Get json data from select data...
-  // =================================
-  const jsonCheckDoorsFromFsCheckDoors = useSelector(
-    selectJsonCheckDoorDataFromFsCheckDoors,
-  );
+export default function CheckDoorsTable({checkDoorsData}) {
 
   const dispatch = useDispatch();
 
@@ -29,13 +24,13 @@ export default function CheckDoorsTable() {
   // Set Flatted Error doors here...
   // =================================
   useEffect(() => {
-    dispatch(setFlattedExternalIdErrorDoors(jsonCheckDoorsFromFsCheckDoors))
-  }, [jsonCheckDoorsFromFsCheckDoors])
+    dispatch(setFlattedExternalIdErrorDoors(checkDoorsData))
+  }, [checkDoorsData])
 
   const checkDoorData = useMemo(() => {
     const data = [];
-    if (jsonCheckDoorsFromFsCheckDoors) {
-      jsonCheckDoorsFromFsCheckDoors?.forEach((levelData) => {
+    if (checkDoorsData) {
+      checkDoorsData?.forEach((levelData) => {
         const {validPercent, errorPercent} = calculateValidAndErrorByPercent(
           levelData.TotalDoor,
           levelData.WarningNumber,
@@ -51,7 +46,7 @@ export default function CheckDoorsTable() {
       });
     }
     return data;
-  }, [jsonCheckDoorsFromFsCheckDoors]);
+  }, [checkDoorsData]);
 
   const columns = [
     {
@@ -91,8 +86,13 @@ export default function CheckDoorsTable() {
   );
 }
 
+
+CheckDoorsTable.propTypes = {
+  checkDoorsData: PropsType.array.isRequired,
+}
 /*
 eslint
   jsx-a11y/anchor-is-valid: 0,
-  no-plusplus: 0 
+  no-plusplus: 0,
+  react/forbid-prop-types: 0
 */
