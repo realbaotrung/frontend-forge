@@ -61,25 +61,25 @@ function ForgeViewer({
 
 ForgeViewer.displayName = 'ForgeViewer'
 
-ForgeViewer.propsType = {
-  version: PropsTypes.string.isRequired,
-  className: PropsTypes.string.isRequired,
-  style: PropsTypes.object.isRequired,
-  token: PropsTypes.string.isRequired,
-  urn: PropsTypes.string.isRequired,
-  initializerOptions: PropsTypes.object.isRequired,
-  onDocumentLoadSuccess: PropsTypes.func.isRequired,
-  onDocumentLoadError: PropsTypes.func.isRequired,
-  headless: PropsTypes.bool.isRequired,
-  viewerOptions: PropsTypes.object.isRequired,
-  viewableOptions: PropsTypes.object.isRequired,
-  onInit: PropsTypes.func.isRequired,
-  disableLoader: PropsTypes.bool.isRequired,
-  extensions: PropsTypes.array.isRequired,
-  onModelLoaded: PropsTypes.func.isRequired,
-  onViewerInitialized: PropsTypes.func.isRequired,
-  skipHiddenFragments: PropsTypes.bool.isRequired,
-};
+// ForgeViewer.propTypes = {
+//   version: PropsTypes.string.isRequired,
+//   className: PropsTypes.string.isRequired,
+//   style: PropsTypes.object.isRequired,
+//   token: PropsTypes.string.isRequired,
+//   urn: PropsTypes.string.isRequired,
+//   initializerOptions: PropsTypes.object.isRequired,
+//   onDocumentLoadSuccess: PropsTypes.func.isRequired,
+//   onDocumentLoadError: PropsTypes.func.isRequired,
+//   headless: PropsTypes.bool.isRequired,
+//   viewerOptions: PropsTypes.object.isRequired,
+//   viewableOptions: PropsTypes.object.isRequired,
+//   onInit: PropsTypes.func.isRequired,
+//   disableLoader: PropsTypes.bool.isRequired,
+//   extensions: PropsTypes.array.isRequired,
+//   onModelLoaded: PropsTypes.func.isRequired,
+//   onViewerInitialized: PropsTypes.func.isRequired,
+//   skipHiddenFragments: PropsTypes.bool.isRequired,
+// };
 
 ForgeViewer.defaultProps = {
   version: DEFAULT_VERSION,

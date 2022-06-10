@@ -13,8 +13,8 @@ import {
 import {ExampleExtension} from '../../../../../utils/ForgeViewer/exts/example.extension';
 
 const style = {
-  width: 'calc((100vw - 600px))',
-  height: 'calc(100vh - 48px)',
+  width: 'inherit',
+  height: 'inherit',
 };
 
 const extensions = [ExampleExtension];

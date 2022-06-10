@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {Empty} from 'antd';
 import {checkDoorDataJson} from './fakeData/data';
 import {selectTokenOAuth2LeggedFromOAUTH} from '../../../slices/oAuth';
 import {selectView3DsFromFV} from '../../../slices/forgeViewer';
@@ -21,13 +22,11 @@ export default function UserCheckStandardPage() {
   const [token, setToken] = useState(null);
   const [guid3d, setGuid3d] = useState(null);
   const [urn, setUrn] = useState(null);
+  const [checkDoorsData, setCheckDoorsData] = useState(null);
 
   const token2legged = useSelector(selectTokenOAuth2LeggedFromOAUTH);
   const view3Ds = useSelector(selectView3DsFromFV);
   const urnFromMD = useSelector(selectUrnFromMD);
-  // ==========================================================
-  // Get json data after check doors form get data successfully
-  // ==========================================================
   const checkDoorsFromFsCheckDoors = useSelector(
     selectJsonCheckDoorsDataFromFsCheckDoors,
   );
@@ -40,6 +39,12 @@ export default function UserCheckStandardPage() {
     }
   }, [token2legged, view3Ds, urnFromMD]);
 
+  useEffect(() => {
+    if (checkDoorsFromFsCheckDoors) {
+      setCheckDoorsData(checkDoorsFromFsCheckDoors);
+    }
+  }, [checkDoorsFromFsCheckDoors]);
+
   // Data from check door
   // ======================================
   // Get all check standard data here...
@@ -48,21 +53,38 @@ export default function UserCheckStandardPage() {
 
   return (
     <div>
-      {checkDoorsFromFsCheckDoors && token && guid3d && urn && (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+          alignItems: 'flex-start',
+        }}
+      >
+        <div style={styles}>
+          <TableCheckStandard dataCheckStandard={checkDoorsData} />
+          <CheckDoorsTable dataCheckStandard={checkDoorsData} />
+        </div>
         <div
           style={{
-            display: 'flex',
+            position: 'relative',
+            width: '100%',
+            height: 'calc(100vh - 48px)',
           }}
         >
-          <div style={styles}>
-            <TableCheckStandard checkDoorsData={checkDoorsFromFsCheckDoors} />
-            <CheckDoorsTable checkDoorsData={checkDoorsFromFsCheckDoors} />
-          </div>
-          <div>
+          {token && guid3d && urn ? (
             <ForgeViewerTest token={token} urn={urn} guid={guid3d} />
-          </div>
+          ) : (
+            <Empty
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+            />
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

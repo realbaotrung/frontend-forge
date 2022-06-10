@@ -7,6 +7,7 @@ import {
   setIsLoadingJsonCheckDoorsDataFromServer,
   setJsonCheckDoorsData,
 } from '../../../../../../../../../slices/forgeStandard/checkDoors';
+import {alertErrorMessage} from '../../../../../../../../../../utils/helpers.utils';
 
 export default function RefreshToGetJsonData({designInfoId, interval}) {
   const [pollInterval, setPollInterval] = useState(interval);
@@ -24,16 +25,25 @@ export default function RefreshToGetJsonData({designInfoId, interval}) {
     const stringJsonData = data?.result?.data;
 
     if (status < 1) {
+      const title = 'Can get json data of design automation from server';
       if (status === -1) {
         // show error message
         setPollInterval(0);
         dispatch(setIsLoadingJsonCheckDoorsDataFromServer(false));
-        console.error('Can get json data of design automation from server');
+        console.error(title);
+        alertErrorMessage(title);
       }
-      if (status === 0 && stringJsonData) {
-        setPollInterval(0);
-        dispatch(setIsLoadingJsonCheckDoorsDataFromServer(false));
-        dispatch(setJsonCheckDoorsData(stringJsonData));
+      if (status === 0) {
+        if (!stringJsonData) {
+          setPollInterval(0);
+          dispatch(setIsLoadingJsonCheckDoorsDataFromServer(false));
+          console.error(title);
+          alertErrorMessage(title);
+        } else {
+          setPollInterval(0);
+          dispatch(setIsLoadingJsonCheckDoorsDataFromServer(false));
+          dispatch(setJsonCheckDoorsData(stringJsonData));
+        }
       }
     }
   }, [data]);

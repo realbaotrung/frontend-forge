@@ -35,15 +35,16 @@ import {
   resetAllFromOssSlice,
 } from '../../../../../../../../../slices/oss/ossSlice';
 import {resetAllFromForgeViewerSlice} from '../../../../../../../../../slices/forgeViewer/forgeViewerSlice';
+import {
+  alertErrorMessage,
+  alertSuccessMessage,
+} from '../../../../../../../../../../utils/helpers.utils';
 
 const {Text} = Typography;
 
 function ButtonShowCategoryForm({title, onOpen}) {
   return (
-    <Button
-      onClick={onOpen}
-      type='ghost'
-    >
+    <Button onClick={onOpen} type='ghost'>
       {title}
     </Button>
   );
@@ -55,7 +56,7 @@ ButtonShowCategoryForm.propTypes = {
 };
 
 export default function FormScheduleCategory() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   const jsonScheduleData = useSelector(selectJsonDataFromServerFromDA);
   const categoryData = useSelector(selectCategoryDataFromDA);
@@ -144,7 +145,7 @@ export default function FormScheduleCategory() {
 
   const handleOnOpen = useCallback(() => {
     setIsOpen(true);
-  }, [isOpen])
+  }, [isOpen]);
 
   const isVisibleButton = useCallback(() => {
     if (categoryKeyName && jsonTargetCategoryData) {
@@ -154,37 +155,12 @@ export default function FormScheduleCategory() {
   }, [categoryKeyName, jsonTargetCategoryData]);
 
   useEffect(() => {
-    let content;
     if (isError) {
-      content = (
-        <Alert
-          description='Fail to send options to server!'
-          type='error'
-          closeable
-          showIcon
-        />
-      );
-      message.open({
-        content,
-        duration: 5,
-        className: 'my-message',
-      });
+      alertErrorMessage('Fail to send options to server!');
       dispatch(resetAllFromDesignAutomation());
     }
     if (isSuccess) {
-      content = (
-        <Alert
-          description='You options were sent successfully!'
-          type='success'
-          closeable
-          showIcon
-        />
-      );
-      message.open({
-        content,
-        duration: 5,
-        className: 'my-message',
-      });
+      alertSuccessMessage('You options were sent successfully!');
 
       dispatch(resetAllFromOssSlice());
       dispatch(resetAllFromForgeViewerSlice());
@@ -195,7 +171,7 @@ export default function FormScheduleCategory() {
 
   return (
     <>
-      <ButtonShowCategoryForm title='Add schedule' onOpen={handleOnOpen}/>
+      <ButtonShowCategoryForm title='Add schedule' onOpen={handleOnOpen} />
 
       <Modal
         centered

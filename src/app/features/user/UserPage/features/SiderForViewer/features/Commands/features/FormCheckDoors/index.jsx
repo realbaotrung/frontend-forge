@@ -26,6 +26,10 @@ import {
   resetAllFromOssSlice,
   ossApi,
 } from '../../../../../../../../../slices/oss';
+import {
+  alertErrorMessage,
+  alertSuccessMessage,
+} from '../../../../../../../../../../utils/helpers.utils';
 
 const {Text} = Typography;
 
@@ -146,37 +150,12 @@ export default function FormCheckDoors() {
   // }, [jsonTargetCategoryData]);
 
   useEffect(async () => {
-    let content;
     if (isError) {
-      content = (
-        <Alert
-          description='Fail to send options to server!'
-          type='error'
-          closeable
-          showIcon
-        />
-      );
-      message.open({
-        content,
-        duration: 5,
-        className: 'my-message',
-      });
+      alertErrorMessage('Fail to send options to server!');
       dispatch(resetAllFromDesignAutomation());
     }
     if (isSuccess) {
-      content = (
-        <Alert
-          description='You options were sent successfully!'
-          type='success'
-          closeable
-          showIcon
-        />
-      );
-      message.open({
-        content,
-        duration: 5,
-        className: 'my-message',
-      });
+      alertSuccessMessage('You options were sent successfully!');
 
       // dispatch(resetAllFromOssSlice());
       // dispatch(resetAllFromForgeViewerSlice());
@@ -209,6 +188,7 @@ export default function FormCheckDoors() {
         width='600px'
         bodyStyle={{height: 'auto', width: '100%'}}
         maskClosable={false}
+        okButtonProps={{disabled: step === 1}}
         title={[
           <Text key='check-doors' style={{fontSize: '20px', fontWeight: '300'}}>
             Check doors

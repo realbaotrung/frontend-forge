@@ -1,10 +1,10 @@
-import {useEffect, useMemo} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import PropsType from 'prop-types'
+import {useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
+import PropsType from 'prop-types';
 import {Table} from 'antd';
 import ViewErrorDoor from './ViewErrorDoors/ViewErrorDoor';
-import {selectJsonCheckDoorDataFromFsCheckDoors, setFlattedExternalIdErrorDoors} from '../../../../slices/forgeStandard/checkDoors';
-import { calculateValidAndErrorByPercent } from '../../../../../utils/helpers.utils';
+import {setFlattedExternalIdErrorDoors} from '../../../../slices/forgeStandard/checkDoors';
+import {calculateValidAndErrorByPercent} from '../../../../../utils/helpers.utils';
 
 const styles = {
   paddingInline: '8px',
@@ -15,8 +15,9 @@ const styles = {
   whiteSpace: 'nowrap',
 };
 
+export default function CheckDoorsTable({dataCheckStandard}) {
 
-export default function CheckDoorsTable({checkDoorsData}) {
+  const [checkDoorsData, setCheckDoorsData] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -24,10 +25,13 @@ export default function CheckDoorsTable({checkDoorsData}) {
   // Set Flatted Error doors here...
   // =================================
   useEffect(() => {
-    dispatch(setFlattedExternalIdErrorDoors(checkDoorsData))
-  }, [checkDoorsData])
+    if (dataCheckStandard) {
+      dispatch(setFlattedExternalIdErrorDoors(dataCheckStandard));
+      setCheckDoorsData(dataCheckStandard);
+    }
+  }, [dataCheckStandard]);
 
-  const checkDoorData = useMemo(() => {
+  const dataSource = useMemo(() => {
     const data = [];
     if (checkDoorsData) {
       checkDoorsData?.forEach((levelData) => {
@@ -41,7 +45,9 @@ export default function CheckDoorsTable({checkDoorsData}) {
           'valid-(%)': validPercent,
           'error-(%)': errorPercent,
           'error-doors': levelData.WarningNumber,
-          'view-error-details': <ViewErrorDoor warningData={levelData.WarningData}/>,
+          'view-error-details': (
+            <ViewErrorDoor warningData={levelData.WarningData} />
+          ),
         });
       });
     }
@@ -80,18 +86,21 @@ export default function CheckDoorsTable({checkDoorsData}) {
     <Table
       style={styles}
       columns={columns}
-      dataSource={checkDoorData}
+      dataSource={dataCheckStandard ? dataSource : []}
       pagination={false}
     />
   );
 }
 
-
-CheckDoorsTable.propTypes = {
-  checkDoorsData: PropsType.array.isRequired,
-}
+// CheckDoorsTable.propTypes = {
+//   checkDoorsData: PropsType.array.isRequired,
+// };
+CheckDoorsTable.defaultProps = {
+  dataCheckStandard: [],
+};
 /*
 eslint
+  react/prop-types: 0,
   jsx-a11y/anchor-is-valid: 0,
   no-plusplus: 0,
   react/forbid-prop-types: 0

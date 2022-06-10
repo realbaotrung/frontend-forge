@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import './canvasViewer.css';
-import {Switch} from 'antd';
+import {Empty, Switch} from 'antd';
 import {
   selectIsLoadingModelFromMD,
   selectUrnFromMD,
@@ -85,7 +85,7 @@ export default function CanvasViewer() {
         </>
       )} */}
       <div>
-        {/* {!urnFromMD && !token2Legged && <Empty className='center-position' />} */}
+        {!urnFromMD && !token2Legged && <Empty className='center-position' />}
         {!isLoadingModel &&
           showSplitViewer &&
           urnFromMD &&

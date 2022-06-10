@@ -1,16 +1,10 @@
-import React, {useEffect, useMemo} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import PropsType from 'prop-types'
+import React, {useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
+import PropsType from 'prop-types';
 import {Table} from 'antd';
 import TotalErrorDoors from './ViewTotalErrors/TotalErrorDoors';
-import {
-  selectJsonCheckDoorDataFromFsCheckDoors,
-  setFlattedExternalIdErrorDoors,
-} from '../../../../slices/forgeStandard/checkDoors';
-import {
-  calculateValidAndErrorByPercent,
-  calculateTotalValidAndErrorByPercent,
-} from '../../../../../utils/helpers.utils';
+import {setFlattedExternalIdErrorDoors} from '../../../../slices/forgeStandard/checkDoors';
+import {calculateTotalValidAndErrorByPercent} from '../../../../../utils/helpers.utils';
 
 const styles = {
   paddingInline: '8px',
@@ -21,13 +15,18 @@ const styles = {
   whiteSpace: 'nowrap',
 };
 
-export default function TableCheckStandard({checkDoorsData}) {
+export default function TableCheckStandard({dataCheckStandard}) {
+
+  const [checkDoorsData, setCheckDoorsData] = useState([]);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setFlattedExternalIdErrorDoors(checkDoorsData));
-  }, [checkDoorsData]);
+    if (dataCheckStandard) {
+      dispatch(setFlattedExternalIdErrorDoors(dataCheckStandard));
+      setCheckDoorsData(dataCheckStandard);
+    }
+  }, [dataCheckStandard]);
 
   const dataSource = useMemo(() => {
     const data = [];
@@ -98,19 +97,25 @@ export default function TableCheckStandard({checkDoorsData}) {
 
   return (
     <Table
-      rowSelection={rowSelection}
+      // rowSelection={rowSelection}
       style={styles}
       columns={columns}
-      dataSource={dataSource}
+      dataSource={dataCheckStandard ? dataSource : []}
+      pagination={false}
     />
   );
 }
 
-TableCheckStandard.propTypes = {
-  checkDoorsData: PropsType.array.isRequired,
+// TableCheckStandard.propTypes = {
+//   dataCheckStandard: PropsType.array.isRequired,
+// };
+
+TableCheckStandard.defaultProps = {
+  dataCheckStandard: [],
 }
 /*
 eslint
+  react/prop-types: 0,
   jsx-a11y/anchor-is-valid: 0,
   no-plusplus: 0,
   react/forbid-prop-types: 0
