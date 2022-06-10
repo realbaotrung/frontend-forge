@@ -30,6 +30,9 @@ export default function NavBarAdmin({children}) {
               <Menu.Item key='2' icon={<VideoCameraOutlined />}>
                 <Link to='/admin/categories'>Bundle Category</Link>
               </Menu.Item>
+              <Menu.Item key='3' icon={<VideoCameraOutlined />}>
+                <Link to='/admin/check-standard'>Check Standard</Link>
+              </Menu.Item>
             </Menu>
           </Col>
           <Col span={4} order={3} xs={{span: 10}} md={{span: 7}} lg={{span: 3}}>

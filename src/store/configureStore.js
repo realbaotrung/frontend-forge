@@ -10,6 +10,7 @@ import {reducer as fsCheckDoorsReducer} from '../app/slices/forgeStandard/checkD
 import {apiRtk} from '../api/rtkQuery';
 import bundleReducer from '../app/slices/bundle/bundleSlice';
 import bundleCategoryReducer from '../app/slices/bundleCategory/bundleCategorySlice';
+import checkStandardReducer from '../app/slices/checkStandard/checkStandardSlice';
 
 /**
  * All reducers put here...
@@ -21,6 +22,7 @@ const store = configureStore({
     oAuth: oAuthReducer,
     bundle: bundleReducer,
     bundleCategory: bundleCategoryReducer,
+    checkStandard: checkStandardReducer,
     designAutomation: designAutomationReducer,
     oss: ossReducer,
     modelDerivative: modelDerivativeReducer,
