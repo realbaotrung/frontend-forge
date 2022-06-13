@@ -35,7 +35,7 @@ const {Text} = Typography;
 
 function ButtonShowCheckDoorsForm({title, onOpen}) {
   return (
-    <Button onClick={onOpen} type='ghost'>
+    <Button onClick={onOpen} type='link'>
       {title}
     </Button>
   );

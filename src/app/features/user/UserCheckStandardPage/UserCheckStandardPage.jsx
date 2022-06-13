@@ -22,6 +22,7 @@ export default function UserCheckStandardPage() {
   const [token, setToken] = useState(null);
   const [guid3d, setGuid3d] = useState(null);
   const [urn, setUrn] = useState(null);
+  const [isHasData, setIsHasData] = useState(false);
   const [checkDoorsData, setCheckDoorsData] = useState(null);
 
   const token2legged = useSelector(selectTokenOAuth2LeggedFromOAUTH);
@@ -36,6 +37,7 @@ export default function UserCheckStandardPage() {
       setToken(token2legged);
       setGuid3d(view3Ds[0]?.guid);
       setUrn(urnFromMD);
+      setIsHasData(true);
     }
   }, [token2legged, view3Ds, urnFromMD]);
 
@@ -44,6 +46,10 @@ export default function UserCheckStandardPage() {
       setCheckDoorsData(checkDoorsFromFsCheckDoors);
     }
   }, [checkDoorsFromFsCheckDoors]);
+
+  // useEffect(() => {
+  //   setCheckDoorsData(checkDoorDataJson);
+  // }, [checkDoorDataJson]);
 
   // Data from check door
   // ======================================
@@ -71,7 +77,7 @@ export default function UserCheckStandardPage() {
             height: 'calc(100vh - 48px)',
           }}
         >
-          {token && guid3d && urn ? (
+          {isHasData ? (
             <ForgeViewerTest token={token} urn={urn} guid={guid3d} />
           ) : (
             <Empty

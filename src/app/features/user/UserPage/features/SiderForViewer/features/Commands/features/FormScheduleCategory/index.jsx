@@ -44,7 +44,7 @@ const {Text} = Typography;
 
 function ButtonShowCategoryForm({title, onOpen}) {
   return (
-    <Button onClick={onOpen} type='ghost'>
+    <Button onClick={onOpen} type='link'>
       {title}
     </Button>
   );

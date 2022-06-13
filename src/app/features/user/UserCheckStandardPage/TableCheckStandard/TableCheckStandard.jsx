@@ -33,11 +33,15 @@ export default function TableCheckStandard({dataCheckStandard}) {
 
     const totalDoorsAllLevels = [];
     const totalWarningNumberAllLevels = [];
+    let standardName = ''
 
     if (checkDoorsData) {
       checkDoorsData?.forEach((levelData) => {
         totalDoorsAllLevels.push(levelData.TotalDoor);
         totalWarningNumberAllLevels.push(levelData.WarningNumber);
+        if (Object.keys(levelData).includes('TotalDoor')) {
+          standardName = 'Check Doors';
+        }
       });
     }
 
@@ -49,7 +53,7 @@ export default function TableCheckStandard({dataCheckStandard}) {
 
     const checkDoors = {
       key: 'Check Doors',
-      'name-of-standards': 'Check Doors',
+      'name-of-standards': standardName,
       'total-valid-(%)': totalValidByPercent,
       'total-errors-(%)': totalErrorByPercent,
       'view-total-errors': <TotalErrorDoors />,
