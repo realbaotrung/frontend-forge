@@ -31,7 +31,6 @@ export default function BundlePage() {
         size: SystemContants.PAGE_SIZE,
       }),
     );
-    console.log(bundle);
   }, [dispatch]);
 
   const onAddBundle = () => {

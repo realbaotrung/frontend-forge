@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Button, Form, Modal, Input, Upload, Select, Spin} from 'antd';
+import {Button, Form, Modal, Input, Upload, Select, Spin, Switch} from 'antd';
 import {UploadOutlined, StarOutlined} from '@ant-design/icons';
 import {
   getVersionRevit,
@@ -49,13 +49,18 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
     formData.append('Description', value.description);
     formData.append('VersionRevit', value.versionRevit);
     formData.append('BundleCategoryId', value.bundleCategoryId);
+    formData.append('requireBase', Number(value.requireBase));
+    formData.append('requireInput', Number(value.requireInput));
+    formData.append('requireCallBack', Number(value.requireCallBack));
     if (uploadFile) {
       formData.append('File', uploadFile);
     }
+
     if (editingBundle.id === undefined) {
       dispatch(postBundle(formData));
     } else {
       dispatch(putBundle({data: formData, id: editingBundle.id}));
+      console.log(formData.append('Description', value.description));
     }
   };
   const onFinishFailed = (errorInfo) => {};
@@ -83,11 +88,11 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
       showRemoveIcon: false,
     },
   };
-
   return (
     <Modal
-      title={editingBundle != null ? 'Edit' : 'Add'}
+      title={editingBundle.id === undefined ? 'Add' : 'Edit'}
       visible={isEditing}
+      style={{top: '20px'}}
       okText='Save'
       forceRender
       onCancel={() => {
@@ -116,6 +121,9 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
           description: editingBundle?.description,
           bundleCategoryId: editingBundle?.bundleCategoryId,
           versionRevit: editingBundle?.versionRevit,
+          requireBase: editingBundle?.requireBase,
+          requireInput: editingBundle?.requireInput,
+          requireCallBack: editingBundle?.requireCallBack,
         }}
         autoComplete='off'
       >
@@ -160,6 +168,28 @@ export default function BundleModal({resetEditing, isEditing, editingBundle}) {
           >
             <Button icon={<UploadOutlined />}>Click to Upload</Button>
           </Upload>
+        </Form.Item>
+
+        <Form.Item
+          label='Require base function'
+          name='requireBase'
+          value={editingBundle?.requireBase}
+        >
+          <Switch defaultChecked={!!editingBundle?.requireBase} />
+        </Form.Item>
+        <Form.Item
+          label='Require input json'
+          name='requireInput'
+          value={editingBundle?.requireInput}
+        >
+          <Switch defaultChecked={!!editingBundle?.requireInput} />
+        </Form.Item>
+        <Form.Item
+          label='Require callback'
+          name='requireCallBack'
+          value={editingBundle?.requireCallBack}
+        >
+          <Switch defaultChecked={!!editingBundle?.requireCallBack} />
         </Form.Item>
 
         {/* <Form.Item wrapperCol={{offset: 8, span: 16}}>

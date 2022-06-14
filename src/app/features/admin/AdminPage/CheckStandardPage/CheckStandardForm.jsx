@@ -37,6 +37,7 @@ export default function CheckStandardForm({
           id: editingStandard.id,
         }),
       );
+      console.log(values);
     }
   };
   // let visiable = true
@@ -149,7 +150,7 @@ export default function CheckStandardForm({
   let htmlModal = (
     <Modal
       style={{top: '40px'}}
-      title={editingStandard != null ? 'Edit' : 'Add'}
+      title={editingStandard.id === undefined ? 'Add' : 'Edit'}
       visible={isEditing}
       okText='Save'
       forceRender

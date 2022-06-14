@@ -7,6 +7,9 @@ export class BundleModel {
     versionRevit,
     bundleCategory,
     bundleCategoryId,
+    requireBase,
+    requireInput,
+    requireCallBack,
   ) {
     this.id = id;
     this.name = name;
@@ -15,5 +18,8 @@ export class BundleModel {
     this.versionRevit = versionRevit;
     this.bundleCategory = bundleCategory;
     this.bundleCategoryId = bundleCategoryId;
+    this.requireBase = requireBase;
+    this.requireInput = requireInput;
+    this.requireCallBack = requireCallBack;
   }
 }
