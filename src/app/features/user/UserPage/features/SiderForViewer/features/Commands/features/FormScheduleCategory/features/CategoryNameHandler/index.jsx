@@ -1,18 +1,17 @@
 import {useCallback, useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Typography, Select} from 'antd';
-import {selectCategoryNamesFromDA} from '../../../../../../../../../slices/designAutomation/selectors';
+import {selectCategoryNamesFromDA} from '../../../../../../../../../../../slices/designAutomation/selectors';
 import {
-  getCategoryKeyName,
-  getScheduleName,
-} from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
+  setCategoryKeyName,
+  setScheduleName,
+} from '../../../../../../../../../../../slices/designAutomation/designAutomationSlice';
 
 const {Text} = Typography;
 const {Option} = Select;
 
 export default function CategoryNameHandler() {
   const categoryNames = useSelector(selectCategoryNamesFromDA);
-  console.log(categoryNames);
 
   const dispatch = useDispatch();
 
@@ -23,9 +22,9 @@ export default function CategoryNameHandler() {
   ));
 
   const handleOnSelect = useCallback((value) => {
-    dispatch(getCategoryKeyName(value));
+    dispatch(setCategoryKeyName(value));
     const timestamp = new Date().getTime();
-    dispatch(getScheduleName(`${value.toString()} ${timestamp.toString()}`));
+    dispatch(setScheduleName(`${value.toString()} ${timestamp.toString()}`));
   }, []);
 
   const selectProps = useMemo(() => {

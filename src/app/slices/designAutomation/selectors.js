@@ -18,9 +18,9 @@ export const selectRevitFileNameFromDA = createSelector(
   (designAutomationState) => designAutomationState.revitFileName,
 );
 
-export const selectJsonScheduleDataFromDA = createSelector(
+export const selectJsonDataFromServerFromDA = createSelector(
   [selectDomain],
-  (designAutomationState) => designAutomationState.jsonScheduleData,
+  (designAutomationState) => designAutomationState.jsonDataFromServer,
 );
 
 export const selectCategoryDataFromDA = createSelector(
@@ -64,9 +64,4 @@ export const selectJsonFinalCategoryDataToUploadFromDA = createSelector(
   [selectDomain],
   (designAutomationState) =>
     designAutomationState.jsonFinalCategoryDataToUpload,
-);
-
-export const selectIsOpenFormScheduleCategoryFromDA = createSelector(
-  [selectDomain],
-  (designAutomationState) => designAutomationState.isOpenFormScheduleCategory,
 );

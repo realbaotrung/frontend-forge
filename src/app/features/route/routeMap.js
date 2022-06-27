@@ -3,9 +3,8 @@ import {loadable as MissingPage} from '../notfound/MissingPage/Loadable';
 import {loadable as UserPage} from '../user/UserPage/Loadable';
 import routePaths from './routePaths';
 import BundlePage from '../admin/AdminPage/BundlePage';
-
-import CategoriesPage
-  from "../admin/AdminPage/CategoriesPage";
+import UserCheckStandardPage from '../user/UserCheckStandardPage/UserCheckStandardPage';
+import CategoriesPage from '../admin/AdminPage/CategoriesPage';
 import CheckStandardPage from '../admin/AdminPage/CheckStandardPage';
 
  const routes = [
@@ -29,6 +28,13 @@ import CheckStandardPage from '../admin/AdminPage/CheckStandardPage';
     isAuth: true,
     isAdmin: false,
     component: <UserPage />,
+  },
+  {
+    id: 'userCheckStandardPage',
+    path: routePaths.USER_CHECK_STANDARD_URL,
+    isAuth: true,
+    isAdmin: false,
+    component: <UserCheckStandardPage />,
   },
   {
     id: 'admin',
@@ -56,7 +62,7 @@ import CheckStandardPage from '../admin/AdminPage/CheckStandardPage';
     path: '/admin/check-standard',
     isAuth: true,
     isAdmin: true,
-    component: <CheckStandardPage/>,
+    component: <CheckStandardPage />,
   },
   {
     id: 'missingPage',

@@ -3,7 +3,7 @@
 // https://linuxhint.com/javascript-abstraction/
 export class Extension {
   constructor(
-    viewer, // Autodesk.Viewing.Viewer3D
+    viewer, // Autodesk.Viewing.Viewer3D || Autodesk.Viewing.GuiViewer3D
     options, // Autodesk.Viewing.ExtensionOptions
   ) {
     if (this.constructor === Extension) {
@@ -13,11 +13,11 @@ export class Extension {
     this.extOptions = options || {};
   }
 
-  load() {
+  async load() {
     throw new Error(' Abstract method has no implementation');
   }
 
-  unload() {
+  async unload() {
     throw new Error(' Abstract method has no implementation');
   }
 

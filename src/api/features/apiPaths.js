@@ -15,7 +15,10 @@ export const apiPaths = {
 
   // Design automation
   API_DESIGNAUTOMATION_ACTIVITIES: '/forge/designautomation/activities',
-  API_DESIGNAUTOMATION_START: '/forge/designautomation/start',
+  //
+  API_DESIGNAUTOMATION_SCHEDULE_START: '/forge/designautomation/schedule-start',
+  API_DESIGNAUTOMATION_CHECK_START: '/forge/designautomation/check-start',
+  //
   API_DESIGNAUTOMATION_GET_INFO_PROJECT:
     '/forge/designautomation/get-info-project',
   API_DESIGNAUTOMATION_ENGINES: '/forge/designautomation/engines',

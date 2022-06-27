@@ -1,15 +1,16 @@
 import {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {Alert, message} from 'antd';
 import {Text, VStack, Spinner} from '@chakra-ui/react';
 import {selectIdFromDA} from '../../../../../../../../../slices/designAutomation/selectors';
 import {
-  getJsonDataFromServer,
+  setJsonDataFromServer,
   useGetDesignAutomationInfoByIdQuery,
 } from '../../../../../../../../../slices/designAutomation/designAutomationSlice';
+import { alertErrorMessage } from '../../../../../../../../../../utils/helpers.utils';
 
 export default function RefetchToShowLoadingAndGetJsonData() {
   const [pollInterval, setPollInterval] = useState(10000);
-  const [count, setCount] = useState(1);
 
   const idFromDA = useSelector(selectIdFromDA);
 
@@ -26,19 +27,26 @@ export default function RefetchToShowLoadingAndGetJsonData() {
     const stringJsonData = data?.result?.data;
 
     if (status < 1) {
+      const title = 'Can get json data of design automation from server'
       if (status === -1) {
         // show error message
         setPollInterval(0);
-        console.error('Can get json data of design automation from server');
+        console.error(title);
+        alertErrorMessage(title);
       }
-      if (status === 0 && stringJsonData) {
-        setPollInterval(0);
-        dispatch(getJsonDataFromServer(stringJsonData));
+      if (status === 0) {
+        if (!stringJsonData) {
+          setPollInterval(0);
+          console.error(title);
+          alertErrorMessage(title);
+        } else {
+          setPollInterval(0);
+          dispatch(setJsonDataFromServer(stringJsonData));
+        }
       }
     }
   }, [data]);
 
-  // {!hasLoadingFromDA && !jsonDataFromDA && <Spinner size='xl' />}
   return (
     <VStack w='full' h='18.125rem' justify='center' align='center'>
       <Spinner pb='0.75rem' size='lg' />

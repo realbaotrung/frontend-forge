@@ -38,3 +38,20 @@
   color: #fff;
   max-width: 63px;
 }
+
+.forge-viewer {
+  width: calc(100vw - 318px);
+  height: calc(100vh - 144px);
+}
+
+.extensions-ribbon {
+  height: 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: start;
+  align-items: center;
+}
+.grid-forge-viewer-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}

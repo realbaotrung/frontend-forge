@@ -1,17 +1,32 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Layout, Tabs, Typography, Menu, Badge, Button, Spin} from 'antd';
+import {
+  Layout,
+  Tabs,
+  Typography,
+  Menu,
+  Badge,
+  Button,
+  Spin,
+  Dropdown,
+  Space,
+} from 'antd';
 import {
   WindowsOutlined,
   CodeSandboxOutlined,
   EyeOutlined,
   FolderOpenOutlined,
   ReloadOutlined,
+  SmileOutlined,
+  DownOutlined,
 } from '@ant-design/icons';
 import ForgeTree from './features/ForgeTree';
 import Forge2DList from './features/Forge2DList';
 import Forge3DList from './features/Forge3DList';
-import FormScheduleCategory from './features/FormScheduleCategory';
+import FormScheduleCategory from './features/Commands/features/FormScheduleCategory';
 import FormUploadFiles from './features/FormUploadFiles';
 import {
   setIsChosenFile,
@@ -28,6 +43,7 @@ import {
   selectView3DsFromFV,
   resetAllFromForgeViewerSlice,
 } from '../../../../../slices/forgeViewer';
+import Commands from './features/Commands';
 
 const {Sider} = Layout;
 const {TabPane} = Tabs;
@@ -104,7 +120,7 @@ export default function SiderForViewer() {
             }}
           >
             <FormUploadFiles />
-            <FormScheduleCategory />
+            <Commands />
             <Button
               onClick={handleLoading}
               type='ghost'

@@ -58,9 +58,21 @@ const postDesignAutomationGetInfoProjectMutation = {
   },
 };
 
-const postJsonFinalCategoryDataToServerMutation = {
+const postJsonScheduleFormDataToServerMutation = {
   query: (data) => ({
-    url: apiPaths.API_DESIGNAUTOMATION_START,
+    url: apiPaths.API_DESIGNAUTOMATION_SCHEDULE_START,
+    method: 'POST',
+    data,
+  }),
+  transformResponse: (response) => {
+    console.log(response);
+    return response;
+  },
+};
+
+const postJsonCheckDoorsFormDataToServerMutation = {
+  query: (data) => ({
+    url: apiPaths.API_DESIGNAUTOMATION_CHECK_START,
     method: 'POST',
     data,
   }),
@@ -82,8 +94,11 @@ export const designAutomationApi = apiRtk.injectEndpoints({
     postDesignAutomationGetInfoProject: builder.mutation(
       postDesignAutomationGetInfoProjectMutation,
     ),
-    postJsonFinalCategoryDataToServer: builder.mutation(
-      postJsonFinalCategoryDataToServerMutation,
+    postJsonScheduleFormDataToServer: builder.mutation(
+      postJsonScheduleFormDataToServerMutation,
+    ),
+    postJsonCheckDoorsFormDataToServer: builder.mutation(
+      postJsonCheckDoorsFormDataToServerMutation,
     ),
   }),
 });
@@ -93,7 +108,8 @@ export const {
   useGetDesignAutomationInfoByIdQuery,
   useGetDesignAutomationEngineQuery,
   usePostDesignAutomationGetInfoProjectMutation,
-  usePostJsonFinalCategoryDataToServerMutation,
+  usePostJsonScheduleFormDataToServerMutation,
+  usePostJsonCheckDoorsFormDataToServerMutation,
 } = designAutomationApi;
 
 // ============================================================================
@@ -104,17 +120,16 @@ export const initialState = {
   id: '',
   revitFileName: '',
   hasLoading: false,
-  jsonScheduleData: null,
+  jsonDataFromServer: null,
   categoryData: null,
   categoryNames: null,
   categoryKeyName: '',
   categoryValuesByKeyName: null,
-  jsonTargetCategoryData: null,
-  jsonFinalCategoryDataToUpload: null,
-  isOpenFormScheduleCategory: false,
   scheduleName: '',
   isSheet: false,
   isError: false,
+  jsonTargetCategoryData: null,
+  jsonFinalCategoryDataToUpload: null,
 };
 
 // --- Declaring slice here ---
@@ -123,66 +138,41 @@ const designAutomationSlice = createSlice({
   name: 'designAutomation',
   initialState,
   reducers: {
-    getJsonDataFromServer: (state, {payload}) => {
+    setJsonDataFromServer: (state, {payload}) => {
       const pattern = /\\/g;
-      state.jsonScheduleData = formatStringToJsonObjectWithRegex(
+      state.jsonDataFromServer = formatStringToJsonObjectWithRegex(
         pattern,
         payload,
       );
     },
-    getJsonScheduleData: (state, {payload}) => {
-      state.jsonScheduleData = JSON.parse(payload);
+    setJsonScheduleData: (state, {payload}) => {
+      state.jsonDataFromServer = JSON.parse(payload);
     },
-    getRevitFileName: (state, {payload}) => {
+    setRevitFileName: (state, {payload}) => {
       state.revitFileName = payload;
     },
-    getCategoryData: (state, {payload}) => {
+    setCategoryData: (state, {payload}) => {
       state.categoryData = payload;
     },
-    getCategoryNames: (state, {payload}) => {
+    setCategoryNames: (state, {payload}) => {
       state.categoryNames = payload;
     },
-    getCategoryKeyName: (state, {payload}) => {
+    setCategoryKeyName: (state, {payload}) => {
       state.categoryKeyName = payload;
     },
-    getScheduleName: (state, {payload}) => {
+    setScheduleName: (state, {payload}) => {
       state.scheduleName = payload;
     },
-    getCheckboxSheet: (state, {payload}) => {
+    setCheckboxSheet: (state, {payload}) => {
       state.isSheet = payload;
     },
-    getCategoryValuesByKeyName: (state, {payload}) => {
+    setCategoryValuesByKeyName: (state, {payload}) => {
       state.categoryValuesByKeyName = payload;
     },
-    getJsonTargetCategoryData: (state, {payload}) => {
+    setJsonTargetCategoryData: (state, {payload}) => {
       state.jsonTargetCategoryData = payload;
     },
-    getJsonFinalCategoryDataToUpload: (state, {payload}) => {
-      // TODO: create structure JSON file for uploading to server
-      //   [
-      //     {
-      //       "Category": "Air Systems",
-      //       "ScheduleName": "",
-      //       "Parameters": [
-      //         "Fan",
-      //         "Chilled Water Loop",
-      //         "Cooling Coil"
-      //       ],
-      //       "IsAddToSheet": true,
-      //       "SheetName": ""
-      //     },
-      //     {
-      //       "Category": "aaaa",
-      //       "ScheduleName": "",
-      //       "Parameters": [
-      //         "Fan",
-      //         "Chilled Water Loop",
-      //         "Cooling Coil"
-      //       ],
-      //       "IsAddToSheet": true,
-      //       "SheetName": ""
-      //     }
-      //   ]
+    setJsonFinalCategoryDataToUpload: (state, {payload}) => {
       const {categoryKeyName, jsonTargetCategoryData, scheduleName, isSheet} =
         payload;
       const jsonFinal = [];
@@ -197,9 +187,9 @@ const designAutomationSlice = createSlice({
       jsonFinal.push(schedule);
       state.jsonFinalCategoryDataToUpload = jsonFinal;
     },
-    setIsOpenFormScheduleCategory: (state, {payload}) => {
-      state.isOpenFormScheduleCategory = payload;
-    },
+
+    // ====================
+
     resetFormUploadFilesState: (state) => {
       state.revitFileName = '';
       state.hasLoading = false;
@@ -225,7 +215,6 @@ const designAutomationSlice = createSlice({
       state.categoryValuesByKeyName = null;
       state.jsonTargetCategoryData = null;
       state.jsonFinalCategoryDataToUpload = null;
-      state.isOpenFormScheduleCategory = false;
       state.scheduleName = '';
       state.isSheet = false;
       state.isError = false;
@@ -260,7 +249,7 @@ const designAutomationSlice = createSlice({
         },
       )
       .addMatcher(
-        designAutomationApi.endpoints.postJsonFinalCategoryDataToServer
+        designAutomationApi.endpoints.postJsonScheduleFormDataToServer
           .matchRejected,
         (state) => {
           state.scheduleName = '';
@@ -279,20 +268,19 @@ const designAutomationSlice = createSlice({
 // --- Export reducer here ---
 
 export const {
-  getJsonDataFromServer,
-  getRevitFileName,
-  getJsonScheduleData,
-  getCategoryData,
-  getCategoryNames,
-  getCategoryKeyName,
-  getScheduleName,
-  getCheckboxSheet,
-  getCategoryValuesByKeyName,
-  getJsonTargetCategoryData,
-  getJsonFinalCategoryDataToUpload,
+  setJsonDataFromServer,
+  setRevitFileName,
+  setJsonScheduleData,
+  setCategoryData,
+  setCategoryNames,
+  setCategoryKeyName,
+  setScheduleName,
+  setCheckboxSheet,
+  setCategoryValuesByKeyName,
+  setJsonTargetCategoryData,
+  setJsonFinalCategoryDataToUpload,
   resetFormUploadFilesState,
   resetFormScheduleCategory,
-  setIsOpenFormScheduleCategory,
   resetAllFromDesignAutomation,
 } = designAutomationSlice.actions;
 export const {reducer} = designAutomationSlice;
