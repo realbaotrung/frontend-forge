@@ -6,6 +6,7 @@ import BundlePage from '../admin/AdminPage/BundlePage';
 import UserCheckStandardPage from '../user/UserCheckStandardPage/UserCheckStandardPage';
 import CategoriesPage from '../admin/AdminPage/CategoriesPage';
 import CheckStandardPage from '../admin/AdminPage/CheckStandardPage';
+import DashboardPage from '../admin/AdminPage/DashboardPage';
 
 const routes = [
   {
@@ -63,6 +64,13 @@ const routes = [
     isAuth: true,
     isAdmin: true,
     component: <CheckStandardPage />,
+  },
+  {
+    id: 'dashboardPage',
+    path: '/admin/dashboard',
+    isAuth: true,
+    isAdmin: true,
+    component: <DashboardPage />,
   },
   {
     id: 'missingPage',
