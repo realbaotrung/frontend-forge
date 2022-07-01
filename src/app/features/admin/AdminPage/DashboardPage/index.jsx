@@ -4,19 +4,24 @@ import MonthLineChart from './MonthLineChart';
 import DayLineChart from './DayLineChart';
 import CardInfo from './CardInfo';
 
-
 function DashboardPage() {
   const [choose, setChoose] = useState(true);
 
   return (
     <>
-     
-        <CardInfo />
-     
-      <Space>
-        <Button onClick={() => setChoose(true)}>Day</Button>
+      <CardInfo />
+      <div
+        style={{
+          display: 'flex',
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: '16px'
+        }}
+      >
+        <Button style={{marginRight: '0.5rem'}} onClick={() => setChoose(true)}>Day</Button>
         <Button onClick={() => setChoose(false)}>Month</Button>
-      </Space>
+      </div>
 
       <div>{choose ? <DayLineChart /> : <MonthLineChart />}</div>
     </>
