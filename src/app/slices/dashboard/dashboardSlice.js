@@ -1,6 +1,5 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import {api} from '../../../api/axiosClient';
-import {getCostAndDateData} from './helper';
 
 export const getDashboardDay = createAsyncThunk(
   'dashboard/getDay',
@@ -52,6 +51,18 @@ export const dashboardSlice = createSlice({
     // Request GET successful
     builder.addCase(getDashboardDay.fulfilled, (state, {payload}) => {
       state.isLoading = false;
+      // let arr = [];
+      // arr = payload.result.map((obj,index) => {
+
+      //   if (obj.cost === 0) {
+      //     obj = {
+      //       ...obj,
+      //       cost: NaN,
+      //     };
+      //   }
+      //   return obj;
+      // });
+      // console.log('payload', arr);
       state.dashboardDay = payload;
     });
 
@@ -68,9 +79,7 @@ export const dashboardSlice = createSlice({
     builder.addCase(getDashboardMonth.fulfilled, (state, {payload}) => {
       state.isLoading = false;
 
-      const data = getCostAndDateData(payload);
-
-      state.dashboardMonth.result = data;
+      state.dashboardMonth.result = payload.result;
     });
 
     // Request GET error

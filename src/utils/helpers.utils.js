@@ -1,4 +1,4 @@
-import { Alert, message } from 'antd';
+import {Alert, message} from 'antd';
 import {removeItemFromSS, storageItem} from './storage.utils';
 
 /**
@@ -53,7 +53,7 @@ export function calculateValidAndErrorByPercent(totalValues, errorValues) {
     validPercent: validPercentWithFixed2Decimal,
     errorPercent: errorPercentWithFixed2Decimal,
   };
-};
+}
 
 /**
  * Calculate total valid or error by percent
@@ -92,21 +92,14 @@ export function calculateTotalValidAndErrorByPercent(
     totalValidByPercent,
     totalErrorByPercent,
   };
-};
+}
 
 // ============================================================================
 // Support Show Alert Message
 // ============================================================================
 
 export function alertErrorMessage(title = '') {
-  const content = (
-    <Alert
-      description={title}
-      type='error'
-      closeable
-      showIcon
-    />
-  );
+  const content = <Alert description={title} type='error' closeable showIcon />;
   message.open({
     content,
     duration: 5,
@@ -116,12 +109,7 @@ export function alertErrorMessage(title = '') {
 
 export function alertSuccessMessage(title = '') {
   const content = (
-    <Alert
-      description={title}
-      type='success'
-      closeable
-      showIcon
-    />
+    <Alert description={title} type='success' closeable showIcon />
   );
   message.open({
     content,
@@ -132,12 +120,7 @@ export function alertSuccessMessage(title = '') {
 
 export function alertWarningMessage(title = '') {
   const content = (
-    <Alert
-      description={title}
-      type='warning'
-      closeable
-      showIcon
-    />
+    <Alert description={title} type='warning' closeable showIcon />
   );
   message.open({
     content,
@@ -147,14 +130,7 @@ export function alertWarningMessage(title = '') {
 }
 
 export function alertInfoMessage(title = '') {
-  const content = (
-    <Alert
-      description={title}
-      type='info'
-      closeable
-      showIcon
-    />
-  );
+  const content = <Alert description={title} type='info' closeable showIcon />;
   message.open({
     content,
     duration: 5,
@@ -162,6 +138,83 @@ export function alertInfoMessage(title = '') {
   });
 }
 
+// ============================================================================
+// Support show Chart in Dashboard Admin Page
+// ============================================================================
+const fakeCostAndDate = [
+  {
+    timeline: 'January',
+    cost: NaN,
+  },
+  {
+    timeline: 'February',
+    cost: NaN,
+  },
+  {
+    timeline: 'March',
+    cost: NaN,
+  },
+  {
+    timeline: 'April',
+    cost: NaN,
+  },
+  {
+    timeline: 'May',
+    cost: NaN,
+  },
+  {
+    timeline: 'June',
+    cost: NaN,
+  },
+  {
+    timeline: 'July',
+    cost: NaN,
+  },
+  {
+    timeline: 'August',
+    cost: NaN,
+  },
+  {
+    timeline: 'September',
+    cost: NaN,
+  },
+  {
+    timeline: 'October',
+    cost: NaN,
+  },
+
+  {
+    timeline: 'November',
+    cost: NaN,
+  },
+  {
+    timeline: 'December',
+    cost: NaN,
+  },
+];
+
+export function getCostAndDateData(payload) {
+  let arr = [];
+  const dataFromSV = payload;
+  arr = fakeCostAndDate.map((obj) => {
+    dataFromSV?.forEach((pObj) => {
+      if (pObj?.timeline === obj.timeline) {
+        obj = {...pObj};
+      }
+    });
+    return obj;
+  });
+  return arr;
+}
+
+export function getTotal(payload) {
+  let total = 0;
+  const dataFromSV = payload;
+  dataFromSV?.forEach((obj) => {
+    total += obj.cost;
+  });
+  return total.toFixed(2);
+}
 /*
 eslint
   react/jsx-filename-extension: 0

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import {Link} from 'react-router-dom';
 import {Layout, Menu, Row, Col} from 'antd';
-import {VideoCameraOutlined, BarChartOutlined} from '@ant-design/icons';
+import {VideoCameraOutlined, LineChartOutlined} from '@ant-design/icons';
 
 import Nav from './features/Nav';
 import Logo from './features/Logo';
@@ -33,7 +33,7 @@ export default function NavBarAdmin({children}) {
               <Menu.Item key='3' icon={<VideoCameraOutlined />}>
                 <Link to='/admin/check-standard'>Check Standard</Link>
               </Menu.Item>
-              <Menu.Item key='4' icon={<BarChartOutlined />}>
+              <Menu.Item key='4' icon={<LineChartOutlined />}>
                 <Link to='/admin/dashboard'>Dashboard</Link>
               </Menu.Item>
             </Menu>

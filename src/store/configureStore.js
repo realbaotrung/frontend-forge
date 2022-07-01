@@ -11,7 +11,7 @@ import {apiRtk} from '../api/rtkQuery';
 import bundleReducer from '../app/slices/bundle/bundleSlice';
 import bundleCategoryReducer from '../app/slices/bundleCategory/bundleCategorySlice';
 import checkStandardReducer from '../app/slices/checkStandard/checkStandardSlice';
-
+import {reducer as dashboardReducer} from '../app/slices/dashboard/dashboardSlice';
 /**
  * All reducers put here...
  */
@@ -29,12 +29,12 @@ const store = configureStore({
     forgeViewer: forgeViewerReducer,
     message: messageReducer,
     fsCheckDoors: fsCheckDoorsReducer,
+    dashboard: dashboardReducer,
     [apiRtk.reducerPath]: apiRtk.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiRtk.middleware),
 });
-
 export default store;
 
 /* eslint

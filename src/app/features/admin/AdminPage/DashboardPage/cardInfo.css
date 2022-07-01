@@ -1,0 +1,32 @@
+.cards {
+  width: 100%;
+  padding: 35px 50px;
+  display: flex;
+  justify-content: space-between;
+}
+.card {
+  width: 290px;
+  height: 140px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 12px -4px #000000;
+  box-shadow: 0px 0px 12px -4px #000000;
+}
+.number {
+  font-size: 40px;
+  font-weight: 500;
+  color: #35a2eb;
+}
+.card-name {
+  color: #888;
+  font-weight: 600;
+  font-size: 20px;
+}
+.icon {
+  font-size: 45px;
+  color: #35a2eb;
+}
