@@ -8,7 +8,7 @@ import CategoriesPage from '../admin/AdminPage/CategoriesPage';
 import CheckStandardPage from '../admin/AdminPage/CheckStandardPage';
 import DashboardPage from '../admin/AdminPage/DashboardPage';
 
-const routes = [
+ const routes = [
   {
     id: 'default',
     path: routePaths.HOME_URL,

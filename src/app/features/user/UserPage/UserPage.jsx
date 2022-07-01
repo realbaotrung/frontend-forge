@@ -1,7 +1,7 @@
 import CanvasViewer from './features/CanvasViewer';
 import SiderForViewer from './features/SiderForViewer';
 import NameOfFileWithView from './features/NameOfFileAndView';
-import './userPage.css';
+import './UserPage.css';
 
 const containerCss = {
   display: 'flex',

@@ -13,6 +13,7 @@ export const initialState = {
   warningDataAtLevel: null,
   errorDoors: null,
   errorDoor: '',
+  isShowAllDbIdErrorDoors: false
 };
 
 const fsCheckDoorsSlice = createSlice({
