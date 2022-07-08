@@ -3,7 +3,6 @@ import {Space} from 'antd';
 import {ReactComponent as Hat} from './assets/harmony-at.svg';
 import LoginForm from './features/LoginForm';
 
-
 export default function LoginPage() {
   return (
     <Space
