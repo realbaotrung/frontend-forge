@@ -1,26 +1,11 @@
-import {useEffect, useState} from 'react';
+import {Space, Form, Input, Button} from 'antd';
+import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {useForm} from 'react-hook-form';
-
 import {useNavigate} from 'react-router-dom';
-
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  VStack,
-  Stack,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
-  IconButton,
-} from '@chakra-ui/react';
+import './index.css';
 
 import {FaUserAlt, FaLock} from 'react-icons/fa';
-import {BsFillEyeFill, BsFillEyeSlashFill} from 'react-icons/bs';
 import {useMessageSlice} from '../../../../../slices/message';
 import LoginFormMessage from './features/LoginFormMessage';
 import routePaths from '../../../../route/routePaths';
@@ -35,10 +20,6 @@ import {
 // =====================================================================
 
 export default function LoginForm() {
-  // State
-  const [showPassword, setShowPassword] = useState(false);
-  const handleShowClick = () => setShowPassword(!showPassword);
-
   // Redux...
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
@@ -54,9 +35,6 @@ export default function LoginForm() {
   useEffect(() => {
     dispatch(clearMessage());
   }, [dispatch]);
-
-  // Manage entire form with schema validation
-  const {handleSubmit, register} = useForm();
 
   // Execution when submitting login form
   const onSubmit = async (formValue) => {
@@ -93,73 +71,78 @@ export default function LoginForm() {
   });
 
   return (
-    <Stack direction='column' spacing={4}>
+    <Space
+      align='center'
+      direction='vertical'
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+      }}
+    >
       <LoginFormMessage />
-      <Box boxShadow='lg' p='6' rounded='md' bgColor='white'>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <VStack spacing={4} align='center'>
-            <FormControl>
-              <FormLabel htmlFor='username'>Username</FormLabel>
-              <InputGroup>
-                <InputLeftElement
-                  pointerEvents='none'
-                  color='gray.300'
-                  children={<FaUserAlt color='gray.300' />}
-                />
-                <Input
-                  id='username'
-                  placeholder='Please enter username'
-                  type='text'
-                  inputMode='text'
-                  {...register('username')}
-                />
-              </InputGroup>
-            </FormControl>
-            <FormControl>
-              <FormLabel htmlFor='password'>Password</FormLabel>
-              <InputGroup>
-                <InputLeftElement
-                  pointerEvents='none'
-                  color='gray.300'
-                  children={<FaLock color='gray.300' />}
-                />
-                <Input
-                  id='password'
-                  placeholder='Please enter password'
-                  type={showPassword ? 'text' : 'password'}
-                  inputMode='text'
-                  {...register('password')}
-                />
-                <InputRightElement width='3.5rem'>
-                  <IconButton
-                    icon={
-                      showPassword ? <BsFillEyeFill /> : <BsFillEyeSlashFill />
-                    }
-                    size='sm'
-                    onClick={handleShowClick}
-                    sx={{
-                      bg: 'transparent',
-                      _hover: {
-                        bg: 'transparent',
-                      },
-                      _active: {
-                        bg: 'transparent',
-                      },
-                      _focus: {
-                        bg: 'transparent',
-                      },
-                    }}
-                  />
-                </InputRightElement>
-              </InputGroup>
-            </FormControl>
-            <Button variant='primary' mt={4} type='submit' w='full'>
-              Sign in
-            </Button>
-          </VStack>
-        </form>
-      </Box>
-    </Stack>
+
+      <div className='loginForm'>
+        <Form
+          name='loginForm'
+          autoComplete='off'
+          layout='vertical'
+          onFinish={onSubmit}
+        >
+          <Form.Item
+            label={
+              <div
+                style={{
+                  fontSize: '16px',
+                  fontWeight: '500',
+                }}
+              >
+                Username
+              </div>
+            }
+            name='username'
+            style={{marginBottom: '15px'}}
+          >
+            <Input
+              size='large'
+              prefix={<FaUserAlt style={{color: '#CBD5E0'}} />}
+              placeholder='Please enter username'
+              style={{borderRadius: '6px'}}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label={
+              <div
+                style={{
+                  fontSize: '16px',
+                  fontWeight: '500',
+                }}
+              >
+                Password
+              </div>
+            }
+            name='password'
+            style={{marginBottom: '18px'}}
+          >
+            <Input.Password
+              size='large'
+              prefix={<FaLock style={{color: '#CBD5E0'}} />}
+              placeholder='Please enter password'
+              style={{borderRadius: '6px'}}
+            />
+          </Form.Item>
+
+          <Button
+            className='submitButton'
+            type='primary'
+            htmlType='submit'
+            block
+          >
+            Sign in
+          </Button>
+        </Form>
+      </div>
+    </Space>
   );
 }
 

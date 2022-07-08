@@ -16,10 +16,12 @@ function DashboardPage() {
           width: '100%',
           justifyContent: 'center',
           alignItems: 'center',
-          marginBottom: '16px'
+          marginBottom: '16px',
         }}
       >
-        <Button style={{marginRight: '0.5rem'}} onClick={() => setChoose(true)}>Day</Button>
+        <Button style={{marginRight: '0.5rem'}} onClick={() => setChoose(true)}>
+          Day
+        </Button>
         <Button onClick={() => setChoose(false)}>Month</Button>
       </div>
 

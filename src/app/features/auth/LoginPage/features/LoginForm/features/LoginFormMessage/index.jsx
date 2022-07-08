@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from 'react-redux';
-
-import {Alert, CloseButton} from '@chakra-ui/react';
+import {Alert} from 'antd';
+import './index.css';
 
 import {
   useMessageSlice,
@@ -17,16 +17,13 @@ export default function LoginFormMessage() {
   if (!message) {
     return null;
   }
-
   return (
-    <Alert status='error' variant='left-accent'>
-      {message}
-      <CloseButton
-        position='absolute'
-        right='7px'
-        top='7px'
-        onClick={() => dispatch(clearMessage())}
-      />
-    </Alert>
+    <Alert
+      className='message'
+      message={message}
+      type='error'
+      closable
+      onClose={() => dispatch(clearMessage())}
+    />
   );
 }

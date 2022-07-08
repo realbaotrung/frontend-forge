@@ -1,22 +1,28 @@
-import {VStack, Heading, Icon} from '@chakra-ui/react';
+import {Center} from '@chakra-ui/react';
+import {Space} from 'antd';
 import {ReactComponent as Hat} from './assets/harmony-at.svg';
 import LoginForm from './features/LoginForm';
 
+
 export default function LoginPage() {
   return (
-    <VStack
-      w='100wh'
-      h='100vh'
-      justify='center'
+    <Space
       align='center'
-      spacing={8}
-      bgColor='#F0F2F5'
+      direction='vertical'
+      size='large'
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        backgroundColor: '#f0f2f5',
+        width: '100wh',
+        height: '100vh',
+      }}
     >
-      <Icon as={Hat} w='320px' h='auto' />
-      <Heading as='h1' fontSize='2xl' fontWeight='300'>
+      <Hat style={{width: '320px', height: 'auto'}} />
+      <h1 style={{fontWeight: '300', fontSize: '24px'}}>
         Sign in to Autodesk Forge
-      </Heading>
+      </h1>
       <LoginForm />
-    </VStack>
+    </Space>
   );
 }
